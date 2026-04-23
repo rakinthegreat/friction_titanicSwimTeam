@@ -3,10 +3,11 @@
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/Card';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { ArrowLeft, Globe, MapPin, CheckCircle2, XCircle, Trophy } from 'lucide-react';
+import { ArrowLeft, Globe, MapPin, CheckCircle2, XCircle, Trophy, Compass } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import geographyData from '@/stored-data/geography.json';
 
-type Category = 'bangladesh' | 'international' | null;
+type Category = 'bangladesh' | 'international' | 'geography' | null;
 
 interface Question {
   text: string;
@@ -34,12 +35,39 @@ export default function TriviaPage() {
   const router = useRouter();
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'results'>('menu');
   const [category, setCategory] = useState<Category>(null);
+  const [sessionQuestions, setSessionQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
 
-  const currentQuestions = category === 'bangladesh' ? bangladeshQuestions : internationalQuestions;
+  const generateGeographyQuestions = (count: number): Question[] => {
+    // 1. Shuffle and pick random geography items
+    const shuffledGeo = [...geographyData].sort(() => 0.5 - Math.random());
+    const selectedGeo = shuffledGeo.slice(0, count);
+
+    // 2. Generate MCQs for each
+    return selectedGeo.map(item => {
+      // Get all answers from the entire dataset, except the correct one
+      const allOtherAnswers = geographyData
+        .map(q => q.answer)
+        .filter(ans => ans !== item.answer);
+      
+      // Shuffle other answers and pick 3 unique distractors
+      const shuffledOthers = allOtherAnswers.sort(() => 0.5 - Math.random());
+      const distractors = Array.from(new Set(shuffledOthers)).slice(0, 3);
+      
+      // Combine and shuffle options
+      const options = [item.answer, ...distractors].sort(() => 0.5 - Math.random());
+      const correctAnswer = options.indexOf(item.answer);
+      
+      return {
+        text: item.question,
+        options,
+        correctAnswer
+      };
+    });
+  };
 
   const startGame = (selectedCategory: Category) => {
     setCategory(selectedCategory);
@@ -48,6 +76,14 @@ export default function TriviaPage() {
     setScore(0);
     setSelectedAnswer(null);
     setIsAnswerRevealed(false);
+
+    if (selectedCategory === 'bangladesh') {
+      setSessionQuestions(bangladeshQuestions);
+    } else if (selectedCategory === 'international') {
+      setSessionQuestions(internationalQuestions);
+    } else if (selectedCategory === 'geography') {
+      setSessionQuestions(generateGeographyQuestions(10)); // Picking 10 random questions
+    }
   };
 
   const handleAnswerSelect = (optionIndex: number) => {
@@ -56,14 +92,14 @@ export default function TriviaPage() {
     setSelectedAnswer(optionIndex);
     setIsAnswerRevealed(true);
 
-    const isCorrect = optionIndex === currentQuestions[currentQuestionIndex].correctAnswer;
+    const isCorrect = optionIndex === sessionQuestions[currentQuestionIndex].correctAnswer;
     if (isCorrect) {
       setScore(prev => prev + 1);
     }
 
     // Wait a bit before moving to next question
     setTimeout(() => {
-      if (currentQuestionIndex < currentQuestions.length - 1) {
+      if (currentQuestionIndex < sessionQuestions.length - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
         setSelectedAnswer(null);
         setIsAnswerRevealed(false);
@@ -109,35 +145,45 @@ export default function TriviaPage() {
             <p className="text-foreground/60">Select your preferred topic to start playing.</p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-4xl">
             <Card 
               onClick={() => startGame('bangladesh')}
-              className="flex flex-col items-center justify-center p-12 hover:-translate-y-2 group"
+              className="flex flex-col items-center justify-center p-8 hover:-translate-y-2 group cursor-pointer"
             >
               <div className="p-6 rounded-3xl bg-black/5 dark:bg-white/5 mb-6 group-hover:scale-110 transition-transform text-accent">
-                <MapPin className="w-16 h-16" />
+                <MapPin className="w-12 h-12" />
               </div>
-              <h3 className="text-2xl font-bold">Bangladesh</h3>
+              <h3 className="text-xl font-bold text-center">Bangladesh</h3>
             </Card>
 
             <Card 
               onClick={() => startGame('international')}
-              className="flex flex-col items-center justify-center p-12 hover:-translate-y-2 group"
+              className="flex flex-col items-center justify-center p-8 hover:-translate-y-2 group cursor-pointer"
             >
               <div className="p-6 rounded-3xl bg-black/5 dark:bg-white/5 mb-6 group-hover:scale-110 transition-transform text-accent-secondary">
-                <Globe className="w-16 h-16" />
+                <Globe className="w-12 h-12" />
               </div>
-              <h3 className="text-2xl font-bold">International</h3>
+              <h3 className="text-xl font-bold text-center">International</h3>
+            </Card>
+
+            <Card 
+              onClick={() => startGame('geography')}
+              className="flex flex-col items-center justify-center p-8 hover:-translate-y-2 group cursor-pointer"
+            >
+              <div className="p-6 rounded-3xl bg-black/5 dark:bg-white/5 mb-6 group-hover:scale-110 transition-transform text-green-500">
+                <Compass className="w-12 h-12" />
+              </div>
+              <h3 className="text-xl font-bold text-center">Geography</h3>
             </Card>
           </div>
         </section>
       )}
 
-      {gameState === 'playing' && category && (
+      {gameState === 'playing' && category && sessionQuestions.length > 0 && (
         <section className="space-y-8 max-w-2xl mx-auto w-full animate-in slide-in-from-bottom-8 duration-500">
           <div className="flex justify-between items-center bg-card p-4 rounded-2xl shadow-neo-out">
             <span className="font-semibold text-foreground/70 uppercase tracking-wider text-sm">
-              Question {currentQuestionIndex + 1} / {currentQuestions.length}
+              Question {currentQuestionIndex + 1} / {sessionQuestions.length}
             </span>
             <span className="font-bold text-accent">
               Score: {score}
@@ -146,14 +192,14 @@ export default function TriviaPage() {
 
           <div className="min-h-[120px] flex items-center justify-center">
             <h2 className="text-2xl sm:text-3xl font-bold text-center leading-tight">
-              {currentQuestions[currentQuestionIndex].text}
+              {sessionQuestions[currentQuestionIndex].text}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 gap-4">
-            {currentQuestions[currentQuestionIndex].options.map((option, index) => {
+            {sessionQuestions[currentQuestionIndex].options.map((option, index) => {
               const isSelected = selectedAnswer === index;
-              const isCorrect = index === currentQuestions[currentQuestionIndex].correctAnswer;
+              const isCorrect = index === sessionQuestions[currentQuestionIndex].correctAnswer;
               
               let buttonStyle = "bg-card";
               let textStyle = "text-foreground";
@@ -174,7 +220,7 @@ export default function TriviaPage() {
                 <Card
                   key={index}
                   onClick={() => handleAnswerSelect(index)}
-                  className={`p-6 border-2 border-transparent transition-all duration-300 ${buttonStyle} ${!isAnswerRevealed ? 'hover:scale-[1.02]' : 'cursor-default shadow-none'}`}
+                  className={`p-6 border-2 border-transparent transition-all duration-300 ${buttonStyle} ${!isAnswerRevealed ? 'hover:scale-[1.02] cursor-pointer' : 'cursor-default shadow-none'}`}
                 >
                   <div className="flex items-center justify-between">
                     <span className={`text-lg sm:text-xl ${textStyle}`}>
@@ -199,7 +245,7 @@ export default function TriviaPage() {
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-extrabold">Quiz Complete!</h2>
             <p className="text-xl text-foreground/70">
-              You scored <span className="text-3xl font-bold text-accent mx-2">{score}</span> out of {currentQuestions.length}
+              You scored <span className="text-3xl font-bold text-accent mx-2">{score}</span> out of {sessionQuestions.length}
             </p>
           </div>
 
