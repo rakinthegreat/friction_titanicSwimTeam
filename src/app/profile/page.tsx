@@ -3,7 +3,7 @@
 import { useUserStore } from "@/store/userStore";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useFirebaseAuth } from "@/hooks/useFirebaseAuth";
-import { LogOut, ArrowLeft } from "lucide-react";
+import { LogOut, ArrowLeft, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -57,7 +57,15 @@ export default function Profile() {
         </div>
       </section>
 
-      <section className="flex justify-center pt-8">
+      <section className="flex flex-col items-center gap-6 pt-8">
+        <Link 
+          href="/permissions"
+          className="flex items-center gap-2 px-8 py-4 bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-foreground/70 rounded-full font-bold"
+        >
+          <ShieldCheck className="w-5 h-5 text-accent" />
+          Manage Permissions
+        </Link>
+
         <button
           onClick={logout}
           disabled={isLoading}
