@@ -9,9 +9,8 @@ const INTEREST_OPTIONS = [
   { id: 'logic', label: 'Logic Puzzles', icon: Puzzle },
   { id: 'languages', label: 'Languages', icon: Languages },
   { id: 'science', label: 'Science', icon: FlaskConical },
-  { id: 'art', label: 'Art & Design', icon: Palette },
   { id: 'philosophy', label: 'Philosophy', icon: Brain },
-  { id: 'nature', label: 'Nature', icon: Leaf },
+
 ];
 
 export default function Onboarding() {
@@ -51,8 +50,8 @@ export default function Onboarding() {
                 key={interest.id}
                 onClick={() => toggleInterest(interest.id)}
                 className={`flex flex-col items-center justify-center py-8 rounded-3xl transition-all cursor-pointer ${isSelected
-                    ? 'shadow-neo-in text-accent scale-95'
-                    : 'shadow-neo-out text-foreground/60 hover:scale-[1.02]'
+                  ? 'shadow-neo-in text-accent scale-95'
+                  : 'shadow-neo-out text-foreground/60 hover:scale-[1.02]'
                   }`}
               >
                 <Icon size={32} strokeWidth={2.5} className="mb-3" />
