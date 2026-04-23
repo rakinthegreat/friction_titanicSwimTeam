@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import localforage from 'localforage';
 
-interface PhilosophySession {
+interface LearningSession {
   conceptName: string;
   conceptText: string;
   mcqs: Array<{
@@ -32,15 +32,30 @@ interface UserState {
     darkMode: boolean;
     blockDoomscrolling: boolean;
   };
+
+  // Philosophy
   completedPhilosophyConcepts: string[];
   customPhilosophyConcepts: any[];
-  philosophyReflections: PhilosophySession[]; // Renaming internally or keeping for compatibility
+  philosophyReflections: LearningSession[];
+
+  // Science
+  completedScienceConcepts: string[];
+  customScienceConcepts: any[];
+  scienceReflections: LearningSession[];
+
   setInterests: (interests: string[]) => void;
   updateStats: (minutes: number, gameId?: string, score?: number) => void;
   setDarkMode: (enabled: boolean) => void;
+
+  // Philosophy Actions
   completePhilosophyConcept: (name: string) => void;
   addCustomPhilosophyConcepts: (concepts: any[]) => void;
-  addPhilosophyReflection: (session: Omit<PhilosophySession, 'timestamp'>) => void;
+  addPhilosophyReflection: (session: Omit<LearningSession, 'timestamp'>) => void;
+
+  // Science Actions
+  completeScienceConcept: (name: string) => void;
+  addCustomScienceConcepts: (concepts: any[]) => void;
+  addScienceReflection: (session: Omit<LearningSession, 'timestamp'>) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -58,9 +73,15 @@ export const useUserStore = create<UserState>()(
         darkMode: false,
         blockDoomscrolling: false,
       },
+
       completedPhilosophyConcepts: [],
       customPhilosophyConcepts: [],
       philosophyReflections: [],
+
+      completedScienceConcepts: [],
+      customScienceConcepts: [],
+      scienceReflections: [],
+
       setInterests: (interests) => set({ interests }),
       updateStats: (minutes, gameId, score) =>
         set((state) => {
@@ -85,6 +106,8 @@ export const useUserStore = create<UserState>()(
         set((state) => ({
           preferences: { ...state.preferences, darkMode: enabled },
         })),
+
+      // Philosophy
       completePhilosophyConcept: (name) =>
         set((state) => ({
           completedPhilosophyConcepts: state.completedPhilosophyConcepts.includes(name)
@@ -100,6 +123,25 @@ export const useUserStore = create<UserState>()(
           philosophyReflections: [
             { ...session, timestamp: Date.now() },
             ...state.philosophyReflections,
+          ],
+        })),
+
+      // Science
+      completeScienceConcept: (name) =>
+        set((state) => ({
+          completedScienceConcepts: state.completedScienceConcepts.includes(name)
+            ? state.completedScienceConcepts
+            : [...state.completedScienceConcepts, name],
+        })),
+      addCustomScienceConcepts: (concepts) =>
+        set((state) => ({
+          customScienceConcepts: [...state.customScienceConcepts, ...concepts],
+        })),
+      addScienceReflection: (session) =>
+        set((state) => ({
+          scienceReflections: [
+            { ...session, timestamp: Date.now() },
+            ...state.scienceReflections,
           ],
         })),
     }),
