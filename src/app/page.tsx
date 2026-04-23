@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useEffect, useState } from "react";
 import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const interests = useUserStore((state) => state.interests);
@@ -15,10 +16,15 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const updateStats = useUserStore((state) => state.updateStats);
 
-  // Prevent hydration mismatch
+  const router = useRouter();
+
+  // Prevent hydration mismatch and handle auth
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (!useUserStore.getState().uid) {
+      router.push('/login');
+    }
+  }, [router]);
 
   const handleActivityComplete = (xp: number) => {
     // XP could be used for leveling, but for now we update time reclaimed
@@ -26,7 +32,9 @@ export default function Home() {
     setActiveActivity(null);
   };
 
-  if (!mounted) return null;
+  const uid = useUserStore((state) => state.uid);
+
+  if (!mounted || !uid) return null;
 
   if (interests.length === 0) {
     return <Onboarding />;
