@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Trophy, HelpCircle, Loader2 } from 'lucide-react';
+import { generateCrossword } from '@/app/games/crosswords/actions';
 
 interface Cell {
   letter: string;
@@ -31,20 +32,23 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
   const [shake, setShake] = useState(false);
   const [correctCells, setCorrectCells] = useState<Set<string>>(new Set());
 
+  const fetchedRef = useRef(false);
+
   useEffect(() => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+
     const fetchPuzzle = async () => {
       try {
-        const res = await fetch(`/api/crossword-v3?t=${Date.now()}`);
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const data = await res.json();
-        if (!data.clues) throw new Error("No clues in response");
-        setClues(data.clues);
+        const result = await generateCrossword();
+        if (result.clues) {
+          setClues(result.clues);
+        } else {
+          throw new Error("No clues in response");
+        }
       } catch (e) {
         console.error("CRITICAL: Failed to load crossword puzzle:", e);
-        setClues([
-          { number: 1, direction: 'across', clue: "API V3 FAILED", answer: "EMPTY", row: 1, col: 1 },
-          { number: 1, direction: 'down', clue: "STILL ERROR", answer: "ERROR", row: 1, col: 1 },
-        ]);
+        setClues([]); // Set empty array to trigger error UI
       }
     };
     fetchPuzzle();
@@ -140,10 +144,17 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
     }
   };
 
-  if (!clues) return (
+  if (clues === null) return (
     <div className="h-64 flex flex-col items-center justify-center space-y-4">
       <Loader2 className="w-8 h-8 animate-spin text-accent" />
       <p className="text-xs font-black uppercase tracking-[0.2em] text-foreground/30">Generating Daily Grid...</p>
+    </div>
+  );
+
+  if (clues.length === 0) return (
+    <div className="h-64 flex flex-col items-center justify-center space-y-4 text-center p-6">
+      <p className="text-sm font-bold text-foreground/50 italic">The daily puzzle is resting. Please try again in a moment.</p>
+      <Button variant="outline" onClick={() => window.location.reload()}>Retry Generation</Button>
     </div>
   );
 
@@ -191,7 +202,7 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
       </div>
 
       <div className="w-full max-w-sm space-y-6">
-        <div className="bg-card/50 p-4 rounded-2xl shadow-neo-in border border-foreground/5">
+        <div className="bg-card/50 p-4 rounded-2xl shadow-neo-in border border-foreground/5 max-h-48 overflow-y-auto scrollbar-hide">
            <h3 className="text-xs font-black uppercase tracking-widest text-accent mb-3 flex items-center gap-2">
              <HelpCircle size={14} /> Daily Clues
            </h3>
