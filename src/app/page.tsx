@@ -5,6 +5,8 @@ import Onboarding from "@/components/Onboarding";
 import { WordLess } from "@/components/games/WordLess";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
+import Link from "next/link";
+import { ArrowRight, Gamepad2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -38,7 +40,7 @@ export default function Home() {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-background">
         <WordLess onComplete={handleActivityComplete} />
-        <button 
+        <button
           onClick={() => setActiveActivity(null)}
           className="mt-8 text-foreground/40 hover:text-foreground font-medium underline underline-offset-4"
         >
@@ -57,11 +59,11 @@ export default function Home() {
         </div>
         <div className="flex items-center gap-4">
           <div className="flex gap-2">
-             {interests.map(i => (
-               <span key={i} className="px-3 py-1 bg-accent/10 text-accent rounded-full text-xs font-bold capitalize">
-                 {i}
-               </span>
-             ))}
+            {interests.map(i => (
+              <span key={i} className="px-3 py-1 bg-accent/10 text-accent rounded-full text-xs font-bold capitalize">
+                {i}
+              </span>
+            ))}
           </div>
           <GoogleLoginButton />
           <ThemeToggle />
@@ -76,7 +78,7 @@ export default function Home() {
           </div>
           <div className="flex flex-wrap gap-4 pt-2">
             {[1, 5, 10, 15, 20, 25].map((mins) => (
-              <button 
+              <button
                 key={mins}
                 onClick={() => setActiveActivity('WordLess')}
                 className="bg-accent rounded-2xl px-6 py-4 font-black shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105 active:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
@@ -96,6 +98,31 @@ export default function Home() {
           <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Daily Streak</p>
           <p className="text-5xl font-black text-accent-secondary">{useUserStore.getState().stats.totalMinutesSaved > 0 ? 1 : 0}<span className="text-xl font-bold text-foreground/20 ml-2 italic">days</span></p>
         </div>
+      </section>
+
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Link href="/learn" className="group">
+          <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-transparent group-hover:border-accent/20 transition-all group-hover:-translate-y-1">
+            <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-black">Learning</h3>
+              <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center text-accent group-hover:scale-110 transition-transform">
+                <ArrowRight className="w-6 h-6" />
+              </div>
+            </div>
+            <p className="text-foreground/80 font-medium">Short Interactive lessons</p>
+          </div>
+        </Link>
+        <Link href="/games" className="group">
+          <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-transparent group-hover:border-accent-secondary/20 transition-all group-hover:-translate-y-1">
+            <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-black">Mini-Games</h3>
+              <div className="w-12 h-12 bg-accent-secondary/10 rounded-full flex items-center justify-center text-accent-secondary group-hover:scale-110 transition-transform">
+                <Gamepad2 className="w-6 h-6" />
+              </div>
+            </div>
+            <p className="text-foreground/80 font-medium">Play offline puzzles</p>
+          </div>
+        </Link>
       </section>
     </main>
   );

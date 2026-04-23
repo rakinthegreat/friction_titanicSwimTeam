@@ -10,6 +10,9 @@
 - [x] Build **2048** (Number sliding game)
 - [x] Implement **Trivia** session UI
 - [x] Implement **Google Auth** 
+- [x] Implement **English Learning** (New words, Literature)
+- [x] Implement **Philosophy Learning** (Philosophical Ideas)
+- [x] Implement **Science Learning** (Facts, concepts)
 ## Phase 3: Native Features (Capacitor/Java)
 - [ ] Develop `WaitLessSensors` Java plugin (Stationary detection)
 - [ ] Develop `WaitLessDigitalWellbeing` Java plugin (UsageStats monitoring)
@@ -18,6 +21,6 @@
 
 ## Phase 4: Polish & Backend
 - [ ] Implement "Time Reclaimed" animations and XP system
-- [ ] Integrate Firebase Auth for cross-device sync
+- [x] Integrate Firebase Auth for cross-device sync
 - [ ] Final UI/UX audit for "Premium" feel
 - [ ] Production build and Android APK generation

@@ -50,14 +50,6 @@ export default function GamesDirectoryPage() {
       href: '/games/2048',
       active: true,
       color: 'text-accent-secondary'
-    },
-    {
-      title: 'Trivia',
-      description: 'Test your knowledge on Bangladesh and the World.',
-      icon: <HelpCircle className="w-8 h-8" />,
-      href: '/games/trivia',
-      active: true,
-      color: 'text-accent'
     }
   ];
 
