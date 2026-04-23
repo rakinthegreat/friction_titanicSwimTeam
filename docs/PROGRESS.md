@@ -45,7 +45,10 @@
 
 ### Phase 3: Native Features (In Progress)
 - Initialized **Native Bridge** skeleton (`src/lib/native-bridge.ts`).
-- Created and registered `WaitLessSensors` Java plugin for Android background tasks.
+- Created and registered `WaitLessSensors` Java plugin for stationary detection.
+- Developed `WaitLessDigitalWellbeing` Java plugin for monitoring foreground app usage via `UsageStatsManager`.
+- Configured **Android Manifest** with required permissions: Fine/Coarse Location, Activity Recognition, and Package Usage Stats.
+
 
 ---
 

@@ -7,6 +7,7 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(WaitLessSensorsPlugin.class);
+        registerPlugin(WaitLessDigitalWellbeingPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }
