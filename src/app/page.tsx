@@ -4,9 +4,8 @@ import { useUserStore } from "@/store/userStore";
 import Onboarding from "@/components/Onboarding";
 import { WordLess } from "@/components/games/WordLess";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
 import { useEffect, useState } from "react";
-import { Gamepad2, User, Home as HomeIcon, ShieldCheck, ChevronRight, ArrowRight } from "lucide-react";
+import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -66,7 +65,6 @@ export default function Home() {
                 </span>
               ))}
             </div>
-            <GoogleLoginButton />
             <Link 
               href="/permissions"
               className="p-3 rounded-2xl bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-accent"

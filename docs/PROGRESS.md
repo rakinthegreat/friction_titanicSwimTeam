@@ -1,6 +1,6 @@
 # Project Progress Log - WaitLess
 
-## Current Status: Phase 3 In Progress / Phase 4 Starting
+## Current Status: Phase 3 Completed / Phase 4 Completed / Phase 5 In Progress
 
 ---
 
@@ -34,26 +34,37 @@
 
 ---
 
-### Phase 2: AI Content & Core Activities (Completed 2026-04-23)
 - Implemented **AI Content Cache** (`contentStore.ts`) to fetch and store Gemini data.
 - Developed **background sync hook** (`useContentSync.ts`) to refresh content every 5 days.
-- Built **WordLess** mini-game with full game logic and design system integration.
+- Built **WordLess** mini-game with full game logic and dedicated page.
 - Implemented **Theme Switcher** (Light/Dark mode) with persistent state.
 - Added **Sudoku**, **Tic-Tac-Toe**, **Memory Match**, and **2048** to the Mini-Games directory.
+- Completed **Neomorphic UI** transformation across the entire dashboard and onboarding flow.
 
 ---
 
-### Phase 3: Native Features (In Progress)
-- Initialized **Native Bridge** skeleton (`src/lib/native-bridge.ts`).
-- Created and registered `WaitLessSensors` Java plugin for stationary detection.
-- Developed `WaitLessDigitalWellbeing` Java plugin for monitoring foreground app usage via `UsageStatsManager`.
-- Configured **Android Manifest** with required permissions: Fine/Coarse Location, Activity Recognition, and Package Usage Stats.
-
+### Phase 3: Native Features (Completed 2026-04-23)
+- Established **Native Bridge** skeleton (`src/lib/native-bridge.ts`).
+- Developed and registered `WaitLessSensors` Java plugin with **Accelerometer-based movement detection**.
+- Developed `WaitLessDigitalWellbeing` Java plugin for monitoring foreground app usage.
+- Implemented **Native Permission Sequencing** (Notifications -> Battery Optimization) in `MainActivity.java`.
+- Configured **Android Manifest** with Fine/Coarse Location, Activity Recognition, and Package Usage Stats permissions.
+- Created **Permissions Management UI** with auto-refresh on focus.
 
 ---
 
-### Phase 4: Polish & Backend (In Progress)
-- Integrated **Firebase Auth** with Google Sign-In support.
+### Phase 4: Learning Modules (Completed 2026-04-23)
+- Implemented **Learning Directory** with curated modules.
+- Developed **English Literature & Vocab** module for language enrichment.
+- Developed **Philosophical Ideas** module for reflective thinking.
+- Developed **Science Concepts** module for bite-sized facts.
+- Developed **History Trivia** module (Bangladesh & International).
+- Integrated **Gemini AI** for dynamic content generation in all learning modules.
+
+---
+
+### Phase 5: Polish & Backend (In Progress)
+- Integrated **Firebase Auth** with Google Sign-In support via "Cloud Backup".
 - Implemented **Auth Middleware** and protected routes (`/profile`, `/api/protected`).
-- Created **Login and Profile** pages for user management.
-- Set up **Firebase Admin SDK** for backend session validation.
+- Streamlined **Dashboard UI** to a "suggestion-first" model, removing cluttered navigation.
+- Synchronized local and remote repositories via rebase and conflict resolution.
