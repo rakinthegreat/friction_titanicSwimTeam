@@ -4,14 +4,14 @@ import { useUserStore } from "@/store/userStore";
 import Onboarding from "@/components/Onboarding";
 import { WordLess } from "@/components/games/WordLess";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
 import { useEffect, useState } from "react";
+import { Gamepad2, User, Home as HomeIcon, ShieldCheck, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   const interests = useUserStore((state) => state.interests);
+  const stats = useUserStore((state) => state.stats);
   const [mounted, setMounted] = useState(false);
-
-  const updateStats = useUserStore((state) => state.updateStats);
   const [activeActivity, setActiveActivity] = useState<string | null>(null);
 
   // Prevent hydration mismatch
@@ -19,85 +19,95 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  const handleActivityComplete = (xp: number) => {
-    updateStats(5); // Assuming 5 mins for now
-    setActiveActivity(null);
-  };
-
   if (!mounted) return null;
 
   if (interests.length === 0) {
-    return (
-      <main className="min-h-screen flex flex-col">
-        <Onboarding />
-      </main>
-    );
+    return <Onboarding />;
   }
 
   if (activeActivity === 'WordLess') {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-background">
-        <WordLess onComplete={handleActivityComplete} />
-        <button 
-          onClick={() => setActiveActivity(null)}
-          className="mt-8 text-foreground/40 hover:text-foreground font-medium underline underline-offset-4"
-        >
-          Quit Session
-        </button>
-      </main>
+      <div className="min-h-screen bg-background">
+        <header className="p-6 flex items-center border-b border-foreground/5">
+          <button 
+            onClick={() => setActiveActivity(null)}
+            className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors mr-4"
+          >
+            <ChevronRight className="w-6 h-6 rotate-180" />
+          </button>
+          <h1 className="text-xl font-bold">WordLess</h1>
+        </header>
+        <WordLess />
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen p-8 max-w-4xl mx-auto space-y-12 animate-in fade-in duration-1000">
-      <header className="flex justify-between items-start">
-        <div className="space-y-2">
-          <p className="text-accent font-medium uppercase tracking-widest text-sm">Dashboard</p>
-          <h1 className="text-5xl font-extrabold tracking-tight">WaitLess</h1>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex gap-2">
-             {interests.map(i => (
-               <span key={i} className="px-3 py-1 bg-accent/10 text-accent rounded-full text-xs font-bold capitalize">
-                 {i}
-               </span>
-             ))}
-          </div>
-          <GoogleLoginButton />
-          <ThemeToggle />
-        </div>
-      </header>
-
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-accent rounded-[2.5rem] p-8 text-white space-y-6 shadow-neo-out ring-1 ring-white/10 col-span-1 md:col-span-2">
+    <main className="min-h-screen bg-background text-foreground pb-32 animate-in fade-in duration-1000">
+      <div className="max-w-4xl mx-auto p-8 space-y-12">
+        <header className="flex justify-between items-start">
           <div className="space-y-2">
-            <h2 className="text-3xl font-black">Ready to reclaim time?</h2>
-            <p className="opacity-80 font-medium">Choose a wait duration to start a curated activity.</p>
+            <p className="text-accent font-medium uppercase tracking-widest text-sm">Dashboard</p>
+            <h1 className="text-5xl font-extrabold tracking-tight">WaitLess</h1>
           </div>
-          <div className="flex flex-wrap gap-4 pt-2">
-            {[1, 5, 10, 15, 20, 25].map((mins) => (
-              <button 
-                key={mins}
-                onClick={() => setActiveActivity('WordLess')}
-                className="bg-accent rounded-2xl px-6 py-4 font-black shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105 active:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
-              >
-                {mins}m
-              </button>
-            ))}
+          <div className="flex items-center gap-3">
+            <Link 
+              href="/permissions"
+              className="p-3 rounded-2xl bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-accent"
+              aria-label="Manage Permissions"
+            >
+              <ShieldCheck size={20} />
+            </Link>
+            <ThemeToggle />
           </div>
-        </div>
+        </header>
 
-        <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
-          <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Time Reclaimed</p>
-          <p className="text-5xl font-black text-accent">{useUserStore.getState().stats.totalMinutesSaved}<span className="text-xl font-bold text-foreground/20 ml-2 italic">mins</span></p>
-        </div>
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-accent rounded-[2.5rem] p-8 text-white space-y-6 shadow-neo-out ring-1 ring-white/10 col-span-1 md:col-span-2 overflow-hidden relative group">
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
+              <Gamepad2 size={120} />
+            </div>
+            <div className="space-y-2 relative z-10">
+              <h2 className="text-3xl font-black">Ready to reclaim time?</h2>
+              <p className="opacity-80 font-medium">Choose a wait duration to start a curated activity.</p>
+            </div>
+            <div className="flex flex-wrap gap-4 pt-2 relative z-10">
+              {[1, 5, 10, 15, 20, 25].map((mins) => (
+                <button 
+                  key={mins}
+                  onClick={() => setActiveActivity('WordLess')}
+                  className="bg-accent rounded-2xl px-6 py-4 font-black shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105 active:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
+                >
+                  {mins}m
+                </button>
+              ))}
+            </div>
+          </div>
 
-        <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
-          <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Daily Streak</p>
-          <p className="text-5xl font-black text-accent-secondary">{useUserStore.getState().stats.totalMinutesSaved > 0 ? 1 : 0}<span className="text-xl font-bold text-foreground/20 ml-2 italic">days</span></p>
+          <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
+            <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Time Reclaimed</p>
+            <p className="text-5xl font-black text-accent">{stats.totalMinutesSaved}<span className="text-xl font-bold text-foreground/20 ml-2 italic">mins</span></p>
+          </div>
+
+          <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
+            <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Daily Streak</p>
+            <p className="text-5xl font-black text-accent-secondary">{stats.totalMinutesSaved > 0 ? 1 : 0}<span className="text-xl font-bold text-foreground/20 ml-2 italic">days</span></p>
+          </div>
+        </section>
+      </div>
+
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-4rem)] max-w-md bg-card/80 backdrop-blur-xl rounded-[2.5rem] p-4 shadow-neo-out border border-white/10 z-50 flex justify-around items-center">
+        <Link href="/games" className="p-4 rounded-2xl text-foreground/40 hover:text-accent transition-colors">
+          <Gamepad2 size={24} />
+        </Link>
+        <div className="p-4 rounded-2xl bg-accent text-white shadow-neo-out scale-110">
+          <HomeIcon size={24} />
         </div>
-      </section>
+        <Link href="/profile" className="p-4 rounded-2xl text-foreground/40 hover:text-accent transition-colors">
+          <User size={24} />
+        </Link>
+      </nav>
     </main>
   );
 }
-
