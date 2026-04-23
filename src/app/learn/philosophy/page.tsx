@@ -22,17 +22,21 @@ export default function PhilosophyModule() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+  const [mounted, setMounted] = useState(false);
+
   const completePhilosophyConcept = useUserStore(state => state.completePhilosophyConcept);
   const addCustomPhilosophyConcepts = useUserStore(state => state.addCustomPhilosophyConcepts);
   const interests = useUserStore(state => state.interests);
 
-  const [sessionConcepts, setSessionConcepts] = useState(() => {
+  const [sessionConcepts, setSessionConcepts] = useState<any[]>([]);
+
+  React.useEffect(() => {
+    setMounted(true);
     const state = useUserStore.getState();
     const completed = state.completedPhilosophyConcepts;
     const allConcepts = [...concepts, ...state.customPhilosophyConcepts];
-    return allConcepts.filter(c => !completed.includes(c.concept_name));
-  });
+    setSessionConcepts(allConcepts.filter(c => !completed.includes(c.concept_name)));
+  }, []);
 
   const lessonData = useMemo(() => {
     return sessionConcepts.flatMap(concept => [
@@ -93,6 +97,8 @@ export default function PhilosophyModule() {
   };
 
   const currentStep = lessonData[currentIndex];
+
+  if (!mounted) return null;
 
   if (sessionConcepts.length === 0) {
     return (
