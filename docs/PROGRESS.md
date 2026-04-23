@@ -1,6 +1,6 @@
 # Project Progress Log - WaitLess
 
-## Current Status: Phase 1 Completed / Phase 2 Starting
+## Current Status: Phase 3 In Progress / Phase 4 Starting
 
 ---
 
@@ -38,12 +38,22 @@
 - Implemented **AI Content Cache** (`contentStore.ts`) to fetch and store Gemini data.
 - Developed **background sync hook** (`useContentSync.ts`) to refresh content every 5 days.
 - Built **WordLess** mini-game with full game logic and design system integration.
+- Implemented **Theme Switcher** (Light/Dark mode) with persistent state.
 - Added **Sudoku**, **Tic-Tac-Toe**, **Memory Match**, and **2048** to the Mini-Games directory.
-- Implemented **Neomorphic UI** transformation across the entire dashboard and onboarding flow.
-- Added **Theme Switcher** (Light/Dark mode) with persistent state.
 
 ---
 
 ### Phase 3: Native Features (In Progress)
 - Initialized **Native Bridge** skeleton (`src/lib/native-bridge.ts`).
-- Created and registered `WaitLessSensors` Java plugin for Android background tasks.
+- Created and registered `WaitLessSensors` Java plugin for stationary detection.
+- Developed `WaitLessDigitalWellbeing` Java plugin for monitoring foreground app usage via `UsageStatsManager`.
+- Configured **Android Manifest** with required permissions: Fine/Coarse Location, Activity Recognition, and Package Usage Stats.
+
+
+---
+
+### Phase 4: Polish & Backend (In Progress)
+- Integrated **Firebase Auth** with Google Sign-In support.
+- Implemented **Auth Middleware** and protected routes (`/profile`, `/api/protected`).
+- Created **Login and Profile** pages for user management.
+- Set up **Firebase Admin SDK** for backend session validation.

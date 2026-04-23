@@ -14,13 +14,14 @@
 - [x] Implement **Philosophy Learning** (Philosophical Ideas)
 - [x] Implement **Science Learning** (Facts, concepts)
 ## Phase 3: Native Features (Capacitor/Java)
-- [ ] Develop `WaitLessSensors` Java plugin (Stationary detection)
-- [ ] Develop `WaitLessDigitalWellbeing` Java plugin (UsageStats monitoring)
+- [x] Develop `WaitLessSensors` Java plugin (Stationary detection)
+- [x] Develop `WaitLessDigitalWellbeing` Java plugin (UsageStats monitoring)
 - [ ] Implement local push notifications for "Wait" triggers
-- [ ] Add Location & Background Location permission flows
+- [x] Add Location & Background Location permission flows (In Manifest)
 
 ## Phase 4: Polish & Backend
 - [ ] Implement "Time Reclaimed" animations and XP system
-- [x] Integrate Firebase Auth for cross-device sync
+- [x] Integrate **Firebase Auth** for cross-device sync
+- [x] Implement **Google Auth** Login/Profile flow
 - [ ] Final UI/UX audit for "Premium" feel
 - [ ] Production build and Android APK generation

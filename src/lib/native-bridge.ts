@@ -4,6 +4,14 @@ export interface WaitLessSensorsPlugin {
   getStationaryStatus(): Promise<{ isStationary: boolean }>;
 }
 
-const WaitLessSensors = registerPlugin<WaitLessSensorsPlugin>('WaitLessSensors');
+export interface WaitLessDigitalWellbeingPlugin {
+  getForegroundApp(): Promise<{ packageName: string }>;
+  hasUsageStatsPermission(): Promise<{ granted: boolean }>;
+  openUsageSettings(): Promise<void>;
+}
 
-export default WaitLessSensors;
+const WaitLessSensors = registerPlugin<WaitLessSensorsPlugin>('WaitLessSensors');
+const WaitLessDigitalWellbeing = registerPlugin<WaitLessDigitalWellbeingPlugin>('WaitLessDigitalWellbeing');
+
+export { WaitLessSensors, WaitLessDigitalWellbeing };
+
