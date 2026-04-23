@@ -4,6 +4,7 @@ import { useUserStore } from "@/store/userStore";
 import Onboarding from "@/components/Onboarding";
 import { WordLess } from "@/components/games/WordLess";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -62,6 +63,7 @@ export default function Home() {
                </span>
              ))}
           </div>
+          <GoogleLoginButton />
           <ThemeToggle />
         </div>
       </header>
