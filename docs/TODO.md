@@ -24,7 +24,16 @@
 ## Phase 4 & 5: Polish, Backend & Animations
 - [x] Integrate **Firebase Auth** for cross-device sync
 - [x] Implement **Google Auth** Login/Profile flow with Cloud Backup UI
+- [x] Implement **Persistent Daily Streak** system (Date-based tracking)
+- [x] Add **Interests Editor** to Profile Tab
+- [x] Refine **Sudoku** with high-contrast, professional grid UI
+- [x] Stabilize **2048** logic (Movement, Merging, Scaling)
+- [x] Implement **Wait-Time Activity Engine** (Interest-matched content)
+- [x] Create **Inline Suggestion UI** for Dashboard (3 random options)
+- [x] Implement **Dynamic Difficulty Scaling** (Sudoku blanks vs time)
+- [x] Implement **Scalable Game Grids** (Maze size vs time)
 - [ ] Implement "Time Reclaimed" animations and interactive XP leveling system
 - [ ] Develop **Vocab Flashcards** module (Gemini-powered)
-- [ ] Final UI/UX audit for "Premium" feel (Micro-interactions, Haptics)
+- [ ] Integrate **Haptic Feedback** for Android via Capacitor Haptics
+- [ ] Final UI/UX audit for "Premium" feel (Micro-interactions, Transitions)
 - [ ] Production build and Android APK generation

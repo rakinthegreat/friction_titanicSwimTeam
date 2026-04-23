@@ -21,9 +21,13 @@ export default function SudokuPage() {
 
   const startNewGame = useCallback(() => {
     setIsLoading(true);
-    // Use timeout to allow UI to render spinner before heavy generation
+    const params = new URLSearchParams(window.location.search);
+    const time = parseInt(params.get('time') || '10');
+    // Scale: 5m -> 32 empty, 25m -> 62 empty
+    const blanks = Math.min(65, Math.max(30, 25 + (time * 1.5)));
+
     setTimeout(() => {
-      const { puzzle } = generateSudoku(40); // 40 blanks = easy/medium difficulty
+      const { puzzle } = generateSudoku(Math.floor(blanks));
       setInitialBoard(puzzle);
       setBoard(puzzle.map(row => [...row]));
       setConflicts([]);

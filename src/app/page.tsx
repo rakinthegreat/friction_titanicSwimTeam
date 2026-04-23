@@ -8,13 +8,18 @@ import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
 import { useEffect, useState } from "react";
 import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ACTIVITIES } from "@/lib/activities";
 
 export default function Home() {
+  const router = useRouter();
   const interests = useUserStore((state) => state.interests);
   const stats = useUserStore((state) => state.stats);
   const [activeActivity, setActiveActivity] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const updateStats = useUserStore((state) => state.updateStats);
+  const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
+  const [suggestions, setSuggestions] = useState<typeof ACTIVITIES>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -85,19 +90,58 @@ export default function Home() {
             </div>
             <div className="space-y-2 relative z-10">
               <h2 className="text-3xl font-black">Ready to reclaim time?</h2>
-              <p className="opacity-80 font-medium">Choose a wait duration to start a curated activity.</p>
+              <p className="opacity-80 font-medium">Choose a wait duration to see activity options.</p>
             </div>
             <div className="flex flex-wrap gap-4 pt-2 relative z-10">
               {[1, 5, 10, 15, 20, 25].map((mins) => (
                 <button
                   key={mins}
-                  onClick={() => setActiveActivity('WordLess')}
-                  className="bg-accent rounded-2xl px-6 py-4 font-black shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105 active:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
+                  onClick={() => {
+                    const filtered = ACTIVITIES.filter(a => 
+                      a.minTime <= mins && 
+                      a.maxTime >= mins &&
+                      (a.interests.some(i => interests.includes(i)) || interests.length === 0)
+                    );
+                    const pool = filtered.length > 0 ? filtered : ACTIVITIES.filter(a => a.minTime <= mins && a.maxTime >= mins);
+                    const shuffled = [...pool].sort(() => 0.5 - Math.random());
+                    setSuggestions(shuffled.slice(0, 3));
+                    setSelectedDuration(mins);
+                  }}
+                  className={`rounded-2xl px-6 py-4 font-black transition-all ${
+                    selectedDuration === mins 
+                    ? "bg-white text-accent shadow-neo-in scale-95" 
+                    : "bg-accent shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105"
+                  }`}
                 >
                   {mins}m
                 </button>
               ))}
             </div>
+
+            {selectedDuration && suggestions.length > 0 && (
+              <div className="pt-6 space-y-4 animate-in slide-in-from-top-4 duration-500 relative z-10">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Curated for {selectedDuration}m</p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {suggestions.map((activity) => (
+                    <Link 
+                      key={activity.id} 
+                      href={`${activity.href}?time=${selectedDuration}`}
+                      className="group"
+                    >
+                      <div className="h-full p-4 bg-white/10 rounded-3xl border border-white/5 hover:bg-white/20 transition-all hover:-translate-y-1">
+                        <div className={`w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center mb-3 ${activity.color.replace('text-', 'text-white')}`}>
+                          <activity.icon className="w-5 h-5 text-white" />
+                        </div>
+                        <h3 className="text-sm font-black leading-tight mb-1">{activity.title}</h3>
+                        <p className="text-[10px] opacity-60 line-clamp-2 font-medium">{activity.description}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
@@ -136,6 +180,7 @@ export default function Home() {
           </Link>
         </section>
       </div>
+
     </main>
   );
 }

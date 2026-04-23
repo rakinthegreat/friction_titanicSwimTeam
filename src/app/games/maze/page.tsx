@@ -7,15 +7,26 @@ import { Trophy, RefreshCw, ArrowLeft, ChevronUp, ChevronDown, ChevronLeft, Chev
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 
-const SIZE = 23;
+const SIZE_DEFAULT = 23;
 
 export default function MazePage() {
   const router = useRouter();
   const updateStats = useUserStore((state) => state.updateStats);
 
+  const [size, setSize] = useState(SIZE_DEFAULT);
   const [maze, setMaze] = useState<number[][]>([]);
   const [player, setPlayer] = useState({ x: 1, y: 1 });
-  const [goal, setGoal] = useState({ x: SIZE - 2, y: SIZE - 2 });
+  const [goal, setGoal] = useState({ x: SIZE_DEFAULT - 2, y: SIZE_DEFAULT - 2 });
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const time = parseInt(params.get('time') || '10');
+    const s = Math.min(35, Math.max(13, 11 + (Math.floor(time / 2) * 2)));
+    const finalSize = s % 2 === 0 ? s + 1 : s;
+    setSize(finalSize);
+    setGoal({ x: finalSize - 2, y: finalSize - 2 });
+  }, []);
+
   const [won, setWon] = useState(false);
   const [moves, setMoves] = useState(0);
   
@@ -23,7 +34,7 @@ export default function MazePage() {
   const isDragging = useRef(false);
 
   const generateMaze = useCallback(() => {
-    const newMaze = Array(SIZE).fill(null).map(() => Array(SIZE).fill(1));
+    const newMaze = Array(size).fill(null).map(() => Array(size).fill(1));
     const stack: [number, number][] = [];
     const start = { x: 1, y: 1 };
     newMaze[start.y][start.x] = 0;
@@ -35,7 +46,7 @@ export default function MazePage() {
 
       [[0, -2], [0, 2], [-2, 0], [2, 0]].forEach(([dx, dy]) => {
         const nx = cx + dx, ny = cy + dy;
-        if (nx > 0 && nx < SIZE - 1 && ny > 0 && ny < SIZE - 1 && newMaze[ny][nx] === 1) {
+        if (nx > 0 && nx < size - 1 && ny > 0 && ny < size - 1 && newMaze[ny][nx] === 1) {
           neighbors.push([nx, ny, cx + dx / 2, cy + dy / 2]);
         }
       });
@@ -82,7 +93,7 @@ export default function MazePage() {
       const nx = prev.x + dx;
       const ny = prev.y + dy;
 
-      if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE && maze[ny][nx] === 0) {
+      if (nx >= 0 && nx < size && ny >= 0 && ny < size && maze[ny][nx] === 0) {
         const isGoal = nx === goal.x && ny === goal.y;
         if (isGoal) {
           setWon(true);
@@ -161,7 +172,7 @@ export default function MazePage() {
           onMouseLeave={handleEnd}
         >
           <Card className="p-2 aspect-square flex items-center justify-center bg-foreground/5 border border-foreground/10 overflow-hidden shadow-none cursor-move transition-colors hover:bg-foreground/[0.07]">
-            <div className="grid grid-cols-23 w-full h-full gap-0">
+            <div className={`grid w-full h-full gap-0`} style={{ gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))` }}>
               {maze.map((row, y) => row.map((cell, x) => (
                 <div 
                   key={`${x}-${y}`} 
