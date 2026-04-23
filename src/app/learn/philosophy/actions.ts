@@ -52,7 +52,7 @@ export async function generateConcepts(interests: string[] = []) {
     const genAI = new GoogleGenerativeAI(apiKey);
     // Note: gemini-3-flash-preview does not exist yet; using gemini-1.5-flash for stability
     const model = genAI.getGenerativeModel({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3.1-flash-lite-preview",
       systemInstruction: SYSTEM_PROMPT
     });
 

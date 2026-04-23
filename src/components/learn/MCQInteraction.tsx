@@ -25,12 +25,13 @@ export const MCQInteraction = ({ question, options, onSubmit }: MCQInteractionPr
   const handleSubmit = () => {
     if (selectedIdx === null) return;
     setIsSubmitted(true);
-    setTimeout(() => {
-      onSubmit(options[selectedIdx].is_correct);
-      // Reset for next question if parent handles re-render
-      setSelectedIdx(null);
-      setIsSubmitted(false);
-    }, 1500);
+  };
+
+  const handleNext = () => {
+    if (selectedIdx === null) return;
+    onSubmit(options[selectedIdx].is_correct);
+    setSelectedIdx(null);
+    setIsSubmitted(false);
   };
 
   return (
@@ -42,8 +43,12 @@ export const MCQInteraction = ({ question, options, onSubmit }: MCQInteractionPr
           const isSelected = selectedIdx === idx;
           let variant = "default";
           
-          if (isSubmitted && isSelected) {
-            variant = option.is_correct ? "correct" : "incorrect";
+          if (isSubmitted) {
+            if (option.is_correct) {
+              variant = "correct";
+            } else if (isSelected && !option.is_correct) {
+              variant = "incorrect";
+            }
           } else if (isSelected) {
             variant = "selected";
           }
@@ -82,18 +87,28 @@ export const MCQInteraction = ({ question, options, onSubmit }: MCQInteractionPr
         })}
       </div>
 
-      <button
-        onClick={handleSubmit}
-        disabled={selectedIdx === null || isSubmitted}
-        className={`
-          w-full py-5 rounded-2xl font-black text-xl transition-all shadow-neo-out
-          ${selectedIdx !== null && !isSubmitted
-            ? 'bg-accent-secondary text-white hover:scale-[1.02] active:scale-95' 
-            : 'bg-black/10 dark:bg-white/10 text-foreground/40 cursor-not-allowed shadow-none'}
-        `}
-      >
-        {isSubmitted ? 'Checking...' : 'Confirm Answer'}
-      </button>
+      {!isSubmitted ? (
+        <button
+          onClick={handleSubmit}
+          disabled={selectedIdx === null}
+          className={`
+            w-full py-5 rounded-2xl font-black text-xl transition-all shadow-neo-out
+            ${selectedIdx !== null
+              ? 'bg-accent-secondary text-white hover:scale-[1.02] active:scale-95' 
+              : 'bg-black/10 dark:bg-white/10 text-foreground/40 cursor-not-allowed shadow-none'}
+          `}
+        >
+          Confirm Answer
+        </button>
+      ) : (
+        <button
+          onClick={handleNext}
+          className="w-full py-5 rounded-2xl font-black text-xl bg-accent-secondary text-white hover:scale-[1.02] active:scale-95 shadow-neo-out animate-in fade-in zoom-in duration-500 ring-4 ring-accent-secondary/30 flex items-center justify-center gap-2 group"
+        >
+          Continue
+          <Check className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+        </button>
+      )}
     </div>
   );
 };
