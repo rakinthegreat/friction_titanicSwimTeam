@@ -30,8 +30,11 @@
 - [x] Stabilize **2048** logic (Movement, Merging, Scaling)
 - [x] Implement **Wait-Time Activity Engine** (Interest-matched content)
 - [x] Create **Inline Suggestion UI** for Dashboard (3 random options)
-- [x] Implement **Dynamic Difficulty Scaling** (Sudoku blanks vs time)
-- [x] Implement **Scalable Game Grids** (Maze size vs time)
+- [x] Implement **Dynamic Difficulty Scaling** (Sudoku/Maze consistency)
+- [x] Implement **Scalable Session Length** (Trivia/Rapid Math vs time)
+- [x] Implement **Persistent Suggestion Engine** (Lock/Restore logic)
+- [x] Create **Daily Completion Ticks** (ShieldCheck UI)
+- [/] Finalize **Back-to-Dashboard** state restoration for all games
 - [ ] Implement "Time Reclaimed" animations and interactive XP leveling system
 - [ ] Develop **Vocab Flashcards** module (Gemini-powered)
 - [ ] Integrate **Haptic Feedback** for Android via Capacitor Haptics

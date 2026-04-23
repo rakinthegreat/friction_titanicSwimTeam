@@ -88,12 +88,16 @@ export default function RapidMathPage() {
   useEffect(() => {
     if (gameState === 'finished') {
       updateStats(2, 'rapid-math', score);
+      useUserStore.getState().completeActivity('rapid-math');
     }
   }, [gameState, score, updateStats]);
 
   const startGame = () => {
     setScore(0);
-    setTotalTime(30);
+    const params = new URLSearchParams(window.location.search);
+    const time = parseInt(params.get('time') || '1');
+    const scaledTime = Math.min(180, Math.max(30, time * 30)); // 1m -> 30s, 5m -> 150s
+    setTotalTime(scaledTime);
     setGameState('playing');
     setFeedback(null);
     setIsShaking(false);

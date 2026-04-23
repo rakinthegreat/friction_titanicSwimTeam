@@ -20,14 +20,46 @@ export default function Home() {
   const updateStats = useUserStore((state) => state.updateStats);
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
   const [suggestions, setSuggestions] = useState<typeof ACTIVITIES>([]);
+  const [suggestionLock, setSuggestionLock] = useState<Record<number, typeof ACTIVITIES>>({});
+  
+  const dailyCompleted = useUserStore(state => state.dailyCompletedActivities);
+  const lastDate = useUserStore(state => state.lastCompletedDate);
+
+  useEffect(() => {
+    setMounted(true);
+    const savedDuration = localStorage.getItem('selectedDuration');
+    const savedSuggestions = localStorage.getItem('suggestions');
+    const savedLock = localStorage.getItem('suggestionLock');
+    if (savedDuration) setSelectedDuration(parseInt(savedDuration));
+    if (savedSuggestions) setSuggestions(JSON.parse(savedSuggestions));
+    if (savedLock) setSuggestionLock(JSON.parse(savedLock));
+
+    const today = new Date().toISOString().split('T')[0];
+    if (lastDate !== today) {
+      setSuggestions([]);
+      setSelectedDuration(null);
+      setSuggestionLock({});
+      localStorage.removeItem('selectedDuration');
+      localStorage.removeItem('suggestions');
+      localStorage.removeItem('suggestionLock');
+    }
+  }, [lastDate]);
+
+  useEffect(() => {
+    if (selectedDuration) localStorage.setItem('selectedDuration', selectedDuration.toString());
+    if (suggestions.length > 0) localStorage.setItem('suggestions', JSON.stringify(suggestions));
+    if (Object.keys(suggestionLock).length > 0) localStorage.setItem('suggestionLock', JSON.stringify(suggestionLock));
+  }, [selectedDuration, suggestions, suggestionLock]);
+
+  const anySuggestionCompleted = suggestions.length > 0 && suggestions.some(a => dailyCompleted.includes(a.id));
+  const allSuggestionsCompleted = suggestions.length > 0 && suggestions.every(a => dailyCompleted.includes(a.id));
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const handleActivityComplete = (xp: number) => {
-    // XP could be used for leveling, but for now we update time reclaimed
-    updateStats(5); // Defaulting to 5 minutes for WordLess session
+    updateStats(5);
     setActiveActivity(null);
   };
 
@@ -97,21 +129,44 @@ export default function Home() {
                 <button
                   key={mins}
                   onClick={() => {
-                    const filtered = ACTIVITIES.filter(a => 
+                    // Lock entire logic if at least one activity from ANY set is completed
+                    // Wait, user said "until an activity is completed".
+                    // I will stick to current behavior: once you start one, you're locked into THAT session.
+                    if (anySuggestionCompleted && !allSuggestionsCompleted) {
+                      return; 
+                    }
+
+                    // Check if we have locked suggestions for THIS duration
+                    if (suggestionLock[mins] && !allSuggestionsCompleted) {
+                      setSuggestions(suggestionLock[mins]);
+                      setSelectedDuration(mins);
+                      return;
+                    }
+
+                    const pool = ACTIVITIES.filter(a => 
                       a.minTime <= mins && 
                       a.maxTime >= mins &&
                       (a.interests.some(i => interests.includes(i)) || interests.length === 0)
                     );
-                    const pool = filtered.length > 0 ? filtered : ACTIVITIES.filter(a => a.minTime <= mins && a.maxTime >= mins);
-                    const shuffled = [...pool].sort(() => 0.5 - Math.random());
-                    setSuggestions(shuffled.slice(0, 3));
+                    
+                    const availablePool = pool.filter(a => !dailyCompleted.includes(a.id));
+                    const finalPool = availablePool.length >= 3 ? availablePool : pool;
+
+                    const shuffled = [...finalPool].sort(() => 0.5 - Math.random());
+                    const newSuggestions = shuffled.slice(0, 3);
+                    
+                    setSuggestions(newSuggestions);
                     setSelectedDuration(mins);
+                    
+                    // Save to lock
+                    setSuggestionLock(prev => ({ ...prev, [mins]: newSuggestions }));
                   }}
                   className={`rounded-2xl px-6 py-4 font-black transition-all ${
                     selectedDuration === mins 
                     ? "bg-white text-accent shadow-neo-in scale-95" 
-                    : "bg-accent shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105"
+                    : (anySuggestionCompleted && !allSuggestionsCompleted) ? "bg-accent/40 cursor-not-allowed opacity-50 shadow-none" : "bg-accent shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105"
                   }`}
+                  disabled={anySuggestionCompleted && !allSuggestionsCompleted && selectedDuration !== mins}
                 >
                   {mins}m
                 </button>
@@ -130,9 +185,18 @@ export default function Home() {
                       href={`${activity.href}?time=${selectedDuration}`}
                       className="group"
                     >
-                      <div className="h-full p-4 bg-white/10 rounded-3xl border border-white/5 hover:bg-white/20 transition-all hover:-translate-y-1">
+                      <div className="h-full p-4 bg-white/10 rounded-3xl border border-white/5 hover:bg-white/20 transition-all hover:-translate-y-1 relative">
+                        {dailyCompleted.includes(activity.id) && (
+                          <div className="absolute top-3 right-3 bg-white text-accent rounded-full p-1 shadow-lg z-20">
+                            <ShieldCheck className="w-4 h-4" />
+                          </div>
+                        )}
                         <div className={`w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center mb-3 ${activity.color.replace('text-', 'text-white')}`}>
-                          <activity.icon className="w-5 h-5 text-white" />
+                          {(() => {
+                            const original = ACTIVITIES.find(a => a.id === activity.id);
+                            const Icon = original?.icon;
+                            return Icon ? <Icon className="w-5 h-5 text-white" /> : null;
+                          })()}
                         </div>
                         <h3 className="text-sm font-black leading-tight mb-1">{activity.title}</h3>
                         <p className="text-[10px] opacity-60 line-clamp-2 font-medium">{activity.description}</p>

@@ -19,12 +19,9 @@ export default function MazePage() {
   const [goal, setGoal] = useState({ x: SIZE_DEFAULT - 2, y: SIZE_DEFAULT - 2 });
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const time = parseInt(params.get('time') || '10');
-    const s = Math.min(35, Math.max(13, 11 + (Math.floor(time / 2) * 2)));
-    const finalSize = s % 2 === 0 ? s + 1 : s;
-    setSize(finalSize);
-    setGoal({ x: finalSize - 2, y: finalSize - 2 });
+    // Maze is now fixed size
+    setSize(SIZE_DEFAULT);
+    setGoal({ x: SIZE_DEFAULT - 2, y: SIZE_DEFAULT - 2 });
   }, []);
 
   const [won, setWon] = useState(false);
@@ -98,6 +95,7 @@ export default function MazePage() {
         if (isGoal) {
           setWon(true);
           updateStats(3);
+          useUserStore.getState().completeActivity('maze');
         }
         setMoves(m => m + 0.5); // Manual halving to fix double-count
         return { x: nx, y: ny };

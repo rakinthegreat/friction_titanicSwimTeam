@@ -9,6 +9,7 @@ import { LessonProgressBar } from '@/components/learn/LessonProgressBar';
 import geographyData from '@/stored-data/geography.json';
 import bangladeshData from '@/stored-data/bangladesh.json';
 import internationalData from '@/stored-data/international.json';
+import { useUserStore } from '@/store/userStore';
 
 type Category = 'bangladesh' | 'international' | 'geography' | null;
 
@@ -27,6 +28,7 @@ const DESERTS = ["Sahara Desert", "Arabian Desert", "Gobi Desert", "Kalahari Des
 
 export default function TriviaPage() {
   const router = useRouter();
+  const updateStats = useUserStore((state) => state.updateStats);
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'results'>('menu');
   const [category, setCategory] = useState<Category>(null);
   
@@ -154,7 +156,10 @@ export default function TriviaPage() {
     setCategory(selectedCategory);
     setGameState('playing');
     setScore(0);
-    setTimeLeft(60);
+    const params = new URLSearchParams(window.location.search);
+    const time = parseInt(params.get('time') || '1');
+    const scaledTime = Math.min(300, Math.max(60, time * 60)); 
+    setTimeLeft(scaledTime);
     setIsShaking(false);
     setFeedback(null);
     loadNextQuestion(selectedCategory);
@@ -166,6 +171,7 @@ export default function TriviaPage() {
 
     if (timeLeft <= 0) {
       setGameState('results');
+      useUserStore.getState().completeActivity('trivia');
       return;
     }
 

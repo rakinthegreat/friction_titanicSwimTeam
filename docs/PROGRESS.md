@@ -77,13 +77,15 @@
 ### Phase 6: Intelligence & Personalization (Completed 2026-04-23)
 - Developed **Wait-Time Activity Engine** (`activities.ts`) with interest-to-time mapping.
 - Implemented **Inline Suggestion UI** on Dashboard for frictionless activity selection.
-- Developed **Dynamic Difficulty Scaling** for Sudoku (empty cell calculation based on wait time).
-- Developed **Scalable Maze Grid** (proportional dimensions from 15x15 to 35x35 based on wait time).
-- Refactored **Native Bridge** with web-safe mocks for seamless PC development.
+- Developed **Dynamic Difficulty Scaling** for Sudoku (fixed 40 blanks) and Maze (fixed 23x23).
+- Implemented **Time-Based Scaling** for Trivia and Rapid Math (session length matches wait time).
+- Developed **Persistent Suggestion Engine** with localStorage and duration-based locking.
+- Implemented **Daily Completion Tracking** with UI ticks and activity pool refreshing.
 
 ---
 
 ### Phase 7: Haptics, Leveling & Production (In Progress)
 - Auditing micro-interactions for "Premium" feel across all mini-games.
 - Planning **XP Leveling System** and "Time Reclaimed" progress animations.
+- Finalizing **Back Navigation** logic to ensure dashboard state preservation.
 - Preparing for production Android build and manifest optimization.

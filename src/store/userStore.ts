@@ -44,6 +44,9 @@ interface UserState {
   customScienceConcepts: any[];
   scienceReflections: LearningSession[];
 
+  dailyCompletedActivities: string[];
+  lastCompletedDate: string | null;
+
   setInterests: (interests: string[]) => void;
   updateStats: (minutes: number, gameId?: string, score?: number) => void;
   setDarkMode: (enabled: boolean) => void;
@@ -57,6 +60,8 @@ interface UserState {
   completeScienceConcept: (name: string) => void;
   addCustomScienceConcepts: (concepts: any[]) => void;
   addScienceReflection: (session: Omit<LearningSession, 'timestamp'>) => void;
+
+  completeActivity: (id: string) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -83,6 +88,9 @@ export const useUserStore = create<UserState>()(
       completedScienceConcepts: [],
       customScienceConcepts: [],
       scienceReflections: [],
+
+      dailyCompletedActivities: [],
+      lastCompletedDate: null,
 
       setInterests: (interests) => set({ interests }),
       updateStats: (minutes, gameId, score) =>
@@ -167,6 +175,20 @@ export const useUserStore = create<UserState>()(
             ...state.scienceReflections,
           ],
         })),
+
+      completeActivity: (id) =>
+        set((state) => {
+          const today = new Date().toISOString().split('T')[0];
+          const isNewDay = state.lastCompletedDate !== today;
+          const currentList = isNewDay ? [] : state.dailyCompletedActivities;
+          
+          if (currentList.includes(id)) return state;
+          
+          return {
+            dailyCompletedActivities: [...currentList, id],
+            lastCompletedDate: today,
+          };
+        }),
     }),
     {
       name: 'user-storage',

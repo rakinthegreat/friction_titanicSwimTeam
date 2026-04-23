@@ -23,8 +23,8 @@ export default function SudokuPage() {
     setIsLoading(true);
     const params = new URLSearchParams(window.location.search);
     const time = parseInt(params.get('time') || '10');
-    // Scale: 5m -> 32 empty, 25m -> 62 empty
-    const blanks = Math.min(65, Math.max(30, 25 + (time * 1.5)));
+    // FIXED: Sudoku is now 20m+ fixed difficulty
+    const blanks = 40;
 
     setTimeout(() => {
       const { puzzle } = generateSudoku(Math.floor(blanks));
@@ -70,6 +70,7 @@ export default function SudokuPage() {
       setIsWon(true);
       setSelectedCell(null);
       updateStats(15, 'sudoku');
+      useUserStore.getState().completeActivity('sudoku');
     }
   };
 
