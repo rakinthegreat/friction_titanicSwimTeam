@@ -26,6 +26,7 @@ interface UserState {
     totalMinutesSaved: number;
     activitiesCompleted: number;
     streakDays: number;
+    lastActivityDate: string | null;
     highScores: Record<string, number>;
   };
   preferences: {
@@ -67,6 +68,7 @@ export const useUserStore = create<UserState>()(
         totalMinutesSaved: 0,
         activitiesCompleted: 0,
         streakDays: 0,
+        lastActivityDate: null,
         highScores: {},
       },
       preferences: {
@@ -93,11 +95,32 @@ export const useUserStore = create<UserState>()(
             }
           }
 
+          // Streak logic
+          const today = new Date().toISOString().split('T')[0];
+          let newStreak = state.stats.streakDays;
+
+          if (state.stats.lastActivityDate === null) {
+            newStreak = 1;
+          } else if (state.stats.lastActivityDate !== today) {
+            const last = new Date(state.stats.lastActivityDate);
+            const now = new Date(today);
+            const diffTime = Math.abs(now.getTime() - last.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) {
+              newStreak += 1;
+            } else {
+              newStreak = 1;
+            }
+          }
+
           return {
             stats: {
               ...state.stats,
               totalMinutesSaved: state.stats.totalMinutesSaved + minutes,
               activitiesCompleted: state.stats.activitiesCompleted + 1,
+              streakDays: newStreak,
+              lastActivityDate: today,
               highScores: newHighScores,
             },
           };

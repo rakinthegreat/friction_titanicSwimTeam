@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useUserStore } from '@/store/userStore';
 
 type Grid = number[][];
 
@@ -16,6 +17,7 @@ export default function Game2048Page() {
   const [gameOver, setGameOver] = useState(false);
   const [hasWon, setHasWon] = useState(false);
   const [variations, setVariations] = useState<{r: number, ox: number, oy: number}[]>([]);
+  const updateStats = useUserStore((state) => state.updateStats);
   
   const touchStart = useRef<{ x: number, y: number } | null>(null);
 
@@ -124,9 +126,12 @@ export default function Game2048Page() {
       const finalGrid = addRandomTile(newGrid);
       setGrid(finalGrid);
       setScore(currentScore);
-      if (isGameOver(finalGrid)) setGameOver(true);
+      if (isGameOver(finalGrid)) {
+        setGameOver(true);
+        updateStats(10, '2048', currentScore);
+      }   
     }
-  }, [grid, gameOver, score]);
+  }, [grid, gameOver, score, updateStats]);
 
   const isGameOver = (g: Grid): boolean => {
     for (let r = 0; r < 4; r++) {

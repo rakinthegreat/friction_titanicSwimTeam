@@ -43,6 +43,7 @@ interface MemoryCard {
 export default function MemoryMatchPage() {
   const router = useRouter();
   const interests = useUserStore((state) => state.interests);
+  const updateStats = useUserStore((state) => state.updateStats);
   const [board, setBoard] = useState<MemoryCard[]>([]);
   const [flipped, setFlipped] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
@@ -134,6 +135,7 @@ export default function MemoryMatchPage() {
 
           if (matchedBoard.every(c => c.isMatched)) {
             setIsWon(true);
+            updateStats(10, 'memory-match');
           }
         }, 500);
       } else {

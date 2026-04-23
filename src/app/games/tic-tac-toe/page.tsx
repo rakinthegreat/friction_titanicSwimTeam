@@ -5,11 +5,13 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useUserStore } from '@/store/userStore';
 
 type Player = 'X' | 'O' | null;
 
 export default function TicTacToePage() {
   const router = useRouter();
+  const updateStats = useUserStore((state) => state.updateStats);
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState<boolean>(true);
   const [winner, setWinner] = useState<Player | 'Draw' | null>(null);
@@ -87,6 +89,9 @@ export default function TicTacToePage() {
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
       setWinner(newWinner);
+      if (newWinner === 'X') {
+        updateStats(5, 'tictactoe');
+      }
     } else {
       setIsXNext(!isXNext);
     }

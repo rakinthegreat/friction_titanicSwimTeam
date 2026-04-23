@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { ArrowLeft, RotateCcw, Delete } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { generateSudoku, findConflicts, SudokuBoard } from '@/lib/sudoku';
+import { useUserStore } from '@/store/userStore';
 
 export default function SudokuPage() {
   const router = useRouter();
@@ -15,6 +16,8 @@ export default function SudokuPage() {
   const [conflicts, setConflicts] = useState<{ row: number, col: number }[]>([]);
   const [isWon, setIsWon] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const updateStats = useUserStore((state) => state.updateStats);
+  const [grid, setGrid] = useState<number[][]>([]); // Placeholder if needed or use existing board state
 
   const startNewGame = useCallback(() => {
     setIsLoading(true);
@@ -62,6 +65,7 @@ export default function SudokuPage() {
     if (isFull && currentConflicts.length === 0) {
       setIsWon(true);
       setSelectedCell(null);
+      updateStats(15, 'sudoku');
     }
   };
 

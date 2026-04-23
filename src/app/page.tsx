@@ -58,13 +58,6 @@ export default function Home() {
             <h1 className="text-5xl font-extrabold tracking-tight">WaitLess</h1>
           </div>
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex gap-2 mr-2">
-              {interests.map(i => (
-                <span key={i} className="px-3 py-1 bg-accent/10 text-accent rounded-full text-xs font-bold capitalize">
-                  {i}
-                </span>
-              ))}
-            </div>
             <Link
               href="/permissions"
               className="p-3 rounded-2xl bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-accent"
@@ -114,7 +107,7 @@ export default function Home() {
 
           <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
             <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Daily Streak</p>
-            <p className="text-5xl font-black text-accent-secondary">{stats.totalMinutesSaved > 0 ? 1 : 0}<span className="text-xl font-bold text-foreground/20 ml-2 italic">days</span></p>
+            <p className="text-5xl font-black text-accent-secondary">{stats.streakDays}<span className="text-xl font-bold text-foreground/20 ml-2 italic">days</span></p>
           </div>
         </section>
 
