@@ -14,9 +14,13 @@ interface UserState {
     darkMode: boolean;
     blockDoomscrolling: boolean;
   };
+  completedPhilosophyConcepts: string[];
+  customPhilosophyConcepts: any[];
   setInterests: (interests: string[]) => void;
   updateStats: (minutes: number) => void;
   setDarkMode: (enabled: boolean) => void;
+  completePhilosophyConcept: (name: string) => void;
+  addCustomPhilosophyConcepts: (concepts: any[]) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -33,6 +37,8 @@ export const useUserStore = create<UserState>()(
         darkMode: false,
         blockDoomscrolling: false,
       },
+      completedPhilosophyConcepts: [],
+      customPhilosophyConcepts: [],
       setInterests: (interests) => set({ interests }),
       updateStats: (minutes) =>
         set((state) => ({
@@ -45,6 +51,16 @@ export const useUserStore = create<UserState>()(
       setDarkMode: (enabled) =>
         set((state) => ({
           preferences: { ...state.preferences, darkMode: enabled },
+        })),
+      completePhilosophyConcept: (name) =>
+        set((state) => ({
+          completedPhilosophyConcepts: state.completedPhilosophyConcepts.includes(name)
+            ? state.completedPhilosophyConcepts
+            : [...state.completedPhilosophyConcepts, name],
+        })),
+      addCustomPhilosophyConcepts: (concepts) =>
+        set((state) => ({
+          customPhilosophyConcepts: [...state.customPhilosophyConcepts, ...concepts],
         })),
     }),
     {
