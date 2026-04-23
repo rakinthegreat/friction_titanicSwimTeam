@@ -2,6 +2,23 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import localforage from 'localforage';
 
+interface PhilosophySession {
+  conceptName: string;
+  conceptText: string;
+  mcqs: Array<{
+    question: string;
+    userAnswer: string;
+    correctAnswer: string;
+    isCorrect: boolean;
+  }>;
+  reflection: {
+    question: string;
+    answer: string;
+    feedback: string;
+  };
+  timestamp: number;
+}
+
 interface UserState {
   uid: string | null;
   interests: string[];
@@ -17,11 +34,13 @@ interface UserState {
   };
   completedPhilosophyConcepts: string[];
   customPhilosophyConcepts: any[];
+  philosophyReflections: PhilosophySession[]; // Renaming internally or keeping for compatibility
   setInterests: (interests: string[]) => void;
   updateStats: (minutes: number, gameId?: string, score?: number) => void;
   setDarkMode: (enabled: boolean) => void;
   completePhilosophyConcept: (name: string) => void;
   addCustomPhilosophyConcepts: (concepts: any[]) => void;
+  addPhilosophyReflection: (session: Omit<PhilosophySession, 'timestamp'>) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -41,6 +60,7 @@ export const useUserStore = create<UserState>()(
       },
       completedPhilosophyConcepts: [],
       customPhilosophyConcepts: [],
+      philosophyReflections: [],
       setInterests: (interests) => set({ interests }),
       updateStats: (minutes, gameId, score) =>
         set((state) => {
@@ -74,6 +94,13 @@ export const useUserStore = create<UserState>()(
       addCustomPhilosophyConcepts: (concepts) =>
         set((state) => ({
           customPhilosophyConcepts: [...state.customPhilosophyConcepts, ...concepts],
+        })),
+      addPhilosophyReflection: (session) =>
+        set((state) => ({
+          philosophyReflections: [
+            { ...session, timestamp: Date.now() },
+            ...state.philosophyReflections,
+          ],
         })),
     }),
     {

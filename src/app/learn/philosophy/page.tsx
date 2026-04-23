@@ -10,12 +10,12 @@ import { useRouter } from 'next/navigation';
 import { concepts } from './topics';
 import { useUserStore } from '@/store/userStore';
 import { generateConcepts } from './actions';
-import { Loader2 } from 'lucide-react';
+import { Loader2, BookOpen, History, Sparkles, ChevronLeft, Calendar } from 'lucide-react';
 
-type Step = 
+type Step =
   | { type: 'concept'; title: string; description: string; conceptName: string; }
   | { type: 'mcq'; question: string; options: any[]; conceptName: string; }
-  | { type: 'interpret'; prompt: string; context: string; conceptName: string; };
+  | { type: 'interpret'; prompt: string; context: string; conceptName: string; description: string; };
 
 export default function PhilosophyModule() {
   const router = useRouter();
@@ -26,8 +26,12 @@ export default function PhilosophyModule() {
 
   const completePhilosophyConcept = useUserStore(state => state.completePhilosophyConcept);
   const addCustomPhilosophyConcepts = useUserStore(state => state.addCustomPhilosophyConcepts);
+  const addPhilosophyReflection = useUserStore(state => state.addPhilosophyReflection);
+  const philosophyReflections = useUserStore(state => state.philosophyReflections);
   const interests = useUserStore(state => state.interests);
 
+  const [viewMode, setViewMode] = useState<'menu' | 'learn' | 'review'>('menu');
+  const [currentSessionMCQs, setCurrentSessionMCQs] = useState<any[]>([]);
   const [sessionConcepts, setSessionConcepts] = useState<any[]>([]);
 
   React.useEffect(() => {
@@ -62,7 +66,8 @@ export default function PhilosophyModule() {
         type: 'interpret' as const,
         prompt: (concept as any)["question 3"].question_body,
         context: concept.concept_name,
-        conceptName: concept.concept_name
+        conceptName: concept.concept_name,
+        description: concept.concept_text
       }
     ]);
   }, [sessionConcepts]);
@@ -85,7 +90,7 @@ export default function PhilosophyModule() {
     setIsGenerating(true);
     setError(null);
     const result = await generateConcepts(interests);
-    
+
     if (result.success && result.concepts) {
       addCustomPhilosophyConcepts(result.concepts);
       setSessionConcepts(result.concepts);
@@ -100,14 +105,170 @@ export default function PhilosophyModule() {
 
   if (!mounted) return null;
 
+  if (viewMode === 'menu') {
+    return (
+      <main className="min-h-screen max-w-4xl mx-auto p-6 flex flex-col justify-center space-y-12 animate-in fade-in duration-700">
+        <div className="space-y-4 text-center">
+          <h1 className="text-6xl font-black tracking-tighter text-foreground italic">
+            The Inner <span className="text-accent-secondary">Sanctum</span>
+          </h1>
+          <p className="text-xl text-foreground/60 font-medium max-w-xl mx-auto">
+            Deepen your understanding of existence through guided exploration and reflective wisdom.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <button
+            onClick={() => setViewMode('learn')}
+            className="group relative p-1 rounded-[3rem] bg-gradient-to-br from-accent-secondary to-accent transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out"
+          >
+            <div className="bg-card rounded-[2.8rem] p-10 h-full flex flex-col items-center text-center space-y-6">
+              <div className="w-20 h-20 bg-accent-secondary/10 text-accent-secondary rounded-3xl flex items-center justify-center group-hover:rotate-12 transition-transform">
+                <BookOpen size={40} strokeWidth={2.5} />
+              </div>
+              <div>
+                <h2 className="text-3xl font-black mb-2">Start Learning</h2>
+                <p className="text-foreground/60 font-bold">Discover 10 new philosophical concepts curated for you.</p>
+              </div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setViewMode('review')}
+            className="group relative p-1 rounded-[3rem] bg-black/5 dark:bg-white/5 transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out"
+          >
+            <div className="bg-card rounded-[2.8rem] p-10 h-full flex flex-col items-center text-center space-y-6">
+              <div className="w-20 h-20 bg-foreground/5 text-foreground/40 rounded-3xl flex items-center justify-center group-hover:-rotate-12 transition-transform">
+                <History size={40} strokeWidth={2.5} />
+              </div>
+              <div>
+                <h2 className="text-3xl font-black mb-2">Review Wisdom</h2>
+                <p className="text-foreground/60 font-bold">Revisit your past reflections and AI-guided insights.</p>
+              </div>
+              {philosophyReflections.length > 0 && (
+                <div className="px-4 py-1 bg-accent-secondary/20 text-accent-secondary rounded-full text-xs font-black uppercase tracking-widest">
+                  {philosophyReflections.length} Reflections Saved
+                </div>
+              )}
+            </div>
+          </button>
+        </div>
+
+        <button
+          onClick={() => router.push('/learn')}
+          className="mx-auto flex items-center gap-2 text-foreground/40 hover:text-foreground transition-colors font-black uppercase tracking-widest text-sm"
+        >
+          <ChevronLeft size={20} />
+          Back to Hub
+        </button>
+      </main>
+    );
+  }
+
+  if (viewMode === 'review') {
+    return (
+      <main className="min-h-screen max-w-3xl mx-auto p-6 flex flex-col space-y-8 animate-in slide-in-from-right-8 duration-500">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setViewMode('menu')}
+            className="p-4 bg-card rounded-2xl shadow-neo-out hover:scale-105 active:scale-95 transition-all"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          <h1 className="text-3xl font-black tracking-tighter">Your Wisdom</h1>
+          <div className="w-12" /> {/* Spacer */}
+        </div>
+
+        {philosophyReflections.length === 0 ? (
+          <div className="flex-1 flex flex-col items-center justify-center space-y-6 opacity-50">
+            <History size={80} strokeWidth={1} />
+            <p className="text-xl font-bold">No reflections saved yet.</p>
+            <button
+              onClick={() => setViewMode('learn')}
+              className="px-8 py-4 bg-accent-secondary text-white rounded-2xl font-black shadow-neo-out hover:scale-105 transition-all"
+            >
+              Begin Your Journey
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-12 pb-20">
+            {philosophyReflections.map((ref, idx) => (
+              <div key={idx} className="space-y-6 animate-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: `${idx * 100}ms` }}>
+                <div className="flex items-center gap-4">
+                  <div className="h-px flex-1 bg-foreground/10" />
+                  <div className="flex items-center gap-2 text-foreground/40 font-black uppercase tracking-widest text-xs">
+                    <Calendar size={14} />
+                    {new Date(ref.timestamp).toLocaleDateString()}
+                  </div>
+                  <div className="h-px flex-1 bg-foreground/10" />
+                </div>
+
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <h3 className="text-xs font-black text-accent-secondary uppercase tracking-widest">{ref.conceptName}</h3>
+                    <div className="p-4 bg-card rounded-2xl shadow-neo-in opacity-60">
+                      <p className="text-sm font-medium leading-relaxed text-foreground/70">{ref.conceptText}</p>
+                    </div>
+                  </div>
+
+                  {/* MCQ Results */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {ref.mcqs.map((mcq, mIdx) => (
+                      <Card key={mIdx} className={`p-4 border-none shadow-neo-out rounded-2xl ${mcq.isCorrect ? 'bg-green-500/5' : 'bg-red-500/5'}`}>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-foreground/30 mb-2">Question {mIdx + 1}</p>
+                        <p className="text-sm font-bold mb-3 line-clamp-2">{mcq.question}</p>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full ${mcq.isCorrect ? 'bg-green-500' : 'bg-red-500'}`} />
+                            <p className="text-xs font-bold truncate">You: {mcq.userAnswer}</p>
+                          </div>
+                          {!mcq.isCorrect && (
+                            <p className="text-[10px] font-black text-green-500 uppercase ml-4">Correct: {mcq.correctAnswer}</p>
+                          )}
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+
+                  <div className="grid gap-4">
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-black text-foreground/30 uppercase tracking-[0.2em] ml-2">Reflection: {ref.reflection.question}</p>
+                      <Card className="p-6 bg-card border-none shadow-neo-in opacity-80">
+                        <p className="text-sm font-black text-foreground/30 uppercase tracking-widest mb-2">Your Thought</p>
+                        <p className="text-lg font-bold text-foreground/70 leading-relaxed italic">"{ref.reflection.answer}"</p>
+                      </Card>
+                    </div>
+
+                    <Card className="p-6 bg-accent-secondary/5 border-2 border-accent-secondary/10 rounded-[3rem] relative overflow-hidden">
+                      <Sparkles className="absolute -top-6 -right-6 w-32 h-32 text-accent-secondary/5 rotate-12" />
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="p-1.5 bg-accent-secondary text-white rounded-lg">
+                          <Sparkles size={14} />
+                        </div>
+                        <span className="font-black text-accent-secondary uppercase tracking-widest text-[10px]">AI Insight</span>
+                      </div>
+                      <p className="text-lg font-bold text-foreground/90 leading-relaxed">
+                        {ref.reflection.feedback}
+                      </p>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
+    );
+  }
+
   if (sessionConcepts.length === 0) {
     return (
       <main className="min-h-screen max-w-2xl mx-auto p-6 flex flex-col justify-center items-center space-y-8 animate-in zoom-in-95 duration-700">
         <div className="w-32 h-32 bg-accent-secondary/20 text-accent-secondary rounded-[2.5rem] flex items-center justify-center shadow-neo-out relative overflow-hidden">
           {isGenerating ? (
-             <Loader2 className="w-16 h-16 animate-spin" />
+            <Loader2 className="w-16 h-16 animate-spin" />
           ) : (
-             <Trophy className="w-16 h-16" />
+            <Trophy className="w-16 h-16" />
           )}
         </div>
         <div className="text-center space-y-2">
@@ -115,28 +276,27 @@ export default function PhilosophyModule() {
             {isGenerating ? "Curating Knowledge..." : "Thought Master"}
           </h1>
           <p className="text-foreground/70 text-lg font-medium max-w-md">
-            {isGenerating 
-              ? "DeepSeek AI is analyzing the universe to bring you 10 brand new philosophical concepts."
+            {isGenerating
+              ? "Our AI is analyzing the universe to bring you 10 brand new philosophical concepts."
               : "You've explored every concept in our current library. You're a true philosopher!"}
           </p>
           {error && <p className="text-red-500 font-bold mt-4">{error}</p>}
         </div>
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <button 
+          <button
             onClick={handleGenerate}
             disabled={isGenerating}
-            className={`px-8 py-5 rounded-2xl font-black text-xl shadow-neo-out transition-all ${
-              isGenerating ? 'bg-card text-foreground/50 opacity-50 cursor-not-allowed' : 'bg-accent-secondary text-white hover:scale-105 active:scale-95'
-            }`}
+            className={`px-8 py-5 rounded-2xl font-black text-xl shadow-neo-out transition-all ${isGenerating ? 'bg-card text-foreground/50 opacity-50 cursor-not-allowed' : 'bg-accent-secondary text-white hover:scale-105 active:scale-95'
+              }`}
           >
             {isGenerating ? 'Synthesizing...' : 'Generate More Concepts'}
           </button>
           {!isGenerating && (
-            <button 
-              onClick={() => router.push('/learn')}
+            <button
+              onClick={() => setViewMode('menu')}
               className="px-8 py-5 bg-card text-foreground rounded-2xl font-black text-xl shadow-neo-out hover:scale-105 active:scale-95 transition-all"
             >
-              Return Home
+              Return to Sanctum
             </button>
           )}
         </div>
@@ -156,11 +316,11 @@ export default function PhilosophyModule() {
             You've mastered {sessionConcepts.length} new concepts in this session.
           </p>
         </div>
-        <button 
-          onClick={() => router.push('/learn')}
+        <button
+          onClick={() => setViewMode('menu')}
           className="w-full sm:w-auto px-12 py-5 bg-accent-secondary text-white rounded-2xl font-black text-xl shadow-neo-out hover:scale-105 active:scale-95 transition-all"
         >
-          Return to Learning
+          Return to Sanctum
         </button>
       </main>
     );
@@ -168,8 +328,13 @@ export default function PhilosophyModule() {
 
   return (
     <main className="min-h-screen max-w-2xl mx-auto p-4 flex flex-col">
-      <div className="pt-4 px-2">
-        <LessonProgressBar current={currentIndex} total={lessonData.length} />
+      <div className="pt-4 px-2 flex items-center gap-4">
+        <button onClick={() => setViewMode('menu')} className="p-2 hover:bg-card rounded-xl transition-colors">
+          <ChevronLeft size={20} />
+        </button>
+        <div className="flex-1">
+          <LessonProgressBar current={currentIndex} total={lessonData.length} />
+        </div>
       </div>
 
       <div className="flex-1 mt-8 pb-12 px-2">
@@ -181,7 +346,7 @@ export default function PhilosophyModule() {
               </h2>
               <h3 className="text-5xl font-black tracking-tighter text-foreground">{currentStep.title}</h3>
             </div>
-            
+
             <Card className="p-8 space-y-6 border-none bg-card shadow-neo-out relative overflow-hidden rounded-[3rem]">
               <Brain className="absolute -top-10 -right-10 w-48 h-48 text-accent-secondary/5 rotate-12" />
               <p className="text-xl font-bold leading-relaxed text-foreground/80 relative z-10">
@@ -207,20 +372,42 @@ export default function PhilosophyModule() {
         )}
 
         {currentStep.type === 'mcq' && (
-          <MCQInteraction 
+          <MCQInteraction
             question={currentStep.question}
             options={currentStep.options}
-            onSubmit={(isCorrect) => {
+            onSubmit={(isCorrect, selected, correct) => {
+              setCurrentSessionMCQs(prev => [
+                ...prev,
+                {
+                  question: currentStep.question,
+                  userAnswer: selected,
+                  correctAnswer: correct,
+                  isCorrect: isCorrect
+                }
+              ]);
               handleNext();
             }}
           />
         )}
 
         {currentStep.type === 'interpret' && (
-          <FreeResponseInteraction 
+          <FreeResponseInteraction
             prompt={currentStep.prompt}
             context={currentStep.context}
-            onSubmit={(resp) => {
+            conceptName={currentStep.conceptName}
+            conceptText={currentStep.description}
+            onSubmit={(resp, feedback) => {
+              addPhilosophyReflection({
+                conceptName: currentStep.conceptName,
+                conceptText: currentStep.description,
+                mcqs: currentSessionMCQs,
+                reflection: {
+                  question: currentStep.prompt,
+                  answer: resp,
+                  feedback: feedback
+                }
+              });
+              setCurrentSessionMCQs([]);
               completePhilosophyConcept(currentStep.conceptName);
               handleNext();
             }}

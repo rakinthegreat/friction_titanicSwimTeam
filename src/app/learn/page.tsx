@@ -13,8 +13,8 @@ export default function LearnDirectoryPage() {
 
   const modules = [
     {
-      title: 'English Literature & Vocab',
-      description: 'Expand your vocabulary and interpret classic quotes.',
+      title: 'English Language & Vocab',
+      description: 'Expand your vocabulary and learn grammar.',
       icon: <BookOpen className="w-8 h-8" />,
       href: '/learn/english',
       color: 'text-accent'

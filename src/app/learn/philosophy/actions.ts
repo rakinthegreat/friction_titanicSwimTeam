@@ -93,3 +93,41 @@ export async function generateConcepts(interests: string[] = []) {
     return { success: false, error: error.message || 'Unknown error occurred.' };
   }
 }
+
+export async function getPhilosophyFeedback(conceptName: string, conceptText: string, question: string, userAnswer: string) {
+  try {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error('GEMINI_API_KEY is not configured.');
+    }
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: "gemini-3.1-flash-lite-preview",
+    });
+
+    const prompt = `
+      You are a wise and encouraging philosophical mentor. 
+      A student is learning about the concept: "${conceptName}".
+      Concept Context: "${conceptText}"
+      
+      The student was asked this question: "${question}"
+      The student provided this answer: "${userAnswer}"
+      
+      Provide a brief (2-3 sentences) feedback that:
+      1. Acknowledges their specific thought or interpretation.
+      2. Offers a deeper philosophical insight related to their answer and the concept.
+      3. Is encouraging and promotes further reflection.
+      
+      Keep the tone warm, intellectual, and inspiring. Avoid being overly critical.
+    `;
+
+    const result = await model.generateContent(prompt);
+    const feedback = result.response.text();
+
+    return { success: true, feedback };
+  } catch (error: any) {
+    console.error("Feedback generation failed:", error);
+    return { success: false, error: "I couldn't generate feedback right now, but your reflection is valuable!" };
+  }
+}

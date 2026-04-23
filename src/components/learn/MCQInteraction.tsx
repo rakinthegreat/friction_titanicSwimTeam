@@ -10,7 +10,7 @@ interface Option {
 interface MCQInteractionProps {
   question: string;
   options: Option[];
-  onSubmit: (isCorrect: boolean) => void;
+  onSubmit: (isCorrect: boolean, selectedOption: string, correctOption: string) => void;
 }
 
 export const MCQInteraction = ({ question, options, onSubmit }: MCQInteractionProps) => {
@@ -29,7 +29,9 @@ export const MCQInteraction = ({ question, options, onSubmit }: MCQInteractionPr
 
   const handleNext = () => {
     if (selectedIdx === null) return;
-    onSubmit(options[selectedIdx].is_correct);
+    const selected = options[selectedIdx];
+    const correct = options.find(o => o.is_correct) || options[0];
+    onSubmit(selected.is_correct, selected.optiontext, correct.optiontext);
     setSelectedIdx(null);
     setIsSubmitted(false);
   };
