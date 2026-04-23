@@ -86,7 +86,7 @@ export default function PermissionsPage() {
       <header className="flex justify-between items-center">
         <div className="flex items-center">
           <button 
-            onClick={() => router.push('/profile')}
+            onClick={() => router.push('/')}
             className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors mr-2"
           >
             <ArrowLeft className="w-6 h-6" />

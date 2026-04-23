@@ -3,14 +3,15 @@
 import { useUserStore } from "@/store/userStore";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useFirebaseAuth } from "@/hooks/useFirebaseAuth";
-import { LogOut, ArrowLeft, ShieldCheck } from "lucide-react";
+import { LogOut, ArrowLeft, CloudUpload } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Profile() {
   const stats = useUserStore((state) => state.stats);
   const interests = useUserStore((state) => state.interests);
-  const { logout, isLoading } = useFirebaseAuth();
+  const { logout, signInWithGoogle, isLoading } = useFirebaseAuth();
+  const uid = useUserStore((state) => state.uid);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -55,17 +56,35 @@ export default function Profile() {
             )) : <p className="text-foreground/40 text-sm">No interests added yet.</p>}
           </div>
         </div>
+
+        <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 md:col-span-2 group">
+          <div className="flex justify-between items-start">
+            <div className="space-y-1">
+              <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Data Sync</p>
+              <h3 className="text-xl font-black">{uid ? 'Cloud Synced' : 'Cloud Backup'}</h3>
+              <p className="text-sm text-foreground/60 font-medium">
+                {uid ? 'Your data is being backed up to Firebase.' : 'Keep your progress safe across devices.'}
+              </p>
+            </div>
+            <div className={`p-3 rounded-2xl ${uid ? 'bg-accent/20 text-accent' : 'bg-accent/10 text-accent'} group-hover:scale-110 transition-transform`}>
+              <CloudUpload size={24} />
+            </div>
+          </div>
+          <button 
+            onClick={uid ? undefined : signInWithGoogle}
+            disabled={isLoading}
+            className={`w-full py-4 rounded-2xl font-black shadow-neo-out transition-all ${
+              uid 
+                ? 'bg-card text-accent opacity-50 cursor-default' 
+                : 'bg-accent text-white hover:scale-[1.02] active:scale-[0.98]'
+            }`}
+          >
+            {isLoading ? 'Connecting...' : uid ? 'Backup Active' : 'Sign in to Backup'}
+          </button>
+        </div>
       </section>
 
-      <section className="flex flex-col items-center gap-6 pt-8">
-        <Link 
-          href="/permissions"
-          className="flex items-center gap-2 px-8 py-4 bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-foreground/70 rounded-full font-bold"
-        >
-          <ShieldCheck className="w-5 h-5 text-accent" />
-          Manage Permissions
-        </Link>
-
+      <section className="flex justify-center pt-8">
         <button
           onClick={logout}
           disabled={isLoading}

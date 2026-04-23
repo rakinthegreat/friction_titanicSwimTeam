@@ -11,13 +11,20 @@ import Link from "next/link";
 export default function Home() {
   const interests = useUserStore((state) => state.interests);
   const stats = useUserStore((state) => state.stats);
-  const [mounted, setMounted] = useState(false);
   const [activeActivity, setActiveActivity] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const updateStats = useUserStore((state) => state.updateStats);
 
   // Prevent hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleActivityComplete = (xp: number) => {
+    // XP could be used for leveling, but for now we update time reclaimed
+    updateStats(5); // Defaulting to 5 minutes for WordLess session
+    setActiveActivity(null);
+  };
 
   if (!mounted) return null;
 
@@ -37,7 +44,7 @@ export default function Home() {
           </button>
           <h1 className="text-xl font-bold">WordLess</h1>
         </header>
-        <WordLess />
+        <WordLess onComplete={handleActivityComplete} />
       </div>
     );
   }
@@ -57,6 +64,13 @@ export default function Home() {
               aria-label="Manage Permissions"
             >
               <ShieldCheck size={20} />
+            </Link>
+            <Link 
+              href="/profile"
+              className="p-3 rounded-2xl bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-accent"
+              aria-label="Profile"
+            >
+              <User size={20} />
             </Link>
             <ThemeToggle />
           </div>
@@ -96,18 +110,6 @@ export default function Home() {
         </section>
       </div>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-4rem)] max-w-md bg-card/80 backdrop-blur-xl rounded-[2.5rem] p-4 shadow-neo-out border border-white/10 z-50 flex justify-around items-center">
-        <Link href="/games" className="p-4 rounded-2xl text-foreground/40 hover:text-accent transition-colors">
-          <Gamepad2 size={24} />
-        </Link>
-        <div className="p-4 rounded-2xl bg-accent text-white shadow-neo-out scale-110">
-          <HomeIcon size={24} />
-        </div>
-        <Link href="/profile" className="p-4 rounded-2xl text-foreground/40 hover:text-accent transition-colors">
-          <User size={24} />
-        </Link>
-      </nav>
     </main>
   );
 }

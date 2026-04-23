@@ -12,6 +12,14 @@ export default function GamesDirectoryPage() {
 
   const games = [
     {
+      title: 'Trivia',
+      description: 'Quick questions based on your interests.',
+      icon: <HelpCircle className="w-8 h-8" />,
+      href: '/games/trivia',
+      active: true,
+      color: 'text-accent-secondary'
+    },
+    {
       title: 'Sudoku',
       description: 'Classic number puzzle to sharpen your mind.',
       icon: <Grid3X3 className="w-8 h-8" />,
@@ -31,7 +39,7 @@ export default function GamesDirectoryPage() {
       title: 'WordLess',
       description: 'Guess the hidden 5-letter word.',
       icon: <Type className="w-8 h-8" />,
-      href: '/', // Handled on home screen currently
+      href: '/games/wordless',
       active: true,
       color: 'text-accent'
     },

@@ -4,8 +4,8 @@
   --background: #F9F6F0;
   --foreground: #2D2D2D;
   --card: #FFFFFF;
-  --accent: #8FA998; /* Sage Green */
-  --accent-secondary: #E9AC8F; /* Soft Orange */
+  --accent: #7EA68B; /* More Saturated Sage Green */
+  --accent-secondary: #E99C75; /* More Saturated Soft Orange */
 }
 
 @theme {
@@ -34,8 +34,8 @@
   --background: #F9F6F0;
   --foreground: #2D2D2D;
   --card: #FFFFFF;
-  --accent: #8FA998;
-  --accent-secondary: #E9AC8F;
+  --accent: #7EA68B;
+  --accent-secondary: #E99C75;
   --neo-shadow-dark: rgba(163, 177, 198, 0.4);
   --neo-shadow-light: rgba(255, 255, 255, 0.8);
 }
