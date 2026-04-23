@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sun, Cloud, CloudRain, CloudLightning, Snowflake, MapPin, Loader2 } from 'lucide-react';
+import { Sun, Cloud, CloudRain, CloudLightning, Snowflake, MapPin, Loader2, Umbrella, Zap, Droplets, ThermometerSnowflake, Sparkles } from 'lucide-react';
 import { Card } from '../ui/Card';
 
 interface WeatherData {
@@ -111,13 +111,13 @@ export const WeatherWidget = () => {
   };
 
   const getWeatherComment = (code: number, temp: number) => {
-    if (code >= 51 && code <= 67) return "Don't forget an umbrella!";
-    if (code >= 71 && code <= 77) return "Bundle up, it's snowing!";
-    if (code >= 95) return "Stay indoors, thunderstorm!";
-    if (temp >= 30) return "Stay hydrated, it's hot!";
-    if (temp <= 10) return "Wear a warm coat!";
-    if (code === 0) return "Great day for a walk!";
-    return "Perfect weather to reclaim time!";
+    if (code >= 51 && code <= 67) return <span className="flex items-center gap-1.5">Don't forget an umbrella! <Umbrella className="w-3.5 h-3.5 text-blue-400 drop-shadow-sm" /></span>;
+    if (code >= 71 && code <= 77) return <span className="flex items-center gap-1.5">Bundle up, it's snowing! <Snowflake className="w-3.5 h-3.5 text-blue-200 drop-shadow-sm" /></span>;
+    if (code >= 95) return <span className="flex items-center gap-1.5">Stay indoors, thunderstorm! <Zap className="w-3.5 h-3.5 text-yellow-500 drop-shadow-sm" /></span>;
+    if (temp >= 30) return <span className="flex items-center gap-1.5">Stay hydrated, it's hot! <Droplets className="w-3.5 h-3.5 text-blue-300 drop-shadow-sm" /></span>;
+    if (temp <= 10) return <span className="flex items-center gap-1.5">Wear a warm coat! <ThermometerSnowflake className="w-3.5 h-3.5 text-blue-100 drop-shadow-sm" /></span>;
+    if (code === 0) return <span className="flex items-center gap-1.5">Great day for a walk! <Sun className="w-3.5 h-3.5 text-yellow-500 drop-shadow-sm" /></span>;
+    return <span className="flex items-center gap-1.5">Perfect weather to reclaim time! <Sparkles className="w-3.5 h-3.5 text-accent drop-shadow-sm" /></span>;
   };
 
   return (

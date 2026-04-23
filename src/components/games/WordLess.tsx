@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/Button';
+import { PartyPopper } from 'lucide-react';
 
 interface WordLessProps {
   onComplete: (xp: number) => void;
@@ -119,7 +120,9 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
 
       {status !== 'playing' && (
         <div className="text-center animate-bounce">
-          <p className="text-2xl font-bold">{status === 'won' ? "🎉 Brilliant!" : `Target: ${targetWord}`}</p>
+          <p className="text-2xl font-bold flex items-center justify-center gap-2">
+            {status === 'won' ? <><PartyPopper className="w-6 h-6 text-accent drop-shadow-sm" /> Brilliant!</> : `Target: ${targetWord}`}
+          </p>
         </div>
       )}
     </div>
