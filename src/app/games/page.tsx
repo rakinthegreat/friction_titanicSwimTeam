@@ -20,6 +20,14 @@ export default function GamesDirectoryPage() {
       color: 'text-accent'
     },
     {
+      title: 'Crosswords',
+      description: 'Daily puzzle to expand your vocabulary.',
+      icon: <Grid3X3 className="w-8 h-8" />,
+      href: '/games/crosswords',
+      active: true,
+      color: 'text-accent-secondary'
+    },
+    {
       title: 'Maze Solver',
       description: 'Navigate through complex paths.',
       icon: <Move className="w-8 h-8" />,
@@ -28,17 +36,9 @@ export default function GamesDirectoryPage() {
       color: 'text-accent-secondary'
     },
     {
-      title: 'Trivia',
-      description: 'Quick questions based on your interests.',
-      icon: <HelpCircle className="w-8 h-8" />,
-      href: '/games/trivia',
-      active: true,
-      color: 'text-accent-secondary'
-    },
-    {
       title: 'Sudoku',
       description: 'Classic number puzzle to sharpen your mind.',
-      icon: <Grid3X3 className="w-8 h-8" />,
+      icon: <Hash className="w-8 h-8" />,
       href: '/games/sudoku',
       active: true,
       color: 'text-accent'
@@ -46,7 +46,7 @@ export default function GamesDirectoryPage() {
     {
       title: 'Tic-Tac-Toe',
       description: 'Quick rounds against a simple AI.',
-      icon: <Hash className="w-8 h-8" />,
+      icon: <Blocks className="w-8 h-8" />,
       href: '/games/tic-tac-toe',
       active: true,
       color: 'text-accent-secondary'

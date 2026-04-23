@@ -58,12 +58,12 @@ export const WeatherWidget = () => {
 
     const fetchIPLocationFallback = async () => {
       try {
-        const res = await fetch('https://freeipapi.com/api/json');
+        const res = await fetch('https://ipapi.co/json/');
         if (!res.ok) throw new Error('IP API failed');
         const data = await res.json();
 
         if (data && data.latitude && data.longitude) {
-          await fetchWeatherData(data.latitude, data.longitude, data.cityName);
+          await fetchWeatherData(data.latitude, data.longitude, data.city);
         } else {
           throw new Error('Invalid IP location data');
         }
