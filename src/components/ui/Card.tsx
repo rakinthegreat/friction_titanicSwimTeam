@@ -1,17 +1,17 @@
 import React from 'react';
 
-interface CardProps {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  className?: string;
-  onClick?: () => void;
 }
 
-export const Card = ({ children, className = '', onClick }: CardProps) => {
+export const Card = ({ children, className = '', ...props }: CardProps) => {
+  const isClickable = !!props.onClick;
+  
   return (
     <div 
-      onClick={onClick}
+      {...props}
       className={`bg-card rounded-3xl transition-all duration-300 ${
-        onClick 
+        isClickable 
           ? 'cursor-pointer shadow-neo-out hover:scale-[1.01] active:shadow-neo-in active:scale-[0.99]' 
           : 'shadow-neo-out'
       } ${className}`}

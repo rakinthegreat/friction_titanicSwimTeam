@@ -89,7 +89,7 @@ export default function SudokuPage() {
         <h1 className="text-2xl font-bold ml-2">Sudoku</h1>
       </div>
 
-      <Card className="flex-1 flex flex-col items-center justify-start p-4 sm:p-8">
+      <Card className="flex flex-col items-center justify-start p-4 sm:p-8">
         {/* Win Message */}
         <div className="mb-4 h-6 flex items-center justify-center w-full">
           {isWon && (
@@ -100,14 +100,14 @@ export default function SudokuPage() {
         </div>
 
         {/* Board */}
-        <div className="relative mb-6 w-full max-w-[340px] select-none">
-          <div className="grid grid-cols-3 gap-[2px] border-2 border-foreground bg-foreground">
+        <div className="relative mb-8 w-full max-w-[340px] select-none p-1 border-[4px] border-black dark:border-white rounded-2xl">
+          <div className="grid grid-cols-3 gap-0 bg-foreground/20 dark:bg-white/10 overflow-hidden rounded-xl border-[1.5px] border-black dark:border-white">
             {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((blockIndex) => {
               const startR = Math.floor(blockIndex / 3) * 3;
               const startC = (blockIndex % 3) * 3;
 
               return (
-                <div key={blockIndex} className="grid grid-cols-3 gap-[1px] bg-black/20 dark:bg-white/20">
+                <div key={blockIndex} className="grid grid-cols-3 gap-[1px] border-[1.5px] border-black dark:border-white">
                   {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((cellIndex) => {
                     const r = startR + Math.floor(cellIndex / 3);
                     const c = startC + (cellIndex % 3);
@@ -123,14 +123,20 @@ export default function SudokuPage() {
                         key={`${r}-${c}`}
                         onClick={() => handleCellClick(r, c)}
                         className={`
-                          aspect-square flex items-center justify-center text-xl font-medium cursor-pointer transition-colors relative
-                          ${isInitial ? 'bg-black/5 dark:bg-white/10 text-foreground' : 'bg-card text-accent-secondary'}
-                          ${isSameNumber ? '!bg-accent/10 dark:!bg-accent/20' : ''}
-                          ${isSelected ? '!bg-accent/20 dark:!bg-accent/30 ring-2 ring-inset ring-accent z-10' : ''}
-                          ${isConflict ? '!bg-red-100 dark:!bg-red-900/30 !text-red-500' : ''}
+                          aspect-square flex items-center justify-center text-xl font-bold cursor-pointer transition-all duration-200 relative
+                          ${isInitial 
+                            ? 'bg-black/10 dark:bg-white/5 text-foreground font-black' 
+                            : 'bg-card text-accent font-medium'}
+                          ${isSameNumber ? '!bg-accent/20 dark:!bg-accent/30 !text-accent' : ''}
+                          ${isSelected ? '!bg-accent !text-white z-10 shadow-lg scale-105 rounded-sm' : ''}
+                          ${isConflict ? '!bg-red-500 !text-white z-20' : ''}
+                          ${!isSelected && !isConflict && !isSameNumber ? 'hover:bg-accent/5' : ''}
                         `}
                       >
                         {cell}
+                        {isInitial && (
+                           <div className="absolute top-0.5 right-1 w-1 h-1 rounded-full bg-foreground/20" />
+                        )}
                       </div>
                     );
                   })}

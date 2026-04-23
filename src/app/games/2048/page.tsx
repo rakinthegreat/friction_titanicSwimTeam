@@ -15,6 +15,7 @@ export default function Game2048Page() {
   const [bestScore, setBestScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [hasWon, setHasWon] = useState(false);
+  const [variations, setVariations] = useState<{r: number, ox: number, oy: number}[]>([]);
   
   const touchStart = useRef<{ x: number, y: number } | null>(null);
 
@@ -25,6 +26,12 @@ export default function Game2048Page() {
     newGrid = addRandomTile(newGrid);
     setGrid(newGrid);
     setScore(0);
+    const newVariations = Array(16).fill(0).map(() => ({
+      r: Math.random() * 4 - 2,
+      ox: Math.random() * 6 - 3,
+      oy: Math.random() * 6 - 3
+    }));
+    setVariations(newVariations);
     setGameOver(false);
     setHasWon(false);
   }, []);
@@ -64,7 +71,8 @@ export default function Game2048Page() {
     let moved = false;
     let currentScore = score;
 
-    const rotate = (g: Grid) => {
+    // Helper to rotate grid 90 degrees clockwise
+    const rotateClockwise = (g: Grid) => {
       const result = Array(4).fill(0).map(() => Array(4).fill(0));
       for (let r = 0; r < 4; r++) {
         for (let c = 0; c < 4; c++) {
@@ -74,15 +82,19 @@ export default function Game2048Page() {
       return result;
     };
 
-    // Standardize move to LEFT by rotating
+    // Standardize everything to "LEFT" move
+    // LEFT: 0 rotations
+    // UP: 3 rotations clockwise (so top becomes left)
+    // RIGHT: 2 rotations clockwise
+    // DOWN: 1 rotation clockwise
     let rotations = 0;
-    if (direction === 'UP') rotations = 1;
+    if (direction === 'UP') rotations = 3;
     else if (direction === 'RIGHT') rotations = 2;
-    else if (direction === 'DOWN') rotations = 3;
+    else if (direction === 'DOWN') rotations = 1;
 
-    for (let i = 0; i < rotations; i++) newGrid = rotate(newGrid);
+    for (let i = 0; i < rotations; i++) newGrid = rotateClockwise(newGrid);
 
-    // Slide and Merge LEFT
+    // Perform merge LEFT
     for (let r = 0; r < 4; r++) {
       const row = newGrid[r].filter(val => val !== 0);
       const mergedRow = [];
@@ -100,19 +112,18 @@ export default function Game2048Page() {
       }
       while (mergedRow.length < 4) mergedRow.push(0);
       
-      if (JSON.stringify(newGrid[r]) !== JSON.stringify(mergedRow)) moved = true;
+      if (newGrid[r].join(',') !== mergedRow.join(',')) moved = true;
       newGrid[r] = mergedRow;
     }
 
-    // Rotate back
-    for (let i = 0; i < (4 - rotations) % 4; i++) newGrid = rotate(newGrid);
+    // Rotate back to original orientation
+    const backRotations = (4 - rotations) % 4;
+    for (let i = 0; i < backRotations; i++) newGrid = rotateClockwise(newGrid);
 
     if (moved) {
       const finalGrid = addRandomTile(newGrid);
       setGrid(finalGrid);
       setScore(currentScore);
-      
-      // Check Game Over
       if (isGameOver(finalGrid)) setGameOver(true);
     }
   }, [grid, gameOver, score]);
@@ -159,24 +170,24 @@ export default function Game2048Page() {
 
   const getTileColor = (val: number) => {
     switch (val) {
-      case 2: return 'bg-card text-foreground shadow-neo-out';
-      case 4: return 'bg-accent/10 text-accent shadow-neo-out';
-      case 8: return 'bg-accent/20 text-accent font-bold';
-      case 16: return 'bg-accent/40 text-white font-bold';
-      case 32: return 'bg-accent/60 text-white font-bold';
-      case 64: return 'bg-accent/80 text-white font-black';
-      case 128: return 'bg-accent text-white font-black text-2xl shadow-neo-in';
-      case 256: return 'bg-accent-secondary/50 text-white font-black text-2xl shadow-neo-in';
-      case 512: return 'bg-accent-secondary/70 text-white font-black text-2xl shadow-neo-in';
-      case 1024: return 'bg-accent-secondary/90 text-white font-black text-xl shadow-neo-in';
-      case 2048: return 'bg-accent-secondary text-white font-black text-xl animate-pulse shadow-neo-in';
+      case 2: return 'bg-card text-foreground shadow-neo-out text-4xl';
+      case 4: return 'bg-accent/10 text-accent shadow-neo-out text-4xl';
+      case 8: return 'bg-accent/20 text-accent font-bold text-4xl';
+      case 16: return 'bg-accent/40 text-white font-bold text-4xl';
+      case 32: return 'bg-accent/60 text-white font-bold text-4xl';
+      case 64: return 'bg-accent/80 text-white font-black text-4xl';
+      case 128: return 'bg-accent text-white font-black text-3xl shadow-neo-in';
+      case 256: return 'bg-accent-secondary/50 text-white font-black text-3xl shadow-neo-in';
+      case 512: return 'bg-accent-secondary/70 text-white font-black text-3xl shadow-neo-in';
+      case 1024: return 'bg-accent-secondary/90 text-white font-black text-2xl shadow-neo-in';
+      case 2048: return 'bg-accent-secondary text-white font-black text-2xl animate-pulse shadow-neo-in';
       default: return 'bg-card/50 opacity-20';
     }
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-lg mx-auto touch-none">
-      <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-xl mx-auto touch-none">
+      <div className="flex items-center justify-between mb-8">
         <div className="flex items-center">
           <button 
             onClick={() => router.push('/games')}
@@ -185,34 +196,39 @@ export default function Game2048Page() {
           >
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-3xl font-black ml-2 text-accent">2048</h1>
+          <h1 className="text-4xl font-black ml-2 text-accent">2048</h1>
         </div>
-        <div className="flex gap-2">
-          <div className="bg-card px-4 py-2 rounded-2xl shadow-neo-in text-center min-w-[70px]">
-            <p className="text-[10px] font-bold uppercase tracking-tighter opacity-40 leading-none mb-1">Score</p>
-            <p className="font-black leading-none">{score}</p>
+        <div className="flex gap-4">
+          <div className="bg-card px-6 py-3 rounded-2xl shadow-neo-in text-center min-w-[90px]">
+            <p className="text-[10px] font-bold uppercase tracking-tighter opacity-40 leading-none mb-2">Score</p>
+            <p className="text-xl font-black leading-none">{score}</p>
           </div>
-          <div className="bg-card px-4 py-2 rounded-2xl shadow-neo-in text-center min-w-[70px]">
-            <p className="text-[10px] font-bold uppercase tracking-tighter opacity-40 leading-none mb-1">Best</p>
-            <p className="font-black leading-none">{bestScore}</p>
+          <div className="bg-card px-6 py-3 rounded-2xl shadow-neo-in text-center min-w-[90px]">
+            <p className="text-[10px] font-bold uppercase tracking-tighter opacity-40 leading-none mb-2">Best</p>
+            <p className="text-xl font-black leading-none">{bestScore}</p>
           </div>
         </div>
       </div>
 
       <Card 
-        className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 mb-4 relative"
+        className="flex flex-col items-center justify-center p-4 sm:p-6 mb-8 relative"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="grid grid-cols-4 gap-3 sm:gap-4 w-full bg-black/5 dark:bg-white/5 p-3 sm:p-4 rounded-[2rem] shadow-neo-in aspect-square relative">
+        <div className="grid grid-cols-4 gap-4 sm:gap-6 w-full bg-black/5 dark:bg-white/5 p-4 sm:p-6 rounded-[2.5rem] shadow-neo-in aspect-square relative">
           {grid.flat().map((val, i) => (
             <div
               key={i}
               className={`
-                aspect-square rounded-2xl flex items-center justify-center text-3xl transition-all duration-150 
+                aspect-square rounded-2xl flex items-center justify-center transition-all duration-150 
                 ${getTileColor(val)}
                 ${val === 0 ? 'shadow-neo-in' : 'scale-100'}
               `}
+              style={{
+                transform: variations[i] 
+                  ? `rotate(${variations[i].r}deg) translate(${variations[i].ox}px, ${variations[i].oy}px)` 
+                  : 'none'
+              }}
             >
               {val !== 0 && val}
             </div>
@@ -220,13 +236,13 @@ export default function Game2048Page() {
 
           {/* Overlays */}
           {(gameOver || hasWon) && (
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm rounded-[2rem] animate-in fade-in zoom-in duration-300">
-              <h2 className="text-5xl font-black mb-6 text-accent">
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm rounded-[2.5rem] animate-in fade-in zoom-in duration-300">
+              <h2 className="text-4xl font-black mb-6 text-accent">
                 {hasWon ? 'You Win!' : 'Game Over'}
               </h2>
-              <Button onClick={initGame} size="lg" className="px-10">
+              <Button onClick={initGame} size="lg" className="px-8 py-4 text-lg font-black italic tracking-widest shadow-neo-out hover:shadow-neo-in transition-all active:scale-95">
                 <RotateCcw className="w-5 h-5 mr-3" />
-                Try Again
+                TRY AGAIN
               </Button>
             </div>
           )}

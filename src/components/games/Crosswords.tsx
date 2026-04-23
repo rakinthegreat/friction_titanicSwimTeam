@@ -4,16 +4,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Trophy, HelpCircle, Loader2 } from 'lucide-react';
-import { generateCrossword } from '@/app/games/crosswords/actions';
+import { getDailyCrossword } from '@/lib/dailyCrossword';
 
 interface Cell {
   letter: string;
   isWall: boolean;
-  number?: number;
+  label?: string;
 }
 
 interface Clue {
-  number: number;
+  label: string;
   direction: 'across' | 'down';
   clue: string;
   answer: string;
@@ -40,15 +40,15 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
 
     const fetchPuzzle = async () => {
       try {
-        const result = await generateCrossword();
-        if (result.clues) {
-          setClues(result.clues);
+        const result = await getDailyCrossword();
+        if (result && result.length > 0) {
+          setClues(result);
         } else {
-          throw new Error("No clues in response");
+          throw new Error("No clues generated");
         }
       } catch (e) {
         console.error("CRITICAL: Failed to load crossword puzzle:", e);
-        setClues([]); // Set empty array to trigger error UI
+        setClues([]); 
       }
     };
     fetchPuzzle();
@@ -65,7 +65,7 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
         const c = clue.direction === 'across' ? clue.col + i : clue.col;
         if (r < GRID_SIZE && c < GRID_SIZE) {
           gridDefinition[r][c].isWall = false;
-          if (i === 0) gridDefinition[r][c].number = clue.number;
+          if (i === 0) gridDefinition[r][c].label = clue.label;
         }
       }
     });
@@ -188,11 +188,11 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
                         : 'bg-card text-foreground'
                   }`}
                 />
-                {cell.number && (
+                {cell.label && (
                   <span className={`absolute top-0.5 left-1 text-[8px] sm:text-[9px] font-bold leading-none pointer-events-none ${
                     correctCells.has(`${r}-${c}`) ? 'text-white/60' : 'text-foreground/40'
                   }`}>
-                    {cell.number}
+                    {cell.label}
                   </span>
                 )}
               </>
@@ -210,16 +210,16 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
               <div className="space-y-2">
                 <p className="text-[10px] font-black text-foreground/30 uppercase tracking-tighter">Across</p>
                 {clues.filter(c => c.direction === 'across').map(clue => (
-                  <p key={clue.number} className="text-xs font-medium text-foreground/80 leading-tight">
-                    <span className="font-bold text-accent mr-1">{clue.number}.</span> {clue.clue}
+                  <p key={clue.label} className="text-xs font-medium text-foreground/80 leading-tight">
+                    <span className="font-bold text-accent mr-1">{clue.label}.</span> {clue.clue}
                   </p>
                 ))}
               </div>
               <div className="space-y-2">
                 <p className="text-[10px] font-black text-foreground/30 uppercase tracking-tighter">Down</p>
                 {clues.filter(c => c.direction === 'down').map(clue => (
-                  <p key={clue.number} className="text-xs font-medium text-foreground/80 leading-tight">
-                    <span className="font-bold text-accent mr-1">{clue.number}.</span> {clue.clue}
+                  <p key={clue.label} className="text-xs font-medium text-foreground/80 leading-tight">
+                    <span className="font-bold text-accent mr-1">{clue.label}.</span> {clue.clue}
                   </p>
                 ))}
               </div>

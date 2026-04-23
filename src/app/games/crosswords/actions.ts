@@ -1,73 +1,109 @@
 'use server';
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { WORD_LIST } from '@/lib/wordlist';
 
-const SYSTEM_PROMPT = `You are a crossword puzzle generator for a fun educational app.
-Your task is to generate a valid, EASY 9x9 crossword puzzle.
+/**
+ * Crossword Logic Strategy:
+ * 1. Pick a high-frequency 5-7 letter word for the center.
+ * 2. Scan the WORD_LIST for intersecting words.
+ * 3. Build a small, valid grid.
+ * 4. Fetch dictionary definitions for the selected words.
+ */
 
-REQUIREMENTS:
-1. Return ONLY a valid JSON object with a "clues" array.
-2. Each object in "clues" must match this schema:
-   {
-     "number": number,
-     "direction": "across" | "down",
-     "clue": "string",
-     "answer": "UPPERCASE_STRING",
-     "row": number,
-     "col": number
-   }
-3. INTERSECTION RULES:
-   - All words in the puzzle MUST share at least one letter with another word.
-   - Letters at intersection points must be identical in both words.
-   - Coordinates (row, col) are 0-indexed (0 to 8).
-4. CONTENT:
-   - Clues and answers should be general knowledge and EASY.
-   - Avoid obscure terms or highly specialized academic language.
-   - Words should be 3 to 8 characters long.
-5. GRID SIZE:
-   - The entire puzzle must fit within a 9x9 grid (row/col 0 to 8).
+const getEffectiveDate = () => {
+  return new Date().toISOString().split('T')[0];
+};
 
-Example output format:
-{
-  "clues": [
-    { "number": 1, "direction": "across", "clue": "Man's best friend", "answer": "DOG", "row": 1, "col": 1 },
-    { "number": 1, "direction": "down", "clue": "A place where you live", "answer": "DWELL", "row": 1, "col": 1 }
-  ]
-}`;
+const hashString = (str: string) => {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = (h * 0x01000193) | 0;
+  }
+  h ^= h >>> 16;
+  h = Math.imul(h, 0x85ebca6b);
+  h ^= h >>> 13;
+  h = Math.imul(h, 0xc2b2ae35);
+  h ^= h >>> 16;
+  return h >>> 0;
+};
 
 export async function generateCrossword() {
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) throw new Error("API Key missing");
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: "gemini-3.1-flash-lite-preview",
-      systemInstruction: SYSTEM_PROMPT
-    });
-
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: "Generate a new EASY daily crossword puzzle with 5-8 intersecting words. Use simple general knowledge clues and answers. Ensure all words fit in 9x9 grid." }] }],
-      generationConfig: {
-        temperature: 1,
-        responseMimeType: "application/json",
-      }
-    });
-
-    const content = result.response.text();
-    if (!content) throw new Error("Empty response from AI");
+    const today = getEffectiveDate();
+    const seed = hashString(today + 'crossword-v4');
     
-    return { success: true, clues: JSON.parse(content).clues };
-  } catch (error: any) {
-    console.error("Gemini Crossword Error:", error);
+    // 1. Pick 4-5 words that can actually intersect
+    const pool = WORD_LIST.filter(w => w.length >= 4 && w.length <= 7);
+    
+    // Starter word (Across)
+    const starterWord = pool[seed % pool.length].toUpperCase();
+    const starterRow = 4;
+    const starterCol = Math.floor((9 - starterWord.length) / 2);
+
+    const clues = [
+      { 
+        number: 1, 
+        direction: 'across', 
+        answer: starterWord, 
+        row: starterRow, 
+        col: starterCol,
+        clue: await fetchDefinition(starterWord)
+      }
+    ];
+
+    // 2. Try to find intersecting 'down' words
+    let intersectionsFound = 0;
+    // We'll skip every other letter to keep the grid clean
+    for (let i = 0; i < starterWord.length; i += 2) {
+      if (intersectionsFound >= 3) break;
+      
+      const char = starterWord[i];
+      const col = starterCol + i;
+      
+      const matchSeed = (seed + i + 100);
+      const possibleDowns = pool.filter(w => w.includes(char) && w !== starterWord);
+      
+      if (possibleDowns.length > 0) {
+        const downWord = possibleDowns[matchSeed % possibleDowns.length].toUpperCase();
+        const charIndexInDown = downWord.indexOf(char);
+        const row = starterRow - charIndexInDown;
+        
+        // Bounds check
+        if (row >= 0 && row + downWord.length <= 9) {
+          clues.push({
+            number: intersectionsFound + 1,
+            direction: 'down',
+            answer: downWord,
+            row: row,
+            col: col,
+            clue: await fetchDefinition(downWord)
+          });
+          intersectionsFound++;
+        }
+      }
+    }
+
+    return { success: true, clues };
+  } catch (error) {
+    console.error("Crossword Gen Error:", error);
     return {
       success: false,
-      error: error.message,
       clues: [
-        { number: 1, direction: 'across', clue: 'Moral principles', answer: 'ETHICS', row: 1, col: 1 },
-        { number: 1, direction: 'down', clue: 'To be or not to be', answer: 'EXIST', row: 1, col: 1 },
-        { number: 2, direction: 'across', clue: 'Platonic concept of perfection', answer: 'IDEAL', row: 3, col: 1 },
+        { number: 1, direction: 'across', clue: 'Fundamental principles', answer: 'ETHICS', row: 4, col: 2 },
+        { number: 1, direction: 'down', clue: 'Existing', answer: 'EXIST', row: 2, col: 2 },
       ]
     };
+  }
+}
+
+async function fetchDefinition(word: string) {
+  try {
+    const res = await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + word);
+    if (!res.ok) return 'A common daily word: ' + word;
+    const data = await res.json();
+    return data[0].meanings[0].definitions[0].definition;
+  } catch (e) {
+    return 'Daily challenge word';
   }
 }

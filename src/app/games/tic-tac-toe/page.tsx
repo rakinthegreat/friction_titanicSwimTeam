@@ -111,26 +111,26 @@ export default function TicTacToePage() {
         <h1 className="text-2xl font-bold ml-2">Tic-Tac-Toe</h1>
       </div>
 
-      <Card className="flex-1 flex flex-col items-center justify-center p-8">
-        <div className="mb-8 text-xl font-medium h-8 overflow-hidden">
-          <div className={`transition-all duration-300 ${winner ? 'scale-110 text-accent font-bold' : ''}`}>
+      <Card className="flex flex-col items-center justify-start p-6 sm:p-8">
+        <div className="mb-8 text-2xl font-black min-h-[40px] flex items-center justify-center">
+          <div className={`transition-all duration-300 ${winner ? 'scale-125 text-accent animate-bounce' : 'text-foreground/40 text-sm uppercase tracking-widest'}`}>
             {winner === 'Draw' 
-              ? "It's a Draw!" 
+              ? "IT'S A DRAW!" 
               : winner === 'X'
-                ? "You Won!"
+                ? "YOU WON!"
                 : winner === 'O'
-                  ? "AI Won!"
+                  ? "AI WON!"
                 : `Your Turn: ${isXNext ? 'X' : 'O'}`}
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-10 w-full max-w-[280px]">
+        <div className="grid grid-cols-3 gap-4 mb-10 w-full max-w-[340px]">
           {board.map((cell, index) => (
             <button
               key={index}
               onClick={() => handleClick(index)}
               disabled={!!winner || (!isXNext && !cell)}
-              className={`aspect-square rounded-2xl text-5xl font-bold transition-all duration-300 flex items-center justify-center bg-card
+              className={`aspect-square w-full min-h-[100px] min-w-[100px] rounded-2xl text-7xl font-black transition-all duration-300 flex items-center justify-center bg-card
                 ${cell === 'X' ? 'text-accent' : 'text-accent-secondary'}
                 ${cell ? 'shadow-neo-in scale-95' : 'shadow-neo-out'}
                 ${!cell && !winner && isXNext ? 'hover:scale-[1.02] hover:shadow-neo-in active:scale-95' : ''}

@@ -35,6 +35,9 @@ interface MemoryCard {
   Icon: any;
   isFlipped: boolean;
   isMatched: boolean;
+  rotation: number;
+  offsetX: number;
+  offsetY: number;
 }
 
 export default function MemoryMatchPage() {
@@ -82,6 +85,9 @@ export default function MemoryMatchPage() {
       Icon: item.icon,
       isFlipped: false,
       isMatched: false,
+      rotation: (Math.random() * 4 - 2), // -2 to 2 degrees
+      offsetX: (Math.random() * 6 - 3), // -3 to 3px
+      offsetY: (Math.random() * 6 - 3), // -3 to 3px
     }));
 
     setBoard(newBoard);
@@ -145,7 +151,7 @@ export default function MemoryMatchPage() {
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-lg mx-auto">
+    <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-2xl mx-auto">
       <div className="flex items-center mb-6">
         <button 
           onClick={() => router.push('/games')}
@@ -157,17 +163,19 @@ export default function MemoryMatchPage() {
         <h1 className="text-2xl font-bold ml-2">Memory Match</h1>
       </div>
 
-      <Card className="flex-1 flex flex-col items-center justify-start p-6 sm:p-8">
-        <div className="w-full flex justify-between items-center mb-8 px-2">
-          <div className="text-sm font-bold uppercase tracking-widest text-foreground/40">
+      <Card className="flex flex-col items-center justify-start p-6 sm:p-8">
+        <div className="w-full grid grid-cols-3 items-center mb-8 px-2">
+          <div className="text-sm font-bold uppercase tracking-widest text-foreground/40 text-left">
             Moves: <span className="text-foreground">{moves}</span>
           </div>
-          {isWon && (
-            <div className="text-accent font-black animate-bounce">
-              WELL DONE!
-            </div>
-          )}
-          <div className="text-sm font-bold uppercase tracking-widest text-foreground/40">
+          <div className="flex justify-center">
+            {isWon && (
+              <div className="text-xl text-accent font-black animate-bounce whitespace-nowrap">
+                WELL DONE!
+              </div>
+            )}
+          </div>
+          <div className="text-sm font-bold uppercase tracking-widest text-foreground/40 text-right">
             Matches: <span className="text-accent">{board.filter(c => c.isMatched).length / 2} / 8</span>
           </div>
         </div>
@@ -182,15 +190,18 @@ export default function MemoryMatchPage() {
                 key={card.id}
                 onClick={() => handleFlip(card.id)}
                 className={`aspect-square perspective-1000 cursor-pointer transition-all duration-300 ${!shown ? 'hover:scale-[1.05]' : ''}`}
+                style={{
+                  transform: `rotate(${card.rotation}deg) translate(${card.offsetX}px, ${card.offsetY}px)`
+                }}
               >
                 <div className={`relative w-full h-full text-center transition-transform duration-500 preserve-3d ${shown ? 'rotate-y-180' : ''}`}>
                   {/* Front (Hidden) */}
                   <div className="absolute w-full h-full backface-hidden shadow-neo-out rounded-2xl bg-card flex items-center justify-center">
-                    <div className="w-8 h-8 rounded-full border-4 border-foreground/5" />
+                    <div className="w-10 h-10 rounded-full border-4 border-foreground/5" />
                   </div>
                   {/* Back (Visible) */}
                   <div className={`absolute w-full h-full backface-hidden rotate-y-180 shadow-neo-in rounded-2xl flex items-center justify-center ${card.isMatched ? 'bg-accent/10 border-2 border-accent/20' : 'bg-card'}`}>
-                    <Icon className={`w-8 h-8 sm:w-10 sm:h-10 ${card.isMatched ? 'text-accent' : 'text-accent-secondary'}`} />
+                    <Icon className={`w-10 h-10 sm:w-12 sm:h-12 ${card.isMatched ? 'text-accent' : 'text-accent-secondary'}`} />
                   </div>
                 </div>
               </div>
