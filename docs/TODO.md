@@ -4,7 +4,10 @@
 - [x] Implement AI Content Cache (via `contentStore.ts`)
 - [x] Create background sync hook (`useContentSync.ts`)
 - [x] Build **WordLess** (Wordle clone using cached vocab)
-- [ ] Build **Sudoku** (Minimal, offline puzzles)
+- [x] Build **Sudoku** (Minimal, offline puzzles)
+- [x] Build **Tic Tac Toe** (Minimal, offline puzzles)
+- [x] Build **Memory Match** (Card flipping game)
+- [x] Build **2048** (Number sliding game)
 - [ ] Implement **Trivia** session UI
 
 ## Phase 3: Native Features (Capacitor/Java)

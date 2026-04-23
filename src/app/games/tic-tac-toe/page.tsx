@@ -1,0 +1,160 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { ArrowLeft, RotateCcw } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
+type Player = 'X' | 'O' | null;
+
+export default function TicTacToePage() {
+  const router = useRouter();
+  const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
+  const [isXNext, setIsXNext] = useState<boolean>(true);
+  const [winner, setWinner] = useState<Player | 'Draw' | null>(null);
+
+  // Simple AI
+  useEffect(() => {
+    if (!isXNext && !winner) {
+      const timer = setTimeout(() => {
+        makeAIMove();
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [isXNext, winner, board]);
+
+  const findWinningMove = (player: Player) => {
+    const lines = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+    for (let i = 0; i < lines.length; i++) {
+        const [a, b, c] = lines[i];
+        if (board[a] === player && board[b] === player && board[c] === null) return c;
+        if (board[a] === player && board[c] === player && board[b] === null) return b;
+        if (board[b] === player && board[c] === player && board[a] === null) return a;
+    }
+    return null;
+  }
+
+  const makeAIMove = () => {
+    // 1. Try to win
+    let move = findWinningMove('O');
+    
+    // 2. Block 'X' from winning
+    if (move === null) {
+      move = findWinningMove('X');
+    }
+    
+    // 3. Pick random empty square
+    if (move === null) {
+      const emptyIndices = board.map((val, idx) => val === null ? idx : null).filter(val => val !== null) as number[];
+      if (emptyIndices.length > 0) {
+        move = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+      }
+    }
+
+    if (move !== null) {
+      handleClick(move, true);
+    }
+  };
+
+  const checkWinner = (squares: Player[]) => {
+    const lines = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+    for (let i = 0; i < lines.length; i++) {
+      const [a, b, c] = lines[i];
+      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        return squares[a];
+      }
+    }
+    if (!squares.includes(null)) return 'Draw';
+    return null;
+  };
+
+  const handleClick = (index: number, isAI: boolean = false) => {
+    if (board[index] || winner || (!isXNext && !isAI)) return;
+
+    const newBoard = [...board];
+    newBoard[index] = isXNext ? 'X' : 'O';
+    setBoard(newBoard);
+    
+    const newWinner = checkWinner(newBoard);
+    if (newWinner) {
+      setWinner(newWinner);
+    } else {
+      setIsXNext(!isXNext);
+    }
+  };
+
+  const resetGame = () => {
+    setBoard(Array(9).fill(null));
+    setIsXNext(true);
+    setWinner(null);
+  };
+
+  return (
+    <div className="min-h-screen p-6 flex flex-col max-w-md mx-auto">
+      <div className="flex items-center mb-8">
+        <button 
+          onClick={() => router.push('/games')}
+          className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+          aria-label="Back to games"
+        >
+          <ArrowLeft className="w-6 h-6" />
+        </button>
+        <h1 className="text-2xl font-bold ml-2">Tic-Tac-Toe</h1>
+      </div>
+
+      <Card className="flex-1 flex flex-col items-center justify-center p-8">
+        <div className="mb-8 text-xl font-medium h-8 overflow-hidden">
+          <div className={`transition-all duration-300 ${winner ? 'scale-110 text-accent font-bold' : ''}`}>
+            {winner === 'Draw' 
+              ? "It's a Draw!" 
+              : winner === 'X'
+                ? "You Won!"
+                : winner === 'O'
+                  ? "AI Won!"
+                : `Your Turn: ${isXNext ? 'X' : 'O'}`}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-4 mb-10 w-full max-w-[280px]">
+          {board.map((cell, index) => (
+            <button
+              key={index}
+              onClick={() => handleClick(index)}
+              disabled={!!winner || (!isXNext && !cell)}
+              className={`aspect-square rounded-2xl text-5xl font-bold transition-all duration-300 flex items-center justify-center bg-card
+                ${cell === 'X' ? 'text-accent' : 'text-accent-secondary'}
+                ${cell ? 'shadow-neo-in scale-95' : 'shadow-neo-out'}
+                ${!cell && !winner && isXNext ? 'hover:scale-[1.02] hover:shadow-neo-in active:scale-95' : ''}
+              `}
+              aria-label={`Square ${index}`}
+            >
+              {cell && (
+                <span className="animate-in zoom-in duration-200">
+                  {cell}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        <Button 
+          variant={winner ? "primary" : "outline"}
+          onClick={resetGame}
+          className="w-full max-w-[200px]"
+        >
+          <RotateCcw className="w-4 h-4 mr-2" />
+          {winner ? "Play Again" : "Restart Game"}
+        </Button>
+      </Card>
+    </div>
+  );
+}
