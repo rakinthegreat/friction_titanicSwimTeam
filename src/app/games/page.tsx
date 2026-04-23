@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/Card';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { ArrowLeft, Hash, Grid3X3, Type, BrainCircuit, Blocks } from 'lucide-react';
+import { ArrowLeft, Hash, Grid3X3, Type, BrainCircuit, Blocks, HelpCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -50,6 +50,14 @@ export default function GamesDirectoryPage() {
       href: '/games/2048',
       active: true,
       color: 'text-accent-secondary'
+    },
+    {
+      title: 'Trivia',
+      description: 'Test your knowledge on Bangladesh and the World.',
+      icon: <HelpCircle className="w-8 h-8" />,
+      href: '/games/trivia',
+      active: true,
+      color: 'text-accent'
     }
   ];
 
@@ -57,7 +65,7 @@ export default function GamesDirectoryPage() {
     <main className="min-h-screen p-6 sm:p-8 max-w-4xl mx-auto space-y-12 animate-in fade-in duration-700">
       <header className="flex justify-between items-center">
         <div className="flex items-center">
-          <button 
+          <button
             onClick={() => router.push('/')}
             className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors mr-2"
             aria-label="Back to home"

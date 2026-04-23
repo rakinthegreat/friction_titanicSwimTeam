@@ -8,7 +8,7 @@
 - [x] Build **Tic Tac Toe** (Minimal, offline puzzles)
 - [x] Build **Memory Match** (Card flipping game)
 - [x] Build **2048** (Number sliding game)
-- [ ] Implement **Trivia** session UI
+- [x] Implement **Trivia** session UI
 - [x] Implement **Google Auth** 
 ## Phase 3: Native Features (Capacitor/Java)
 - [ ] Develop `WaitLessSensors` Java plugin (Stationary detection)
