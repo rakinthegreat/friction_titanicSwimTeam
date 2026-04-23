@@ -7,6 +7,8 @@ import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 
+import { getDailyWordLess } from '@/lib/dailyWord';
+
 export default function WordLessPage() {
   const router = useRouter();
   const updateStats = useUserStore((state) => state.updateStats);
@@ -14,18 +16,14 @@ export default function WordLessPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchWord = async () => {
-      try {
-        const res = await fetch('/api/wordless-daily');
-        const data = await res.json();
-        setDailyWord(data.word);
-      } catch (e) {
-        setDailyWord("LIGHT");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchWord();
+    try {
+      const word = getDailyWordLess();
+      setDailyWord(word);
+    } catch (e) {
+      setDailyWord("LIGHT");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const handleComplete = (xp: number) => {

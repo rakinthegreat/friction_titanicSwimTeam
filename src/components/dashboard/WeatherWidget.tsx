@@ -29,6 +29,9 @@ export const WeatherWidget = () => {
 
   // Fetch weather and location
   useEffect(() => {
+    const CACHE_KEY = 'weather_cache';
+    const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
+
     const fetchWeatherData = async (lat: number, lon: number, cityName?: string) => {
       try {
         const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code`);
@@ -43,12 +46,16 @@ export const WeatherWidget = () => {
         }
 
         const code = data.current.weather_code;
-        setWeather({
+        const weatherData = {
           temp: Math.round(data.current.temperature_2m),
           code: code,
           condition: getWeatherConditionString(code),
-          city: finalCity || 'Unknown Location'
-        });
+          city: finalCity || 'Unknown Location',
+          timestamp: Date.now()
+        };
+
+        setWeather(weatherData);
+        localStorage.setItem(CACHE_KEY, JSON.stringify(weatherData));
       } catch (error) {
         console.error("Failed to fetch weather data:", error);
       } finally {
@@ -58,21 +65,46 @@ export const WeatherWidget = () => {
 
     const fetchIPLocationFallback = async () => {
       try {
+        // Try Primary IP API
         const res = await fetch('https://ipapi.co/json/');
-        if (!res.ok) throw new Error('IP API failed');
+        if (!res.ok) throw new Error('Primary IP API failed');
         const data = await res.json();
 
         if (data && data.latitude && data.longitude) {
           await fetchWeatherData(data.latitude, data.longitude, data.city);
-        } else {
-          throw new Error('Invalid IP location data');
+          return;
         }
       } catch (e) {
-        console.error("IP fallback failed, using default location (Dhaka).", e);
-        // Default to Dhaka if all else fails so the widget doesn't stay loading
+        console.warn("Primary IP Location failed, trying secondary...");
+      }
+
+      try {
+        // Try Secondary IP API (FreeIPAPI)
+        const res = await fetch('https://freeipapi.com/api/json');
+        if (!res.ok) throw new Error('Secondary IP API failed');
+        const data = await res.json();
+
+        if (data && data.latitude && data.longitude) {
+          await fetchWeatherData(data.latitude, data.longitude, data.cityName);
+        } else {
+          throw new Error('Invalid secondary IP data');
+        }
+      } catch (error) {
+        console.error("All IP Location fallbacks failed, using default (Dhaka).", error);
         await fetchWeatherData(23.8103, 90.4125, 'Dhaka');
       }
     };
+
+    // Check cache first
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Date.now() - parsed.timestamp < CACHE_DURATION) {
+        setWeather(parsed);
+        setLoading(false);
+        return;
+      }
+    }
 
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(

@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { BookOpen, Loader2 } from 'lucide-react';
 import { Card } from '../ui/Card';
 
+import { getDailyWord } from '@/lib/dailyWord';
+
 interface WordData {
   word: string;
   phonetic: string;
@@ -17,15 +19,28 @@ export const WordOfTheDayWidget = () => {
   useEffect(() => {
     const fetchWordOfTheDay = async () => {
       try {
-        // Fetch from our internal API route which caches the result globally for 24 hours
-        const response = await fetch('/api/word-of-the-day');
-        if (!response.ok) throw new Error('Failed to fetch word of the day API');
+        const word = getDailyWord();
+        
+        // Only fetch dictionary definition
+        const defRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+        if (!defRes.ok) throw new Error('Dict failed');
 
-        const data = await response.json();
-        setData(data);
+        const defData = await defRes.json();
+        const entry = defData[0];
 
+        setData({
+          word: word,
+          meaning: entry.meanings[0].definitions[0].definition,
+          phonetic: entry.phonetic || ''
+        });
       } catch (error) {
         console.error("Failed to fetch word of the day:", error);
+        // Static fallback if even dictionary fails
+        setData({
+          word: 'serendipity',
+          meaning: 'the occurrence and development of events by chance in a happy or beneficial way.',
+          phonetic: '/ˌserənˈdipədē/'
+        });
       } finally {
         setLoading(false);
       }
