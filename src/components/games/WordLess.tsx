@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/Button';
+import { PartyPopper } from 'lucide-react';
 
 interface WordLessProps {
   onComplete: (xp: number) => void;
@@ -49,8 +50,44 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
     const letter = guess[index];
     const target = targetWord.toUpperCase();
     
+    // 1. Correct position (Green)
     if (target[index] === letter) return 'bg-accent text-white border-accent';
-    if (target.includes(letter)) return 'bg-accent-secondary text-white border-accent-secondary';
+    
+    // 2. Letter not in word at all (Gray)
+    if (!target.includes(letter)) return 'bg-foreground/10 text-foreground border-foreground/5';
+
+    // 3. Sophisticated Wordle logic for 'Present' (Yellow/Orange)
+    // We only color it if there are more instances of this letter in the target 
+    // that haven't been matched by 'Correct' positions.
+    
+    // Count how many times this letter appears in the target
+    let targetCount = 0;
+    for (let i = 0; i < target.length; i++) {
+      if (target[i] === letter) targetCount++;
+    }
+
+    // Subtract the ones that the user already got in the 'Correct' (Green) positions
+    let correctMatches = 0;
+    for (let i = 0; i < target.length; i++) {
+      if (guess[i] === letter && target[i] === letter) correctMatches++;
+    }
+
+    // Count how many times this letter appeared in the guess BEFORE this current index
+    // that were marked as 'Present' (Yellow)
+    let previousPresentMatches = 0;
+    for (let i = 0; i < index; i++) {
+      if (guess[i] === letter && target[i] !== letter && target.includes(letter)) {
+        // This is a bit tricky: we need to know if the earlier one was actually colored yellow
+        // A letter at index 'i' is colored yellow if targetCount > (correctMatches + previousPresentsBeforeI)
+        previousPresentMatches++;
+      }
+    }
+
+    const remainingToColor = targetCount - correctMatches;
+    if (previousPresentMatches < remainingToColor) {
+      return 'bg-accent-secondary text-white border-accent-secondary';
+    }
+
     return 'bg-foreground/10 text-foreground border-foreground/5';
   };
 
@@ -83,7 +120,9 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
 
       {status !== 'playing' && (
         <div className="text-center animate-bounce">
-          <p className="text-2xl font-bold">{status === 'won' ? "🎉 Brilliant!" : `Target: ${targetWord}`}</p>
+          <p className="text-2xl font-bold flex items-center justify-center gap-2">
+            {status === 'won' ? <><PartyPopper className="w-6 h-6 text-accent drop-shadow-sm" /> Brilliant!</> : `Target: ${targetWord}`}
+          </p>
         </div>
       )}
     </div>

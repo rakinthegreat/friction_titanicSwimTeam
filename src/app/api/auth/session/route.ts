@@ -9,10 +9,10 @@ export async function POST(req: any) {
     }
 
     try {
-        // ✅ Verify Firebase ID token
+        // Verify Firebase ID token
         const decoded = await admin.auth().verifyIdToken(token);
 
-        // ✅ Create session cookie
+        // Create session cookie
         const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
 
         const sessionCookie = await admin
