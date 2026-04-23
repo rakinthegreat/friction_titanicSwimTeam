@@ -1,0 +1,806 @@
+[
+    {
+        "question": "Who was the first prominent independent king of ancient Bengal?",
+        "answer": "Shashanka"
+    },
+    {
+        "question": "Which ancient dynasty ruled Bengal for over 400 years?",
+        "answer": "Pala Dynasty"
+    },
+    {
+        "question": "What was the capital of Shashanka's kingdom?",
+        "answer": "Karnasuvarna"
+    },
+    {
+        "question": "Which ancient empire was referred to by Greek and Roman historians as being located in the Bengal region?",
+        "answer": "Gangaridai"
+    },
+    {
+        "question": "Who founded the Pala Empire?",
+        "answer": "Gopala"
+    },
+    {
+        "question": "Which Buddhist vihara, a UNESCO World Heritage site, was built by Dharmapala?",
+        "answer": "Somapura Mahavihara"
+    },
+    {
+        "question": "What is the oldest known archaeological site in Bangladesh?",
+        "answer": "Mahasthangarh"
+    },
+    {
+        "question": "Mahasthangarh was the ancient capital of which territory?",
+        "answer": "Pundravardhana"
+    },
+    {
+        "question": "Who was the last significant ruler of the Sena dynasty?",
+        "answer": "Lakshmana Sena"
+    },
+    {
+        "question": "Which Muslim general conquered Nadia, defeating Lakshmana Sena in 1204?",
+        "answer": "Bakhtiyar Khalji"
+    },
+    {
+        "question": "Which traveler from Morocco visited Bengal in the 14th century?",
+        "answer": "Ibn Battuta"
+    },
+    {
+        "question": "Who founded the Ilyas Shahi dynasty?",
+        "answer": "Shamsuddin Ilyas Shah"
+    },
+    {
+        "question": "Which ruler declared himself the first independent Sultan of Bengal in 1338?",
+        "answer": "Fakhruddin Mubarak Shah"
+    },
+    {
+        "question": "During whose reign did the golden age of the Bengal Sultanate occur?",
+        "answer": "Alauddin Hussain Shah"
+    },
+    {
+        "question": "What was the historic capital of the Bengal Sultanate?",
+        "answer": "Sonargaon"
+    },
+    {
+        "question": "Who built the Sixty Dome Mosque (Shait Gumbad Mosque) in Bagerhat?",
+        "answer": "Khan Jahan Ali"
+    },
+    {
+        "question": "What was the alliance of independent landlords in Bengal who resisted Mughal expansion called?",
+        "answer": "Bara Bhuiyans"
+    },
+    {
+        "question": "Who was the leader of the Bara Bhuiyans?",
+        "answer": "Isa Khan"
+    },
+    {
+        "question": "Which Mughal general finally defeated the Bara Bhuiyans?",
+        "answer": "Islam Khan"
+    },
+    {
+        "question": "What was Dhaka renamed to during the Mughal era?",
+        "answer": "Jahangirnagar"
+    },
+    {
+        "question": "Who started the construction of the Lalbagh Fort in Dhaka?",
+        "answer": "Prince Muhammad Azam"
+    },
+    {
+        "question": "Which Mughal subahdar is famous for driving pirates out of Chittagong?",
+        "answer": "Shaista Khan"
+    },
+    {
+        "question": "Who was the first independent Nawab of Bengal?",
+        "answer": "Murshid Quli Khan"
+    },
+    {
+        "question": "In which battle was the last independent Nawab of Bengal defeated?",
+        "answer": "Battle of Plassey"
+    },
+    {
+        "question": "In what year did the Battle of Plassey take place?",
+        "answer": "1757"
+    },
+    {
+        "question": "Who was the last independent Nawab of Bengal?",
+        "answer": "Siraj ud-Daulah"
+    },
+    {
+        "question": "Which British military officer led the forces of the East India Company at Plassey?",
+        "answer": "Robert Clive"
+    },
+    {
+        "question": "Who betrayed Nawab Siraj ud-Daulah during the Battle of Plassey?",
+        "answer": "Mir Jafar"
+    },
+    {
+        "question": "Which battle in 1764 cemented British control over Bengal?",
+        "answer": "Battle of Buxar"
+    },
+    {
+        "question": "What devastating event occurred in Bengal in 1770 due to East India Company policies?",
+        "answer": "The Great Bengal Famine"
+    },
+    {
+        "question": "Who introduced the Permanent Settlement Act in Bengal?",
+        "answer": "Lord Cornwallis"
+    },
+    {
+        "question": "In what year was the Permanent Settlement Act enacted?",
+        "answer": "1793"
+    },
+    {
+        "question": "Who led the peasant uprising known as the Fakir-Sannyasi Rebellion?",
+        "answer": "Majnu Shah"
+    },
+    {
+        "question": "Who built a bamboo fort (Bansher Kella) to fight the British?",
+        "answer": "Titumir"
+    },
+    {
+        "question": "Who was the founder of the Faraizi Movement in Bengal?",
+        "answer": "Haji Shariatullah"
+    },
+    {
+        "question": "Which movement was launched in 1859 by Bengali farmers against British planters?",
+        "answer": "Indigo Revolt"
+    },
+    {
+        "question": "In what year did the first Partition of Bengal take place?",
+        "answer": "1905"
+    },
+    {
+        "question": "Which British Viceroy partitioned Bengal in 1905?",
+        "answer": "Lord Curzon"
+    },
+    {
+        "question": "What movement was launched in response to the 1905 Partition of Bengal?",
+        "answer": "Swadeshi Movement"
+    },
+    {
+        "question": "In what year was the Partition of Bengal annulled?",
+        "answer": "1911"
+    },
+    {
+        "question": "Who was the driving force behind the establishment of the All India Muslim League in Dhaka?",
+        "answer": "Nawab Salimullah"
+    },
+    {
+        "question": "In what year was the All India Muslim League founded?",
+        "answer": "1906"
+    },
+    {
+        "question": "In what year was the University of Dhaka established?",
+        "answer": "1921"
+    },
+    {
+        "question": "Who presented the Lahore Resolution in 1940?",
+        "answer": "A.K. Fazlul Huq"
+    },
+    {
+        "question": "What was A.K. Fazlul Huq's popular title?",
+        "answer": "Sher-e-Bangla"
+    },
+    {
+        "question": "Who was the first Prime Minister of Bengal under the British framework?",
+        "answer": "A.K. Fazlul Huq"
+    },
+    {
+        "question": "Which Bengali revolutionary led the Chittagong armoury raid in 1930?",
+        "answer": "Masterda Surya Sen"
+    },
+    {
+        "question": "Who was the first Bengali woman revolutionary to die fighting the British?",
+        "answer": "Pritilata Waddedar"
+    },
+    {
+        "question": "Which Bengali poet was awarded the Nobel Prize in Literature in 1913?",
+        "answer": "Rabindranath Tagore"
+    },
+    {
+        "question": "Who is known as the Rebel Poet of Bengal?",
+        "answer": "Kazi Nazrul Islam"
+    },
+    {
+        "question": "In what year did the British partition India, creating Pakistan?",
+        "answer": "1947"
+    },
+    {
+        "question": "What was the eastern wing of Pakistan originally called before 1955?",
+        "answer": "East Bengal"
+    },
+    {
+        "question": "In what year was the Awami Muslim League founded?",
+        "answer": "1949"
+    },
+    {
+        "question": "Who was the founding President of the Awami Muslim League?",
+        "answer": "Maulana Bhashani"
+    },
+    {
+        "question": "Which Pakistani leader controversially declared 'Urdu and only Urdu' shall be the state language?",
+        "answer": "Muhammad Ali Jinnah"
+    },
+    {
+        "question": "In what year did the Bengali Language Movement reach its peak?",
+        "answer": "1952"
+    },
+    {
+        "question": "On what date in 1952 did police open fire on students demanding Bengali as a state language?",
+        "answer": "February 21"
+    },
+    {
+        "question": "Name one of the martyrs of the 1952 Language Movement.",
+        "answer": "Barkat"
+    },
+    {
+        "question": "What monument was built to honor the martyrs of the Language Movement?",
+        "answer": "Shaheed Minar"
+    },
+    {
+        "question": "Who designed the central Shaheed Minar?",
+        "answer": "Hamidur Rahman"
+    },
+    {
+        "question": "What political coalition won the 1954 East Bengal legislative elections?",
+        "answer": "United Front"
+    },
+    {
+        "question": "In what year did Pakistan adopt its first constitution, officially naming East Bengal as East Pakistan?",
+        "answer": "1956"
+    },
+    {
+        "question": "Who imposed martial law in Pakistan in 1958?",
+        "answer": "Ayub Khan"
+    },
+    {
+        "question": "Who presented the historic Six-Point Demand?",
+        "answer": "Sheikh Mujibur Rahman"
+    },
+    {
+        "question": "In what year was the Six-Point Demand presented?",
+        "answer": "1966"
+    },
+    {
+        "question": "The Six-Point Movement was essentially a demand for what?",
+        "answer": "Provincial Autonomy"
+    },
+    {
+        "question": "What was the name of the sedition case filed against Sheikh Mujibur Rahman in 1968?",
+        "answer": "Agartala Conspiracy Case"
+    },
+    {
+        "question": "What major political event forced Ayub Khan to withdraw the Agartala Conspiracy Case?",
+        "answer": "1969 Mass Uprising"
+    },
+    {
+        "question": "Which student leader was killed during the 1969 Mass Uprising, fueling the protests?",
+        "answer": "Amanullah Asaduzzaman"
+    },
+    {
+        "question": "Which title was bestowed upon Sheikh Mujibur Rahman in 1969?",
+        "answer": "Bangabandhu"
+    },
+    {
+        "question": "Who gave Sheikh Mujibur Rahman the title 'Bangabandhu'?",
+        "answer": "Tofail Ahmed"
+    },
+    {
+        "question": "Which political party won an absolute majority in the 1970 Pakistani general election?",
+        "answer": "Awami League"
+    },
+    {
+        "question": "What devastating natural disaster struck East Pakistan in November 1970?",
+        "answer": "Bhola Cyclone"
+    },
+    {
+        "question": "Who became the President and Chief Martial Law Administrator of Pakistan in 1969?",
+        "answer": "Yahya Khan"
+    },
+    {
+        "question": "On what date did Bangabandhu deliver his historic speech at the Race Course Maidan?",
+        "answer": "March 7, 1971"
+    },
+    {
+        "question": "What was the code name for the Pakistani military crackdown on March 25, 1971?",
+        "answer": "Operation Searchlight"
+    },
+    {
+        "question": "On what date did Bangladesh officially declare independence?",
+        "answer": "March 26, 1971"
+    },
+    {
+        "question": "Who declared the independence of Bangladesh on behalf of Sheikh Mujibur Rahman via radio?",
+        "answer": "Ziaur Rahman"
+    },
+    {
+        "question": "Where was the first provisional government of Bangladesh formed?",
+        "answer": "Mujibnagar"
+    },
+    {
+        "question": "On what date did the Mujibnagar Government take the oath of office?",
+        "answer": "April 17, 1971"
+    },
+    {
+        "question": "Who was the President of the provisional Mujibnagar Government?",
+        "answer": "Sheikh Mujibur Rahman"
+    },
+    {
+        "question": "Who served as the acting President of the Mujibnagar Government?",
+        "answer": "Syed Nazrul Islam"
+    },
+    {
+        "question": "Who was the first Prime Minister of Bangladesh?",
+        "answer": "Tajuddin Ahmad"
+    },
+    {
+        "question": "Who was the Commander-in-Chief of the Mukti Bahini?",
+        "answer": "M. A. G. Osmani"
+    },
+    {
+        "question": "Into how many sectors was Bangladesh divided during the Liberation War?",
+        "answer": "11"
+    },
+    {
+        "question": "Which sector had no regular commander and was composed of naval commandos?",
+        "answer": "Sector 10"
+    },
+    {
+        "question": "What was the guerrilla force fighting for the independence of Bangladesh called?",
+        "answer": "Mukti Bahini"
+    },
+    {
+        "question": "Which Indian Prime Minister strongly supported Bangladesh during the Liberation War?",
+        "answer": "Indira Gandhi"
+    },
+    {
+        "question": "Which famous musician organized the 'Concert for Bangladesh' in New York?",
+        "answer": "George Harrison"
+    },
+    {
+        "question": "Which Indian musician co-organized the Concert for Bangladesh?",
+        "answer": "Ravi Shankar"
+    },
+    {
+        "question": "Which global superpower sent its Seventh Fleet to the Bay of Bengal to intimidate India and Bangladesh?",
+        "answer": "United States"
+    },
+    {
+        "question": "Which global superpower vetoed UN resolutions to support India and Bangladesh in 1971?",
+        "answer": "Soviet Union"
+    },
+    {
+        "question": "On what date did the Pakistani army systematically execute Bengali intellectuals?",
+        "answer": "December 14, 1971"
+    },
+    {
+        "question": "What day is observed as Martyred Intellectuals Day in Bangladesh?",
+        "answer": "December 14"
+    },
+    {
+        "question": "On what date did the Pakistani forces surrender, marking Victory Day?",
+        "answer": "December 16, 1971"
+    },
+    {
+        "question": "Which Pakistani general signed the instrument of surrender?",
+        "answer": "A. A. K. Niazi"
+    },
+    {
+        "question": "Which Indian general accepted the surrender of Pakistani forces in Dhaka?",
+        "answer": "Jagjit Singh Aurora"
+    },
+    {
+        "question": "Where did the surrender ceremony take place in Dhaka?",
+        "answer": "Ramna Race Course"
+    },
+    {
+        "question": "What is the highest military award for gallantry in Bangladesh?",
+        "answer": "Bir Sreshtho"
+    },
+    {
+        "question": "How many freedom fighters were awarded the title of Bir Sreshtho?",
+        "answer": "7"
+    },
+    {
+        "question": "Name the Bir Sreshtho who was a Captain in the army.",
+        "answer": "Mohiuddin Jahangir"
+    },
+    {
+        "question": "Name the Bir Sreshtho who belonged to the Bangladesh Navy.",
+        "answer": "Ruhul Amin"
+    },
+    {
+        "question": "Name the Bir Sreshtho who was an Engine Room Artificer.",
+        "answer": "Ruhul Amin"
+    },
+    {
+        "question": "Name the Bir Sreshtho who was a Flight Lieutenant.",
+        "answer": "Matiur Rahman"
+    },
+    {
+        "question": "Which Bir Sreshtho died while trying to hijack a fighter plane from Pakistan?",
+        "answer": "Matiur Rahman"
+    },
+    {
+        "question": "Name the Bir Sreshtho who was a Sepoy.",
+        "answer": "Hamidur Rahman"
+    },
+    {
+        "question": "Name the Bir Sreshtho who was a Lance Naik.",
+        "answer": "Munshi Abdur Rouf"
+    },
+    {
+        "question": "Name the Bir Sreshtho who was a Havildar.",
+        "answer": "Abdur Rouf"
+    },
+    {
+        "question": "What is the second highest military award in Bangladesh?",
+        "answer": "Bir Uttam"
+    },
+    {
+        "question": "What was the name of the independent radio station operated by Bengali nationalists during the war?",
+        "answer": "Swadhin Bangla Betar Kendra"
+    },
+    {
+        "question": "On what date did Bangabandhu Sheikh Mujibur Rahman return to independent Bangladesh?",
+        "answer": "January 10, 1972"
+    },
+    {
+        "question": "Who headed the committee that drafted the Constitution of Bangladesh?",
+        "answer": "Dr. Kamal Hossain"
+    },
+    {
+        "question": "On what date was the Constitution of Bangladesh formally adopted?",
+        "answer": "November 4, 1972"
+    },
+    {
+        "question": "When did the Constitution of Bangladesh come into effect?",
+        "answer": "December 16, 1972"
+    },
+    {
+        "question": "In what year did Bangladesh become a member of the United Nations?",
+        "answer": "1974"
+    },
+    {
+        "question": "What was the national political front formed by Sheikh Mujibur Rahman in 1975?",
+        "answer": "BAKSAL"
+    },
+    {
+        "question": "On what date was Bangabandhu Sheikh Mujibur Rahman assassinated?",
+        "answer": "August 15, 1975"
+    },
+    {
+        "question": "Who became the President immediately after the assassination of Sheikh Mujibur Rahman?",
+        "answer": "Khondaker Mostaq Ahmad"
+    },
+    {
+        "question": "On what date were four national leaders assassinated inside Dhaka Central Jail?",
+        "answer": "November 3, 1975"
+    },
+    {
+        "question": "What day is observed as Jail Killing Day in Bangladesh?",
+        "answer": "November 3"
+    },
+    {
+        "question": "Who assumed power as the Chief Martial Law Administrator in November 1975?",
+        "answer": "Ziaur Rahman"
+    },
+    {
+        "question": "Which political party was founded by Ziaur Rahman?",
+        "answer": "Bangladesh Nationalist Party (BNP)"
+    },
+    {
+        "question": "In what year was Ziaur Rahman assassinated?",
+        "answer": "1981"
+    },
+    {
+        "question": "Who took over the government through a bloodless coup in 1982?",
+        "answer": "Hussain Muhammad Ershad"
+    },
+    {
+        "question": "Which political party was founded by Hussain Muhammad Ershad?",
+        "answer": "Jatiya Party"
+    },
+    {
+        "question": "What movement eventually forced Ershad to resign?",
+        "answer": "1990 Mass Uprising"
+    },
+    {
+        "question": "Which young activist was killed in 1987 wearing a shirt that read 'Let Democracy Be Free'?",
+        "answer": "Noor Hossain"
+    },
+    {
+        "question": "Who was the first female Prime Minister of Bangladesh?",
+        "answer": "Khaleda Zia"
+    },
+    {
+        "question": "In what year was the caretaker government system introduced into the Constitution?",
+        "answer": "1996"
+    },
+    {
+        "question": "Which historic treaty was signed in 1997 to end the insurgency in the Chittagong Hill Tracts?",
+        "answer": "Chittagong Hill Tracts Peace Accord"
+    },
+    {
+        "question": "What international body declared February 21 as International Mother Language Day?",
+        "answer": "UNESCO"
+    },
+    {
+        "question": "In what year was February 21 declared International Mother Language Day?",
+        "answer": "1999"
+    },
+    {
+        "question": "Who is the longest-serving Prime Minister in the history of Bangladesh?",
+        "answer": "Sheikh Hasina"
+    },
+    {
+        "question": "What tribunal was established in 2010 to try collaborators of the 1971 war?",
+        "answer": "International Crimes Tribunal"
+    },
+    {
+        "question": "What was the name of the 2013 mass movement demanding capital punishment for war criminals?",
+        "answer": "Shahbag Protests"
+    },
+    {
+        "question": "Which major infrastructure project, self-funded by Bangladesh, opened in 2022?",
+        "answer": "Padma Bridge"
+    },
+    {
+        "question": "Who composed the national anthem of Bangladesh?",
+        "answer": "Rabindranath Tagore"
+    },
+    {
+        "question": "Which song was adopted as the national anthem?",
+        "answer": "Amar Sonar Bangla"
+    },
+    {
+        "question": "Who composed the national march of Bangladesh (Notuner Gaan)?",
+        "answer": "Kazi Nazrul Islam"
+    },
+    {
+        "question": "What is the national animal of Bangladesh?",
+        "answer": "Royal Bengal Tiger"
+    },
+    {
+        "question": "What is the national bird of Bangladesh?",
+        "answer": "Oriental Magpie-Robin (Doyel)"
+    },
+    {
+        "question": "What is the national flower of Bangladesh?",
+        "answer": "Water Lily (Shapla)"
+    },
+    {
+        "question": "What is the national fruit of Bangladesh?",
+        "answer": "Jackfruit"
+    },
+    {
+        "question": "What is the national fish of Bangladesh?",
+        "answer": "Ilish (Hilsa)"
+    },
+    {
+        "question": "What is the national tree of Bangladesh?",
+        "answer": "Mango Tree"
+    },
+    {
+        "question": "Who is the architect of the National Parliament House (Jatiya Sangsad Bhaban)?",
+        "answer": "Louis I. Kahn"
+    },
+    {
+        "question": "Who is the architect of the National Martyrs' Memorial (Jatiya Smriti Soudha)?",
+        "answer": "Syed Mainul Hossain"
+    },
+    {
+        "question": "Where is the National Martyrs' Memorial located?",
+        "answer": "Savar"
+    },
+    {
+        "question": "What is the central bank of Bangladesh called?",
+        "answer": "Bangladesh Bank"
+    },
+    {
+        "question": "In what year was Bangladesh Bank established?",
+        "answer": "1971"
+    },
+    {
+        "question": "Which Bangladeshi microfinance organization won the Nobel Peace Prize in 2006?",
+        "answer": "Grameen Bank"
+    },
+    {
+        "question": "Who was jointly awarded the Nobel Peace Prize alongside Grameen Bank?",
+        "answer": "Muhammad Yunus"
+    },
+    {
+        "question": "Which Bangladeshi non-governmental organization is considered the largest in the world?",
+        "answer": "BRAC"
+    },
+    {
+        "question": "Who was the founder of BRAC?",
+        "answer": "Fazle Hasan Abed"
+    },
+    {
+        "question": "What is the official state religion of Bangladesh?",
+        "answer": "Islam"
+    },
+    {
+        "question": "Which constitutional amendment made Islam the state religion?",
+        "answer": "Eighth Amendment"
+    },
+    {
+        "question": "What is the name of the highest court in Bangladesh?",
+        "answer": "Supreme Court of Bangladesh"
+    },
+    {
+        "question": "Which region of Bangladesh is famous for its tea gardens?",
+        "answer": "Sylhet"
+    },
+    {
+        "question": "What is the name of the longest natural sea beach in the world, located in Bangladesh?",
+        "answer": "Cox's Bazar"
+    },
+    {
+        "question": "Which mangrove forest in Bangladesh is the largest in the world?",
+        "answer": "Sundarbans"
+    },
+    {
+        "question": "In what year did Bangladesh win its first ICC Trophy in cricket?",
+        "answer": "1997"
+    },
+    {
+        "question": "Who was the first Bangladeshi to climb Mount Everest?",
+        "answer": "Musa Ibrahim"
+    },
+    {
+        "question": "What is the local name for the catastrophic cyclone of 1991?",
+        "answer": "Gorky"
+    },
+    {
+        "question": "Which Bangladeshi architect designed the Sears Tower in Chicago?",
+        "answer": "Fazlur Rahman Khan"
+    },
+    {
+        "question": "What is the staple crop of Bangladesh?",
+        "answer": "Rice"
+    },
+    {
+        "question": "Which river is known as the sorrow of Bengal?",
+        "answer": "Teesta (historically Damodar)"
+    },
+    {
+        "question": "What is the combined flow of the Ganges and Brahmaputra rivers called in Bangladesh?",
+        "answer": "Padma"
+    },
+    {
+        "question": "Which river joins the Padma to form the Meghna estuary?",
+        "answer": "Meghna"
+    },
+    {
+        "question": "What is the name of the primary seaport of Bangladesh?",
+        "answer": "Chittagong Port"
+    },
+    {
+        "question": "Which international organization was proposed by Ziaur Rahman and established in Dhaka in 1985?",
+        "answer": "SAARC"
+    },
+    {
+        "question": "What is the name of the first satellite launched by Bangladesh?",
+        "answer": "Bangabandhu-1"
+    },
+    {
+        "question": "In what year was Bangabandhu-1 launched?",
+        "answer": "2018"
+    },
+    {
+        "question": "Which historical mosque in Dhaka was built by Prince Muhammad Azam?",
+        "answer": "Lalbagh Fort Mosque"
+    },
+    {
+        "question": "What is the famous muslin fabric of Dhaka historically known for?",
+        "answer": "Being finely woven and translucent"
+    },
+    {
+        "question": "Which traditional boat is widely used in the riverine areas of Bangladesh?",
+        "answer": "Nouka"
+    },
+    {
+        "question": "What is the traditional form of embroidery from Bengal called?",
+        "answer": "Nakshi Kantha"
+    },
+    {
+        "question": "Which historic Hindu temple was destroyed during Operation Searchlight and later rebuilt?",
+        "answer": "Ramna Kali Mandir"
+    },
+    {
+        "question": "Who is considered the pioneer of modern art in Bangladesh?",
+        "answer": "Zainul Abedin"
+    },
+    {
+        "question": "Which famine did Zainul Abedin famously depict in his sketches?",
+        "answer": "Bengal Famine of 1943"
+    },
+    {
+        "question": "Who is the legendary folk singer of Bengal known as the 'Baul Samrat'?",
+        "answer": "Lalon Shah"
+    },
+    {
+        "question": "Which mystic poet's songs were recognized by UNESCO as a Masterpiece of the Oral and Intangible Heritage?",
+        "answer": "Baul songs"
+    },
+    {
+        "question": "What was the code name for the 1971 naval commando operation against Pakistani ships?",
+        "answer": "Operation Jackpot"
+    },
+    {
+        "question": "Who was the first female pilot in the Bangladesh Air Force?",
+        "answer": "Nayma Haque and Tamanna-E-Lutfi"
+    },
+    {
+        "question": "Which Bangladeshi diplomat served as the Under-Secretary-General of the United Nations?",
+        "answer": "Anwarul Karim Chowdhury"
+    },
+    {
+        "question": "What is the name of the border guard force of Bangladesh?",
+        "answer": "Border Guard Bangladesh (BGB)"
+    },
+    {
+        "question": "What was the previous name of the Border Guard Bangladesh?",
+        "answer": "Bangladesh Rifles (BDR)"
+    },
+    {
+        "question": "In what year did the tragic BDR mutiny take place?",
+        "answer": "2009"
+    },
+    {
+        "question": "Which historical region of Bengal was known for its distinct dialect and maritime history?",
+        "answer": "Noakhali / Chittagong"
+    },
+    {
+        "question": "Who led the first successful expedition of the Bangladesh Navy to Antarctica?",
+        "answer": "There has been no official naval expedition, but Inam Al Haque raised the flag."
+    },
+    {
+        "question": "Which Bangladeshi scientist invented a method to extract jute polymer (Sonali Bag)?",
+        "answer": "Mubarak Ahmad Khan"
+    },
+    {
+        "question": "Who was the first woman to be appointed as a judge in the Appellate Division of the Supreme Court of Bangladesh?",
+        "answer": "Nazmun Ara Sultana"
+    },
+    {
+        "question": "What was the first feature film made in East Pakistan?",
+        "answer": "Mukh O Mukhosh"
+    },
+    {
+        "question": "In what year was the first passenger train service inaugurated in East Bengal?",
+        "answer": "1862"
+    },
+    {
+        "question": "Which district is known as the 'Granary of Bangladesh'?",
+        "answer": "Barisal"
+    },
+    {
+        "question": "Which major river divides Dhaka from the southern districts?",
+        "answer": "Buriganga"
+    },
+    {
+        "question": "What was the historical name of the region encompassing modern Sylhet?",
+        "answer": "Srihatta"
+    },
+    {
+        "question": "Who is the legendary Sufi saint buried in Sylhet?",
+        "answer": "Hazrat Shahjalal"
+    },
+    {
+        "question": "Which historic fort is located in Munshiganj?",
+        "answer": "Idrakpur Fort"
+    },
+    {
+        "question": "What is the name of the traditional martial art of Bangladesh?",
+        "answer": "Lathi Khela"
+    },
+    {
+        "question": "Which festival marks the Bengali New Year?",
+        "answer": "Pohela Boishakh"
+    },
+    {
+        "question": "What is the UNESCO-recognized cultural procession that takes place on Pohela Boishakh?",
+        "answer": "Mangal Shobhajatra"
+    }
+]

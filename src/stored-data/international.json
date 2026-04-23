@@ -1,0 +1,798 @@
+[
+    {
+        "question": "What is the official currency of Japan?",
+        "answer": "Yen"
+    },
+    {
+        "question": "What is the official currency of the United Kingdom?",
+        "answer": "Pound Sterling"
+    },
+    {
+        "question": "What is the official currency of South Korea?",
+        "answer": "Won"
+    },
+    {
+        "question": "What is the official currency of China?",
+        "answer": "Yuan"
+    },
+    {
+        "question": "What is the official currency of India?",
+        "answer": "Rupee"
+    },
+    {
+        "question": "What is the official currency of Russia?",
+        "answer": "Ruble"
+    },
+    {
+        "question": "What is the official currency of South Africa?",
+        "answer": "Rand"
+    },
+    {
+        "question": "What is the official currency of Brazil?",
+        "answer": "Real"
+    },
+    {
+        "question": "What is the official currency of Mexico?",
+        "answer": "Peso"
+    },
+    {
+        "question": "What is the official currency of Switzerland?",
+        "answer": "Swiss Franc"
+    },
+    {
+        "question": "What is the official currency of Turkey?",
+        "answer": "Lira"
+    },
+    {
+        "question": "What is the official currency of the United Arab Emirates?",
+        "answer": "Dirham"
+    },
+    {
+        "question": "What is the official currency of Israel?",
+        "answer": "Shekel"
+    },
+    {
+        "question": "What is the official currency of Thailand?",
+        "answer": "Baht"
+    },
+    {
+        "question": "What is the official currency of Vietnam?",
+        "answer": "Dong"
+    },
+    {
+        "question": "What is the official currency of Malaysia?",
+        "answer": "Ringgit"
+    },
+    {
+        "question": "What is the official currency of Indonesia?",
+        "answer": "Rupiah"
+    },
+    {
+        "question": "What is the official currency of Poland?",
+        "answer": "Zloty"
+    },
+    {
+        "question": "What is the official currency of Sweden?",
+        "answer": "Krona"
+    },
+    {
+        "question": "What is the official currency of Norway?",
+        "answer": "Krone"
+    },
+    {
+        "question": "What is the official currency of Denmark?",
+        "answer": "Krone"
+    },
+    {
+        "question": "What is the official currency of Hungary?",
+        "answer": "Forint"
+    },
+    {
+        "question": "What is the official currency of Peru?",
+        "answer": "Sol"
+    },
+    {
+        "question": "What is the official currency of Nigeria?",
+        "answer": "Naira"
+    },
+    {
+        "question": "What is the official currency of Kenya?",
+        "answer": "Shilling"
+    },
+    {
+        "question": "In which country is the ancient city of Petra located?",
+        "answer": "Jordan"
+    },
+    {
+        "question": "In which country is the Taj Mahal located?",
+        "answer": "India"
+    },
+    {
+        "question": "In which country is the Machu Picchu located?",
+        "answer": "Peru"
+    },
+    {
+        "question": "In which country is the Chichen Itza pyramid located?",
+        "answer": "Mexico"
+    },
+    {
+        "question": "In which country is the Colosseum located?",
+        "answer": "Italy"
+    },
+    {
+        "question": "In which country is the Eiffel Tower located?",
+        "answer": "France"
+    },
+    {
+        "question": "In which country is the Great Wall located?",
+        "answer": "China"
+    },
+    {
+        "question": "In which country is the Christ the Redeemer statue located?",
+        "answer": "Brazil"
+    },
+    {
+        "question": "In which country is the Sydney Opera House located?",
+        "answer": "Australia"
+    },
+    {
+        "question": "In which country is the Acropolis located?",
+        "answer": "Greece"
+    },
+    {
+        "question": "In which country is Stonehenge located?",
+        "answer": "United Kingdom"
+    },
+    {
+        "question": "In which country are the Pyramids of Giza located?",
+        "answer": "Egypt"
+    },
+    {
+        "question": "In which country is Mount Fuji located?",
+        "answer": "Japan"
+    },
+    {
+        "question": "In which country is the Burj Khalifa located?",
+        "answer": "United Arab Emirates"
+    },
+    {
+        "question": "In which country is the Statue of Liberty located?",
+        "answer": "United States"
+    },
+    {
+        "question": "In which country is the Angkor Wat temple complex located?",
+        "answer": "Cambodia"
+    },
+    {
+        "question": "In which country is Mount Kilimanjaro located?",
+        "answer": "Tanzania"
+    },
+    {
+        "question": "In which country is the Alhambra palace located?",
+        "answer": "Spain"
+    },
+    {
+        "question": "In which country is the Neuschwanstein Castle located?",
+        "answer": "Germany"
+    },
+    {
+        "question": "In which country is the Hagia Sophia located?",
+        "answer": "Turkey"
+    },
+    {
+        "question": "In which country is the St. Basil's Cathedral located?",
+        "answer": "Russia"
+    },
+    {
+        "question": "In which country is the Golden Gate Bridge located?",
+        "answer": "United States"
+    },
+    {
+        "question": "In which country is the CN Tower located?",
+        "answer": "Canada"
+    },
+    {
+        "question": "In which country is the Burj Al Arab located?",
+        "answer": "United Arab Emirates"
+    },
+    {
+        "question": "In which country is the Potala Palace located?",
+        "answer": "China"
+    },
+    {
+        "question": "Which city hosts the headquarters of the United Nations?",
+        "answer": "New York"
+    },
+    {
+        "question": "Which city hosts the headquarters of the World Health Organization (WHO)?",
+        "answer": "Geneva"
+    },
+    {
+        "question": "Which city hosts the headquarters of the European Union?",
+        "answer": "Brussels"
+    },
+    {
+        "question": "Which city hosts the headquarters of NATO?",
+        "answer": "Brussels"
+    },
+    {
+        "question": "Which city hosts the headquarters of Interpol?",
+        "answer": "Lyon"
+    },
+    {
+        "question": "Which city hosts the headquarters of the African Union?",
+        "answer": "Addis Ababa"
+    },
+    {
+        "question": "Which city hosts the headquarters of the Arab League?",
+        "answer": "Cairo"
+    },
+    {
+        "question": "Which city hosts the headquarters of OPEC?",
+        "answer": "Vienna"
+    },
+    {
+        "question": "Which city hosts the headquarters of the International Monetary Fund (IMF)?",
+        "answer": "Washington, D.C."
+    },
+    {
+        "question": "Which city hosts the headquarters of the World Trade Organization (WTO)?",
+        "answer": "Geneva"
+    },
+    {
+        "question": "Which city hosts the headquarters of UNESCO?",
+        "answer": "Paris"
+    },
+    {
+        "question": "Which city hosts the headquarters of the International Olympic Committee (IOC)?",
+        "answer": "Lausanne"
+    },
+    {
+        "question": "Which city hosts the headquarters of the International Court of Justice?",
+        "answer": "The Hague"
+    },
+    {
+        "question": "Which city hosts the headquarters of the Association of Southeast Asian Nations (ASEAN)?",
+        "answer": "Jakarta"
+    },
+    {
+        "question": "Which city hosts the headquarters of the Commonwealth of Nations?",
+        "answer": "London"
+    },
+    {
+        "question": "What is the official language of Brazil?",
+        "answer": "Portuguese"
+    },
+    {
+        "question": "What is the most widely spoken first language in the world?",
+        "answer": "Mandarin Chinese"
+    },
+    {
+        "question": "What is the official language of Austria?",
+        "answer": "German"
+    },
+    {
+        "question": "What is the official language of Egypt?",
+        "answer": "Arabic"
+    },
+    {
+        "question": "What is the official language of Argentina?",
+        "answer": "Spanish"
+    },
+    {
+        "question": "What is the official language of Iran?",
+        "answer": "Persian"
+    },
+    {
+        "question": "What is the official language of Kenya?",
+        "answer": "Swahili"
+    },
+    {
+        "question": "What is the official language of Senegal?",
+        "answer": "French"
+    },
+    {
+        "question": "What is the official language of Mozambique?",
+        "answer": "Portuguese"
+    },
+    {
+        "question": "What is the national language of Japan?",
+        "answer": "Japanese"
+    },
+    {
+        "question": "What is the official language of the Netherlands?",
+        "answer": "Dutch"
+    },
+    {
+        "question": "What is the official language of Jamaica?",
+        "answer": "English"
+    },
+    {
+        "question": "What is the official language of Cuba?",
+        "answer": "Spanish"
+    },
+    {
+        "question": "What language is primarily spoken in the Flanders region of Belgium?",
+        "answer": "Dutch"
+    },
+    {
+        "question": "What language is primarily spoken in the Wallonia region of Belgium?",
+        "answer": "French"
+    },
+    {
+        "question": "What is the official language of Haiti alongside French?",
+        "answer": "Haitian Creole"
+    },
+    {
+        "question": "Which country has the most official languages in the world at the national level?",
+        "answer": "Bolivia"
+    },
+    {
+        "question": "What is the most widely spoken language in the African continent?",
+        "answer": "Swahili"
+    },
+    {
+        "question": "What language is the lingua franca of the aviation industry?",
+        "answer": "English"
+    },
+    {
+        "question": "What is the official language of the Vatican City?",
+        "answer": "Latin"
+    },
+    {
+        "question": "Which country has the most time zones in the world, including its overseas territories?",
+        "answer": "France"
+    },
+    {
+        "question": "Which country has the longest coastline in the world?",
+        "answer": "Canada"
+    },
+    {
+        "question": "Which country shares the longest international land border with the United States?",
+        "answer": "Canada"
+    },
+    {
+        "question": "What is the smallest country in the world by land area?",
+        "answer": "Vatican City"
+    },
+    {
+        "question": "What is the largest country in the world by land area?",
+        "answer": "Russia"
+    },
+    {
+        "question": "Which country is known as the Land of Fire and Ice?",
+        "answer": "Iceland"
+    },
+    {
+        "question": "Which country is known as the Land of the Midnight Sun?",
+        "answer": "Norway"
+    },
+    {
+        "question": "Which country is entirely entirely surrounded by South Africa?",
+        "answer": "Lesotho"
+    },
+    {
+        "question": "Which European country is bordered by Spain and France?",
+        "answer": "Andorra"
+    },
+    {
+        "question": "Which country occupies the Horn of Africa alongside Ethiopia and Djibouti?",
+        "answer": "Somalia"
+    },
+    {
+        "question": "What is the only country in South America whose official language is English?",
+        "answer": "Guyana"
+    },
+    {
+        "question": "What is the only country in South America whose official language is Dutch?",
+        "answer": "Suriname"
+    },
+    {
+        "question": "Which country consists of over 7,000 islands in Southeast Asia?",
+        "answer": "Philippines"
+    },
+    {
+        "question": "Which country is the largest archipelago in the world?",
+        "answer": "Indonesia"
+    },
+    {
+        "question": "Which country borders both the Caspian Sea and the Persian Gulf?",
+        "answer": "Iran"
+    },
+    {
+        "question": "Which African country was formerly known as Zaire?",
+        "answer": "Democratic Republic of the Congo"
+    },
+    {
+        "question": "Which Asian country was formerly known as Ceylon?",
+        "answer": "Sri Lanka"
+    },
+    {
+        "question": "Which Southeast Asian country was formerly known as Burma?",
+        "answer": "Myanmar"
+    },
+    {
+        "question": "Which African country was formerly known as Rhodesia?",
+        "answer": "Zimbabwe"
+    },
+    {
+        "question": "Which European country was known as Helvetia in ancient times?",
+        "answer": "Switzerland"
+    },
+    {
+        "question": "Which is the only country to have a non-rectangular national flag?",
+        "answer": "Nepal"
+    },
+    {
+        "question": "Which country's flag features a red maple leaf?",
+        "answer": "Canada"
+    },
+    {
+        "question": "Which country's flag features a yellow Star of David?",
+        "answer": "Israel"
+    },
+    {
+        "question": "Which country's flag features a green cedar tree?",
+        "answer": "Lebanon"
+    },
+    {
+        "question": "Which country's flag is entirely red with a yellow star in the center?",
+        "answer": "Vietnam"
+    },
+    {
+        "question": "Which country's flag features a dragon holding jewels?",
+        "answer": "Bhutan"
+    },
+    {
+        "question": "Which country's flag is the only one to feature a modern assault rifle?",
+        "answer": "Mozambique"
+    },
+    {
+        "question": "Which continent is home to the Amazon Rainforest?",
+        "answer": "South America"
+    },
+    {
+        "question": "Which continent is home to the Sahara Desert?",
+        "answer": "Africa"
+    },
+    {
+        "question": "Which continent is home to the Gobi Desert?",
+        "answer": "Asia"
+    },
+    {
+        "question": "Which major canal connects the Atlantic Ocean to the Pacific Ocean?",
+        "answer": "Panama Canal"
+    },
+    {
+        "question": "Which major canal connects the Mediterranean Sea to the Red Sea?",
+        "answer": "Suez Canal"
+    },
+    {
+        "question": "Which sea separates the Arabian Peninsula from northeastern Africa?",
+        "answer": "Red Sea"
+    },
+    {
+        "question": "Which strait separates Asia from North America?",
+        "answer": "Bering Strait"
+    },
+    {
+        "question": "Which strait separates the United Kingdom from mainland Europe?",
+        "answer": "English Channel"
+    },
+    {
+        "question": "What is the longest river in Europe?",
+        "answer": "Volga River"
+    },
+    {
+        "question": "What is the longest river in South America?",
+        "answer": "Amazon River"
+    },
+    {
+        "question": "What is the highest mountain peak in Africa?",
+        "answer": "Mount Kilimanjaro"
+    },
+    {
+        "question": "What is the highest mountain peak in North America?",
+        "answer": "Denali"
+    },
+    {
+        "question": "What is the highest mountain peak in South America?",
+        "answer": "Aconcagua"
+    },
+    {
+        "question": "What is the largest fresh water lake in the world by volume?",
+        "answer": "Lake Baikal"
+    },
+    {
+        "question": "What is the largest fresh water lake in the world by surface area?",
+        "answer": "Lake Superior"
+    },
+    {
+        "question": "Which ocean is located entirely in the Northern Hemisphere?",
+        "answer": "Arctic Ocean"
+    },
+    {
+        "question": "Which ocean lies between Africa and Australia?",
+        "answer": "Indian Ocean"
+    },
+    {
+        "question": "Which ocean lies on the east coast of Africa?",
+        "answer": "Indian Ocean"
+    },
+    {
+        "question": "Which ocean surrounds the continent of Antarctica?",
+        "answer": "Southern Ocean"
+    },
+    {
+        "question": "Which country produces the most coffee in the world?",
+        "answer": "Brazil"
+    },
+    {
+        "question": "Which country produces the most tea in the world?",
+        "answer": "China"
+    },
+    {
+        "question": "Which country produces the most olive oil in the world?",
+        "answer": "Spain"
+    },
+    {
+        "question": "Which country has the largest proven oil reserves in the world?",
+        "answer": "Venezuela"
+    },
+    {
+        "question": "Which country is the world's largest producer of diamonds by volume?",
+        "answer": "Russia"
+    },
+    {
+        "question": "Which country is famous for the global export of tulips?",
+        "answer": "Netherlands"
+    },
+    {
+        "question": "Which country is the largest exporter of electronics in the world?",
+        "answer": "China"
+    },
+    {
+        "question": "What is the most populous city in Australia?",
+        "answer": "Sydney"
+    },
+    {
+        "question": "What is the most populous city in the United States?",
+        "answer": "New York City"
+    },
+    {
+        "question": "What is the most populous city in Brazil?",
+        "answer": "São Paulo"
+    },
+    {
+        "question": "What is the most populous city in Japan?",
+        "answer": "Tokyo"
+    },
+    {
+        "question": "What is the most populous city in Turkey?",
+        "answer": "Istanbul"
+    },
+    {
+        "question": "What is the most populous city in South Africa?",
+        "answer": "Johannesburg"
+    },
+    {
+        "question": "What is the most populous city in Canada?",
+        "answer": "Toronto"
+    },
+    {
+        "question": "What is the most populous city in the United Kingdom?",
+        "answer": "London"
+    },
+    {
+        "question": "Which country's national animal is the kangaroo?",
+        "answer": "Australia"
+    },
+    {
+        "question": "Which country's national animal is the giant panda?",
+        "answer": "China"
+    },
+    {
+        "question": "Which country's national animal is the bald eagle?",
+        "answer": "United States"
+    },
+    {
+        "question": "Which country's national animal is the beaver?",
+        "answer": "Canada"
+    },
+    {
+        "question": "Which country's national animal is the Bengal tiger?",
+        "answer": "India"
+    },
+    {
+        "question": "Which country's national bird is the kiwi?",
+        "answer": "New Zealand"
+    },
+    {
+        "question": "Which country is famous for the Maori culture?",
+        "answer": "New Zealand"
+    },
+    {
+        "question": "Which country is famous for the Inca civilization?",
+        "answer": "Peru"
+    },
+    {
+        "question": "Which country is famous for the Aztec civilization?",
+        "answer": "Mexico"
+    },
+    {
+        "question": "Which country is known as the birthplace of democracy?",
+        "answer": "Greece"
+    },
+    {
+        "question": "Which modern-day country encompasses most of ancient Mesopotamia?",
+        "answer": "Iraq"
+    },
+    {
+        "question": "Which modern-day country encompasses the ancient city of Carthage?",
+        "answer": "Tunisia"
+    },
+    {
+        "question": "Which country is the origin of the martial art Taekwondo?",
+        "answer": "South Korea"
+    },
+    {
+        "question": "Which country is the origin of the martial art Judo?",
+        "answer": "Japan"
+    },
+    {
+        "question": "Which country is the origin of the martial art Capoeira?",
+        "answer": "Brazil"
+    },
+    {
+        "question": "Which country is the origin of the martial art Muay Thai?",
+        "answer": "Thailand"
+    },
+    {
+        "question": "What is the primary religion in India?",
+        "answer": "Hinduism"
+    },
+    {
+        "question": "What is the primary religion in Thailand?",
+        "answer": "Buddhism"
+    },
+    {
+        "question": "What is the primary religion in Saudi Arabia?",
+        "answer": "Islam"
+    },
+    {
+        "question": "Which European country has the largest population?",
+        "answer": "Russia"
+    },
+    {
+        "question": "Which African country has the largest population?",
+        "answer": "Nigeria"
+    },
+    {
+        "question": "Which South American country has the largest population?",
+        "answer": "Brazil"
+    },
+    {
+        "question": "What is the highest waterfall in the world?",
+        "answer": "Angel Falls"
+    },
+    {
+        "question": "In which country are Angel Falls located?",
+        "answer": "Venezuela"
+    },
+    {
+        "question": "In which country is the Victoria Falls located?",
+        "answer": "Zambia"
+    },
+    {
+        "question": "Which two countries share the Iguazu Falls?",
+        "answer": "Brazil and Argentina"
+    },
+    {
+        "question": "Which two countries share Niagara Falls?",
+        "answer": "United States and Canada"
+    },
+    {
+        "question": "What is the largest coral reef system in the world?",
+        "answer": "Great Barrier Reef"
+    },
+    {
+        "question": "Which country is the Great Barrier Reef located in?",
+        "answer": "Australia"
+    },
+    {
+        "question": "What is the largest desert in Asia?",
+        "answer": "Gobi Desert"
+    },
+    {
+        "question": "What is the largest desert in Africa?",
+        "answer": "Sahara Desert"
+    },
+    {
+        "question": "What is the driest non-polar desert in the world?",
+        "answer": "Atacama Desert"
+    },
+    {
+        "question": "In which country is the Atacama Desert primarily located?",
+        "answer": "Chile"
+    },
+    {
+        "question": "Which country is known as the 'Pearl of Africa'?",
+        "answer": "Uganda"
+    },
+    {
+        "question": "Which country is known as the 'Emerald Isle'?",
+        "answer": "Ireland"
+    },
+    {
+        "question": "Which European city is known as the 'City of Canals'?",
+        "answer": "Venice"
+    },
+    {
+        "question": "Which European city is known as the 'City of Lights'?",
+        "answer": "Paris"
+    },
+    {
+        "question": "Which Middle Eastern city is holy to Judaism, Christianity, and Islam?",
+        "answer": "Jerusalem"
+    },
+    {
+        "question": "Which European river flows through four national capitals?",
+        "answer": "Danube River"
+    },
+    {
+        "question": "What is the deepest lake in the world?",
+        "answer": "Lake Baikal"
+    },
+    {
+        "question": "In which country is Lake Baikal located?",
+        "answer": "Russia"
+    },
+    {
+        "question": "Which country is famous for the Galápagos Islands?",
+        "answer": "Ecuador"
+    },
+    {
+        "question": "Which country is famous for Easter Island?",
+        "answer": "Chile"
+    },
+    {
+        "question": "Which island nation is located in the Indian Ocean southwest of Sri Lanka?",
+        "answer": "Maldives"
+    },
+    {
+        "question": "Which island nation is located in the Mediterranean Sea south of Sicily?",
+        "answer": "Malta"
+    },
+    {
+        "question": "Which European country has the most active volcanoes?",
+        "answer": "Italy"
+    },
+    {
+        "question": "Which country experiences the most earthquakes annually?",
+        "answer": "Japan"
+    },
+    {
+        "question": "Which country is the smallest member of the United Nations by population?",
+        "answer": "Tuvalu"
+    },
+    {
+        "question": "Which international agreement aims to reduce global greenhouse gas emissions, signed in 2015?",
+        "answer": "Paris Agreement"
+    },
+    {
+        "question": "What international organization manages the global system of internet domain names?",
+        "answer": "ICANN"
+    },
+    {
+        "question": "Which country has the highest life expectancy in the world?",
+        "answer": "Monaco"
+    },
+    {
+        "question": "Which country is home to the world's northernmost capital city?",
+        "answer": "Iceland"
+    },
+    {
+        "question": "Which country is home to the world's southernmost capital city?",
+        "answer": "New Zealand"
+    }
+]

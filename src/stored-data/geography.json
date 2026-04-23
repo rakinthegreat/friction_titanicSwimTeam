@@ -1,0 +1,770 @@
+[
+    {
+        "question": "What is the capital of the Netherlands?",
+        "answer": "Amsterdam"
+    },
+    {
+        "question": "What is the longest river in the world?",
+        "answer": "Nile"
+    },
+    {
+        "question": "Which country has the largest landmass?",
+        "answer": "Russia"
+    },
+    {
+        "question": "What is the capital of Japan?",
+        "answer": "Tokyo"
+    },
+    {
+        "question": "In which continent is the Sahara Desert located?",
+        "answer": "Africa"
+    },
+    {
+        "question": "What is the smallest country in the world?",
+        "answer": "Vatican City"
+    },
+    {
+        "question": "Which ocean is the largest?",
+        "answer": "Pacific Ocean"
+    },
+    {
+        "question": "What is the capital of Australia?",
+        "answer": "Canberra"
+    },
+    {
+        "question": "Mount Everest is located in which mountain range?",
+        "answer": "Himalayas"
+    },
+    {
+        "question": "Which country is known as the Land of the Rising Sun?",
+        "answer": "Japan"
+    },
+    {
+        "question": "What is the capital of Canada?",
+        "answer": "Ottawa"
+    },
+    {
+        "question": "Which US state is the largest by area?",
+        "answer": "Alaska"
+    },
+    {
+        "question": "What is the capital of Brazil?",
+        "answer": "Brasília"
+    },
+    {
+        "question": "The Great Barrier Reef is off the coast of which country?",
+        "answer": "Australia"
+    },
+    {
+        "question": "Which European country is divided into regions called cantons?",
+        "answer": "Switzerland"
+    },
+    {
+        "question": "What is the capital of Egypt?",
+        "answer": "Cairo"
+    },
+    {
+        "question": "Which river flows through Paris?",
+        "answer": "Seine"
+    },
+    {
+        "question": "Which country has the most islands in the world?",
+        "answer": "Sweden"
+    },
+    {
+        "question": "What is the capital of Argentina?",
+        "answer": "Buenos Aires"
+    },
+    {
+        "question": "The Andes mountain range is located on which continent?",
+        "answer": "South America"
+    },
+    {
+        "question": "What is the capital of New Zealand?",
+        "answer": "Wellington"
+    },
+    {
+        "question": "What is the tallest uninterrupted waterfall in the world?",
+        "answer": "Angel Falls"
+    },
+    {
+        "question": "Which river flows through London?",
+        "answer": "Thames"
+    },
+    {
+        "question": "What is the capital of South Korea?",
+        "answer": "Seoul"
+    },
+    {
+        "question": "What is the largest desert in the world (including cold deserts)?",
+        "answer": "Antarctic Desert"
+    },
+    {
+        "question": "What is the capital of Italy?",
+        "answer": "Rome"
+    },
+    {
+        "question": "Mount Kilimanjaro is located on which continent?",
+        "answer": "Africa"
+    },
+    {
+        "question": "What is the smallest continent by land area?",
+        "answer": "Australia"
+    },
+    {
+        "question": "What is the capital of Spain?",
+        "answer": "Madrid"
+    },
+    {
+        "question": "Which country features a maple leaf on its national flag?",
+        "answer": "Canada"
+    },
+    {
+        "question": "What is the capital of India?",
+        "answer": "New Delhi"
+    },
+    {
+        "question": "Which river carved the Grand Canyon?",
+        "answer": "Colorado River"
+    },
+    {
+        "question": "What is the capital of Thailand?",
+        "answer": "Bangkok"
+    },
+    {
+        "question": "Which country shares the longest international border with the United States?",
+        "answer": "Canada"
+    },
+    {
+        "question": "What is the capital of Mexico?",
+        "answer": "Mexico City"
+    },
+    {
+        "question": "What is the largest island in the world?",
+        "answer": "Greenland"
+    },
+    {
+        "question": "What is the capital of China?",
+        "answer": "Beijing"
+    },
+    {
+        "question": "Which European country is shaped like a boot?",
+        "answer": "Italy"
+    },
+    {
+        "question": "What is the capital of Germany?",
+        "answer": "Berlin"
+    },
+    {
+        "question": "Which ocean lies on the east coast of the United States?",
+        "answer": "Atlantic Ocean"
+    },
+    {
+        "question": "What is the capital of France?",
+        "answer": "Paris"
+    },
+    {
+        "question": "Which country is known as the Emerald Isle?",
+        "answer": "Ireland"
+    },
+    {
+        "question": "What is the capital of Russia?",
+        "answer": "Moscow"
+    },
+    {
+        "question": "What is the deepest oceanic trench on Earth?",
+        "answer": "Mariana Trench"
+    },
+    {
+        "question": "What is the capital of Turkey?",
+        "answer": "Ankara"
+    },
+    {
+        "question": "Which country has the most pyramids in the world?",
+        "answer": "Sudan"
+    },
+    {
+        "question": "What is the capital of Greece?",
+        "answer": "Athens"
+    },
+    {
+        "question": "Which continent has the most countries?",
+        "answer": "Africa"
+    },
+    {
+        "question": "What is the administrative capital of South Africa?",
+        "answer": "Pretoria"
+    },
+    {
+        "question": "Which river flows through Rome?",
+        "answer": "Tiber"
+    },
+    {
+        "question": "What is the capital of Kenya?",
+        "answer": "Nairobi"
+    },
+    {
+        "question": "Which major mountain range spans across eight Alpine countries in Europe?",
+        "answer": "Alps"
+    },
+    {
+        "question": "What is the capital of Peru?",
+        "answer": "Lima"
+    },
+    {
+        "question": "Which country connects Central and South America?",
+        "answer": "Panama"
+    },
+    {
+        "question": "What is the capital of Vietnam?",
+        "answer": "Hanoi"
+    },
+    {
+        "question": "What is the largest lake in Africa?",
+        "answer": "Lake Victoria"
+    },
+    {
+        "question": "What is the capital of Portugal?",
+        "answer": "Lisbon"
+    },
+    {
+        "question": "Which country borders 14 nations and starts with the letter C?",
+        "answer": "China"
+    },
+    {
+        "question": "What is the capital of Colombia?",
+        "answer": "Bogotá"
+    },
+    {
+        "question": "Which sea separates Europe from Africa?",
+        "answer": "Mediterranean Sea"
+    },
+    {
+        "question": "What is the capital of Chile?",
+        "answer": "Santiago"
+    },
+    {
+        "question": "What is the longest continental mountain range in the world?",
+        "answer": "Andes"
+    },
+    {
+        "question": "What is the capital of Indonesia?",
+        "answer": "Jakarta"
+    },
+    {
+        "question": "Which Scandinavian country is famous for its deep fjords?",
+        "answer": "Norway"
+    },
+    {
+        "question": "What is the capital of Sweden?",
+        "answer": "Stockholm"
+    },
+    {
+        "question": "Which strait separates the United Kingdom from France?",
+        "answer": "English Channel"
+    },
+    {
+        "question": "What is the capital of Malaysia?",
+        "answer": "Kuala Lumpur"
+    },
+    {
+        "question": "What is the largest country in South America?",
+        "answer": "Brazil"
+    },
+    {
+        "question": "What is the capital of the Philippines?",
+        "answer": "Manila"
+    },
+    {
+        "question": "Which river is often considered the lifeline of Egypt?",
+        "answer": "Nile"
+    },
+    {
+        "question": "What is the capital of Cuba?",
+        "answer": "Havana"
+    },
+    {
+        "question": "Which island country lies off the southeastern coast of India?",
+        "answer": "Sri Lanka"
+    },
+    {
+        "question": "What is the capital of Poland?",
+        "answer": "Warsaw"
+    },
+    {
+        "question": "What is the capital of Saudi Arabia?",
+        "answer": "Riyadh"
+    },
+    {
+        "question": "In which country is the Taj Mahal located?",
+        "answer": "India"
+    },
+    {
+        "question": "What is the capital of Iran?",
+        "answer": "Tehran"
+    },
+    {
+        "question": "What is the name of the largest coral reef system in the world?",
+        "answer": "Great Barrier Reef"
+    },
+    {
+        "question": "What is the capital of Iraq?",
+        "answer": "Baghdad"
+    },
+    {
+        "question": "Which peninsula is shared by Spain and Portugal?",
+        "answer": "Iberian Peninsula"
+    },
+    {
+        "question": "What is the capital of Austria?",
+        "answer": "Vienna"
+    },
+    {
+        "question": "Loch Ness is a famous lake located in which country?",
+        "answer": "Scotland"
+    },
+    {
+        "question": "What is the capital of Hungary?",
+        "answer": "Budapest"
+    },
+    {
+        "question": "What is the capital of the Czech Republic?",
+        "answer": "Prague"
+    },
+    {
+        "question": "What is the capital of Ireland?",
+        "answer": "Dublin"
+    },
+    {
+        "question": "Which is the only continent without native reptiles?",
+        "answer": "Antarctica"
+    },
+    {
+        "question": "What is the capital of Finland?",
+        "answer": "Helsinki"
+    },
+    {
+        "question": "What is the capital of Norway?",
+        "answer": "Oslo"
+    },
+    {
+        "question": "What is the capital of Denmark?",
+        "answer": "Copenhagen"
+    },
+    {
+        "question": "What is the capital of Belgium?",
+        "answer": "Brussels"
+    },
+    {
+        "question": "What is the capital of Switzerland?",
+        "answer": "Bern"
+    },
+    {
+        "question": "Which modern-day country was formerly known as Persia?",
+        "answer": "Iran"
+    },
+    {
+        "question": "What is the capital of Jamaica?",
+        "answer": "Kingston"
+    },
+    {
+        "question": "What is the capital of New York State?",
+        "answer": "Albany"
+    },
+    {
+        "question": "Which city is known as the Big Apple?",
+        "answer": "New York City"
+    },
+    {
+        "question": "What is the capital of California?",
+        "answer": "Sacramento"
+    },
+    {
+        "question": "In which city is the Golden Gate Bridge located?",
+        "answer": "San Francisco"
+    },
+    {
+        "question": "What is the capital of Texas?",
+        "answer": "Austin"
+    },
+    {
+        "question": "Which city is known as the Windy City?",
+        "answer": "Chicago"
+    },
+    {
+        "question": "In which city would you find the Space Needle?",
+        "answer": "Seattle"
+    },
+    {
+        "question": "What is the capital of Florida?",
+        "answer": "Tallahassee"
+    },
+    {
+        "question": "Which city is home to the Gateway Arch?",
+        "answer": "St. Louis"
+    },
+    {
+        "question": "What is the capital of Washington State?",
+        "answer": "Olympia"
+    },
+    {
+        "question": "Which city is the most populous in Canada?",
+        "answer": "Toronto"
+    },
+    {
+        "question": "What is the capital of the Canadian province of British Columbia?",
+        "answer": "Victoria"
+    },
+    {
+        "question": "In which city is the CN Tower located?",
+        "answer": "Toronto"
+    },
+    {
+        "question": "Which French-speaking city is the largest in the province of Quebec?",
+        "answer": "Montreal"
+    },
+    {
+        "question": "What is the capital of the United Kingdom?",
+        "answer": "London"
+    },
+    {
+        "question": "In which city would you find Big Ben and the Houses of Parliament?",
+        "answer": "London"
+    },
+    {
+        "question": "What is the capital of Scotland?",
+        "answer": "Edinburgh"
+    },
+    {
+        "question": "Which city is the most populous in Scotland?",
+        "answer": "Glasgow"
+    },
+    {
+        "question": "What is the capital of Ireland?",
+        "answer": "Dublin"
+    },
+    {
+        "question": "Which city is home to the Eiffel Tower?",
+        "answer": "Paris"
+    },
+    {
+        "question": "In which city is the Louvre Museum located?",
+        "answer": "Paris"
+    },
+    {
+        "question": "What is the capital of Spain?",
+        "answer": "Madrid"
+    },
+    {
+        "question": "Which city is famous for the Sagrada Familia basilica?",
+        "answer": "Barcelona"
+    },
+    {
+        "question": "What is the capital of Portugal?",
+        "answer": "Lisbon"
+    },
+    {
+        "question": "What is the capital of Italy?",
+        "answer": "Rome"
+    },
+    {
+        "question": "In which city is the Colosseum located?",
+        "answer": "Rome"
+    },
+    {
+        "question": "Which Italian city is famous for its extensive network of canals?",
+        "answer": "Venice"
+    },
+    {
+        "question": "Which Italian city is considered the birthplace of the Renaissance?",
+        "answer": "Florence"
+    },
+    {
+        "question": "What is the capital of Switzerland?",
+        "answer": "Bern"
+    },
+    {
+        "question": "Which city is the global headquarters for the Red Cross and the UN's European base?",
+        "answer": "Geneva"
+    },
+    {
+        "question": "What is the financial capital and most populous city of Switzerland?",
+        "answer": "Zurich"
+    },
+    {
+        "question": "What is the capital of Austria?",
+        "answer": "Vienna"
+    },
+    {
+        "question": "What is the capital of Germany?",
+        "answer": "Berlin"
+    },
+    {
+        "question": "Which German city is home to the European Central Bank?",
+        "answer": "Frankfurt"
+    },
+    {
+        "question": "Which German city hosts the annual Oktoberfest?",
+        "answer": "Munich"
+    },
+    {
+        "question": "What is the capital of the Netherlands?",
+        "answer": "Amsterdam"
+    },
+    {
+        "question": "In which city is the Dutch seat of government and the International Court of Justice located?",
+        "answer": "The Hague"
+    },
+    {
+        "question": "What is the capital of Belgium?",
+        "answer": "Brussels"
+    },
+    {
+        "question": "What is the capital of Norway?",
+        "answer": "Oslo"
+    },
+    {
+        "question": "What is the capital of Sweden?",
+        "answer": "Stockholm"
+    },
+    {
+        "question": "What is the capital of Denmark?",
+        "answer": "Copenhagen"
+    },
+    {
+        "question": "What is the capital of Finland?",
+        "answer": "Helsinki"
+    },
+    {
+        "question": "What is the capital of Iceland?",
+        "answer": "Reykjavik"
+    },
+    {
+        "question": "What is the capital of Poland?",
+        "answer": "Warsaw"
+    },
+    {
+        "question": "What is the capital of the Czech Republic?",
+        "answer": "Prague"
+    },
+    {
+        "question": "What is the capital of Hungary?",
+        "answer": "Budapest"
+    },
+    {
+        "question": "What is the capital of Romania?",
+        "answer": "Bucharest"
+    },
+    {
+        "question": "What is the capital of Greece?",
+        "answer": "Athens"
+    },
+    {
+        "question": "In which city is the Parthenon located?",
+        "answer": "Athens"
+    },
+    {
+        "question": "What is the capital of Turkey?",
+        "answer": "Ankara"
+    },
+    {
+        "question": "Which transcontinental city straddles the Bosphorus Strait?",
+        "answer": "Istanbul"
+    },
+    {
+        "question": "What is the capital of Russia?",
+        "answer": "Moscow"
+    },
+    {
+        "question": "In which city is the State Hermitage Museum located?",
+        "answer": "Saint Petersburg"
+    },
+    {
+        "question": "What is the capital of Ukraine?",
+        "answer": "Kyiv"
+    },
+    {
+        "question": "What is the capital of Japan?",
+        "answer": "Tokyo"
+    },
+    {
+        "question": "Which Japanese city was the first to be targeted by an atomic bomb?",
+        "answer": "Hiroshima"
+    },
+    {
+        "question": "What is the capital of South Korea?",
+        "answer": "Seoul"
+    },
+    {
+        "question": "What is the capital of North Korea?",
+        "answer": "Pyongyang"
+    },
+    {
+        "question": "What is the capital of China?",
+        "answer": "Beijing"
+    },
+    {
+        "question": "Which city is known as the Pearl of the Orient and is a major global financial center in China?",
+        "answer": "Shanghai"
+    },
+    {
+        "question": "What is the capital of Taiwan?",
+        "answer": "Taipei"
+    },
+    {
+        "question": "What is the capital of Vietnam?",
+        "answer": "Hanoi"
+    },
+    {
+        "question": "Which city is the most populous in Vietnam, formerly known as Saigon?",
+        "answer": "Ho Chi Minh City"
+    },
+    {
+        "question": "What is the capital of Thailand?",
+        "answer": "Bangkok"
+    },
+    {
+        "question": "What is the capital of Malaysia?",
+        "answer": "Kuala Lumpur"
+    },
+    {
+        "question": "In which city are the Petronas Twin Towers located?",
+        "answer": "Kuala Lumpur"
+    },
+    {
+        "question": "What is the capital of Indonesia?",
+        "answer": "Jakarta"
+    },
+    {
+        "question": "What is the capital of the Philippines?",
+        "answer": "Manila"
+    },
+    {
+        "question": "What is the capital of India?",
+        "answer": "New Delhi"
+    },
+    {
+        "question": "Which city is the financial center of India and home to Bollywood?",
+        "answer": "Mumbai"
+    },
+    {
+        "question": "In which city is the Taj Mahal located?",
+        "answer": "Agra"
+    },
+    {
+        "question": "What is the capital of Pakistan?",
+        "answer": "Islamabad"
+    },
+    {
+        "question": "Which city is the largest and most populous in Pakistan?",
+        "answer": "Karachi"
+    },
+    {
+        "question": "What is the capital of Bangladesh?",
+        "answer": "Dhaka"
+    },
+    {
+        "question": "What is the capital of Afghanistan?",
+        "answer": "Kabul"
+    },
+    {
+        "question": "What is the capital of Iran?",
+        "answer": "Tehran"
+    },
+    {
+        "question": "What is the capital of Iraq?",
+        "answer": "Baghdad"
+    },
+    {
+        "question": "What is the capital of Saudi Arabia?",
+        "answer": "Riyadh"
+    },
+    {
+        "question": "Which city is the holiest in Islam?",
+        "answer": "Mecca"
+    },
+    {
+        "question": "What is the capital of the United Arab Emirates?",
+        "answer": "Abu Dhabi"
+    },
+    {
+        "question": "In which city is the Burj Khalifa, the tallest building in the world, located?",
+        "answer": "Dubai"
+    },
+    {
+        "question": "What is the capital of Israel?",
+        "answer": "Jerusalem"
+    },
+    {
+        "question": "What is the capital of Egypt?",
+        "answer": "Cairo"
+    },
+    {
+        "question": "What is the legislative capital of South Africa?",
+        "answer": "Cape Town"
+    },
+    {
+        "question": "What is the administrative capital of South Africa?",
+        "answer": "Pretoria"
+    },
+    {
+        "question": "What is the capital of Kenya?",
+        "answer": "Nairobi"
+    },
+    {
+        "question": "What is the capital of Ethiopia?",
+        "answer": "Addis Ababa"
+    },
+    {
+        "question": "What is the capital of Nigeria?",
+        "answer": "Abuja"
+    },
+    {
+        "question": "Which city is the most populous in Nigeria and all of Africa?",
+        "answer": "Lagos"
+    },
+    {
+        "question": "What is the capital of Morocco?",
+        "answer": "Rabat"
+    },
+    {
+        "question": "Which city is the largest in Morocco and famous for a 1942 classic film of the same name?",
+        "answer": "Casablanca"
+    },
+    {
+        "question": "What is the capital of Australia?",
+        "answer": "Canberra"
+    },
+    {
+        "question": "In which city is the Sydney Opera House located?",
+        "answer": "Sydney"
+    },
+    {
+        "question": "What is the capital of New Zealand?",
+        "answer": "Wellington"
+    },
+    {
+        "question": "Which city is the most populous in New Zealand?",
+        "answer": "Auckland"
+    },
+    {
+        "question": "What is the capital of Brazil?",
+        "answer": "Brasília"
+    },
+    {
+        "question": "In which city is the Christ the Redeemer statue located?",
+        "answer": "Rio de Janeiro"
+    },
+    {
+        "question": "Which city is the most populous in Brazil and the Southern Hemisphere?",
+        "answer": "São Paulo"
+    },
+    {
+        "question": "What is the capital of Argentina?",
+        "answer": "Buenos Aires"
+    },
+    {
+        "question": "What is the capital of Colombia?",
+        "answer": "Bogotá"
+    }
+]
