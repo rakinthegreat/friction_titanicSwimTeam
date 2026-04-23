@@ -18,6 +18,7 @@
 
 ## Phase 4: Polish & Backend
 - [ ] Implement "Time Reclaimed" animations and XP system
-- [ ] Integrate Firebase Auth for cross-device sync
+- [x] Integrate **Firebase Auth** for cross-device sync
+- [x] Implement **Google Auth** Login/Profile flow
 - [ ] Final UI/UX audit for "Premium" feel
 - [ ] Production build and Android APK generation
