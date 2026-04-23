@@ -4,27 +4,18 @@ import React, { useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { GoogleLoginButton } from '@/components/auth/GoogleLoginButton';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 
 export default function LoginPage() {
-  const router = useRouter();
   const uid = useUserStore((state) => state.uid);
-
-  useEffect(() => {
-    // Redirect back to home if already logged in
-    if (uid) {
-      router.push('/');
-    }
-  }, [uid, router]);
 
   return (
     <main className="min-h-screen p-6 sm:p-8 flex flex-col items-center justify-center animate-in fade-in duration-700 bg-background text-foreground">
       <div className="w-full max-w-sm">
         <header className="flex justify-between items-center mb-8">
           <button 
-            onClick={() => router.push('/')}
+            onClick={() => window.location.href = '/'}
             className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
             aria-label="Back to home"
           >

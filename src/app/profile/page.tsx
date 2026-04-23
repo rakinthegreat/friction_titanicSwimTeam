@@ -6,7 +6,6 @@ import { useFirebaseAuth } from "@/hooks/useFirebaseAuth";
 import { LogOut, ArrowLeft, CloudUpload } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function Profile() {
   const stats = useUserStore((state) => state.stats);
@@ -14,18 +13,11 @@ export default function Profile() {
   const { logout, signInWithGoogle, isLoading } = useFirebaseAuth();
   const uid = useUserStore((state) => state.uid);
   const [mounted, setMounted] = useState(false);
-  const router = useRouter();
-
   useEffect(() => {
     setMounted(true);
-    if (!useUserStore.getState().uid) {
-      router.push('/login');
-    }
-  }, [router]);
+  }, []);
 
-  const uid = useUserStore((state) => state.uid);
-
-  if (!mounted || !uid) return null;
+  if (!mounted) return null;
 
   return (
     <main className="min-h-screen p-8 max-w-4xl mx-auto space-y-12 animate-in fade-in duration-1000">
@@ -91,16 +83,18 @@ export default function Profile() {
         </div>
       </section>
 
-      <section className="flex justify-center pt-8">
-        <button
-          onClick={logout}
-          disabled={isLoading}
-          className="flex items-center gap-2 px-8 py-4 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-full font-bold transition-colors"
-        >
-          <LogOut className="w-5 h-5" />
-          {isLoading ? 'Logging out...' : 'Log Out'}
-        </button>
-      </section>
+      {uid && (
+        <section className="flex justify-center pt-8">
+          <button
+            onClick={logout}
+            disabled={isLoading}
+            className="flex items-center gap-2 px-8 py-4 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-full font-bold transition-colors"
+          >
+            <LogOut className="w-5 h-5" />
+            {isLoading ? 'Logging out...' : 'Log Out'}
+          </button>
+        </section>
+      )}
     </main>
   );
 }
