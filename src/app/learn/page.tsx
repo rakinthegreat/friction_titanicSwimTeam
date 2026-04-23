@@ -6,6 +6,7 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { ArrowLeft, BookOpen, Brain, FlaskConical, HelpCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { WordOfTheDayWidget } from '@/components/learn/WordOfTheDayWidget';
 
 export default function LearnDirectoryPage() {
   const router = useRouter();
@@ -59,6 +60,8 @@ export default function LearnDirectoryPage() {
         </div>
         <ThemeToggle />
       </header>
+
+      <WordOfTheDayWidget />
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {modules.map((mod, i) => (

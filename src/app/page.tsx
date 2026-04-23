@@ -4,6 +4,7 @@ import { useUserStore } from "@/store/userStore";
 import Onboarding from "@/components/Onboarding";
 import { WordLess } from "@/components/games/WordLess";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
 import { useEffect, useState } from "react";
 import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -35,7 +36,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-background">
         <header className="p-6 flex items-center border-b border-foreground/5">
-          <button 
+          <button
             onClick={() => setActiveActivity(null)}
             className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors mr-4"
           >
@@ -64,14 +65,14 @@ export default function Home() {
                 </span>
               ))}
             </div>
-            <Link 
+            <Link
               href="/permissions"
               className="p-3 rounded-2xl bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-accent"
               aria-label="Manage Permissions"
             >
               <ShieldCheck size={20} />
             </Link>
-            <Link 
+            <Link
               href="/profile"
               className="p-3 rounded-2xl bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-accent"
               aria-label="Profile"
@@ -81,6 +82,8 @@ export default function Home() {
             <ThemeToggle />
           </div>
         </header>
+
+        <WeatherWidget />
 
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-accent rounded-[2.5rem] p-8 text-white space-y-6 shadow-neo-out ring-1 ring-white/10 col-span-1 md:col-span-2 overflow-hidden relative group">
@@ -93,7 +96,7 @@ export default function Home() {
             </div>
             <div className="flex flex-wrap gap-4 pt-2 relative z-10">
               {[1, 5, 10, 15, 20, 25].map((mins) => (
-                <button 
+                <button
                   key={mins}
                   onClick={() => setActiveActivity('WordLess')}
                   className="bg-accent rounded-2xl px-6 py-4 font-black shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105 active:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
