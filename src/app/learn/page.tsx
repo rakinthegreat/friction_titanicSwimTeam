@@ -34,7 +34,7 @@ export default function LearnDirectoryPage() {
       color: 'text-accent'
     },
     {
-      title: 'History Trivia',
+      title: 'Trivia',
       description: 'Test your knowledge on Bangladesh and the World.',
       icon: <HelpCircle className="w-8 h-8" />,
       href: '/learn/trivia',
