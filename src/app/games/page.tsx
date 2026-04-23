@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/Card';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { ArrowLeft, Hash, Grid3X3, Type, BrainCircuit, Blocks, HelpCircle } from 'lucide-react';
+import { ArrowLeft, Hash, Grid3X3, Type, BrainCircuit, Blocks, HelpCircle, Zap, Move } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -11,6 +11,22 @@ export default function GamesDirectoryPage() {
   const router = useRouter();
 
   const games = [
+    {
+      title: 'Rapid Math',
+      description: 'Quick arithmetic under pressure.',
+      icon: <Zap className="w-8 h-8" />,
+      href: '/games/rapid-math',
+      active: true,
+      color: 'text-accent'
+    },
+    {
+      title: 'Maze Solver',
+      description: 'Navigate through complex paths.',
+      icon: <Move className="w-8 h-8" />,
+      href: '/games/maze',
+      active: true,
+      color: 'text-accent-secondary'
+    },
     {
       title: 'Trivia',
       description: 'Quick questions based on your interests.',
