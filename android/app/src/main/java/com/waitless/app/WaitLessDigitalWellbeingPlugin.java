@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import android.content.Intent;
+import android.provider.Settings;
+
 @CapacitorPlugin(name = "WaitLessDigitalWellbeing")
 public class WaitLessDigitalWellbeingPlugin extends Plugin {
 
@@ -40,9 +43,21 @@ public class WaitLessDigitalWellbeingPlugin extends Plugin {
 
     @PluginMethod
     public void hasUsageStatsPermission(PluginCall call) {
+        UsageStatsManager usm = (UsageStatsManager) getContext().getSystemService(Context.USAGE_STATS_SERVICE);
+        long time = System.currentTimeMillis();
+        List<UsageStats> stats = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 10, time);
+        boolean granted = (stats != null && !stats.isEmpty());
+        
         JSObject ret = new JSObject();
-        // Simple check - in reality, we'd check if the query returns data
-        ret.put("granted", true); 
+        ret.put("granted", granted);
         call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void openUsageSettings(PluginCall call) {
+        Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getContext().startActivity(intent);
+        call.resolve();
     }
 }

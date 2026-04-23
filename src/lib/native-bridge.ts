@@ -7,6 +7,7 @@ export interface WaitLessSensorsPlugin {
 export interface WaitLessDigitalWellbeingPlugin {
   getForegroundApp(): Promise<{ packageName: string }>;
   hasUsageStatsPermission(): Promise<{ granted: boolean }>;
+  openUsageSettings(): Promise<void>;
 }
 
 const WaitLessSensors = registerPlugin<WaitLessSensorsPlugin>('WaitLessSensors');
