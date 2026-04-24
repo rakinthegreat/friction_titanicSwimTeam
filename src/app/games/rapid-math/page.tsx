@@ -24,6 +24,10 @@ export default function RapidMathPage() {
   const router = useRouter();
   const updateStats = useUserStore((state) => state.updateStats);
   const persistentHighScore = useUserStore((state) => state.stats?.highScores?.['rapid-math'] || 0);
+  const recordGameStart = useUserStore((state) => state.recordGameStart);
+  const recordGameResult = useUserStore((state) => state.recordGameResult);
+  const startTime = React.useRef<number>(Date.now());
+  const gameEnded = React.useRef<boolean>(false);
   
   const [gameState, setGameState] = useState<'idle' | 'playing' | 'finished'>('idle');
   const [score, setScore] = useState(0);
@@ -103,11 +107,29 @@ export default function RapidMathPage() {
 
   // Handle Game Finish
   useEffect(() => {
-    if (gameState === 'finished') {
+    if (gameState === 'finished' && !gameEnded.current) {
       updateStats(2, 'rapid-math', score);
       useUserStore.getState().completeActivity('rapid-math');
+
+      gameEnded.current = true;
+      const timeSpent = (Date.now() - startTime.current) / 1000;
+      recordGameResult('rapid-math', 'win', timeSpent);
     }
-  }, [gameState, score, updateStats]);
+  }, [gameState, score, updateStats, recordGameResult]);
+
+  const gameStateRef = React.useRef(gameState);
+  useEffect(() => {
+    gameStateRef.current = gameState;
+  }, [gameState]);
+
+  useEffect(() => {
+    return () => {
+      if (!gameEnded.current && gameStateRef.current === 'playing') {
+        const timeSpent = (Date.now() - startTime.current) / 1000;
+        recordGameResult('rapid-math', 'quit', timeSpent);
+      }
+    };
+  }, [recordGameResult]);
 
   const startGame = () => {
     setScore(0);
@@ -119,6 +141,11 @@ export default function RapidMathPage() {
     setFeedback(null);
     setIsShaking(false);
     generateEquation();
+
+    // Track game start
+    recordGameStart('rapid-math');
+    startTime.current = Date.now();
+    gameEnded.current = false;
   };
 
   const showFeedback = (text: string, type: 'plus' | 'minus') => {

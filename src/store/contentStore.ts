@@ -54,7 +54,7 @@ export const useContentStore = create<ContentState>()(
     }),
     {
       name: 'content-storage',
-      storage: createJSONStorage(() => localforage as any),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

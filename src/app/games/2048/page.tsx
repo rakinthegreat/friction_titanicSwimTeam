@@ -27,9 +27,13 @@ export default function Game2048Page() {
   const [variations, setVariations] = useState<{r: number, ox: number, oy: number}[]>([]);
   const [lastNewPos, setLastNewPos] = useState<{r: number, c: number} | null>(null);
   const updateStats = useUserStore((state) => state.updateStats);
+  const recordGameStart = useUserStore((state) => state.recordGameStart);
+  const recordGameResult = useUserStore((state) => state.recordGameResult);
   
   const touchStart = useRef<{ x: number, y: number } | null>(null);
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+  const startTime = useRef<number>(Date.now());
+  const gameEnded = useRef<boolean>(false);
 
   useEffect(() => {
     const hasSeen = localStorage.getItem('tutorial-2048');
@@ -41,6 +45,12 @@ export default function Game2048Page() {
 
   // Initialize game
   const initGame = useCallback(() => {
+    // If restarting an ongoing game, record it as a quit
+    if (!gameEnded.current && grid.some(row => row.some(cell => cell !== 0))) {
+      const timeSpent = (Date.now() - startTime.current) / 1000;
+      recordGameResult('2048', 'quit', timeSpent);
+    }
+
     let newGrid = Array(4).fill(0).map(() => Array(4).fill(0));
     const { grid: g1, newPos: p1 } = addRandomTile(newGrid);
     const { grid: g2, newPos: p2 } = addRandomTile(g1);
@@ -55,14 +65,32 @@ export default function Game2048Page() {
     setVariations(newVariations);
     setGameOver(false);
     setHasWon(false);
-  }, []);
+
+    // Track new game start
+    recordGameStart('2048');
+    startTime.current = Date.now();
+    gameEnded.current = false;
+  }, [grid, recordGameStart, recordGameResult]);
+
+  const scoreRef = useRef(score);
+  useEffect(() => {
+    scoreRef.current = score;
+  }, [score]);
 
   useEffect(() => {
     initGame();
     // Load best score
     const saved = localStorage.getItem('2048-best-score');
     if (saved) setBestScore(parseInt(saved));
-  }, [initGame]);
+
+    return () => {
+      // Record quit on unmount if game not ended and player started playing
+      if (!gameEnded.current && scoreRef.current > 0) {
+        const timeSpent = (Date.now() - startTime.current) / 1000;
+        recordGameResult('2048', 'quit', timeSpent);
+      }
+    };
+  }, []); // Only on mount/unmount
 
   useEffect(() => {
     if (score > bestScore) {
@@ -146,12 +174,24 @@ export default function Game2048Page() {
       setGrid(finalGrid);
       setLastNewPos(newPos);
       setScore(currentScore);
+      
+      if (hasWon && !gameEnded.current) {
+        gameEnded.current = true;
+        const timeSpent = (Date.now() - startTime.current) / 1000;
+        recordGameResult('2048', 'win', timeSpent);
+      }
+
       if (isGameOver(finalGrid)) {
         setGameOver(true);
         updateStats(10, '2048', currentScore);
+        if (!gameEnded.current) {
+          gameEnded.current = true;
+          const timeSpent = (Date.now() - startTime.current) / 1000;
+          recordGameResult('2048', hasWon ? 'win' : 'loss', timeSpent);
+        }
       }   
     }
-  }, [grid, gameOver, score, updateStats]);
+  }, [grid, gameOver, score, updateStats, hasWon, recordGameResult]);
 
   const isGameOver = (g: Grid): boolean => {
     for (let r = 0; r < 4; r++) {

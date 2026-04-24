@@ -26,9 +26,12 @@ export default function Home() {
   const setNavigationSource = useUserStore((state) => state.setNavigationSource);
   
   const dailyCompleted = useUserStore(state => state.dailyCompletedActivities);
+  const _hasHydrated = useUserStore(state => state._hasHydrated);
   const lastDate = useUserStore(state => state.lastCompletedDate);
 
   useEffect(() => {
+    if (!_hasHydrated) return;
+    
     setMounted(true);
     setNavigationSource('home');
     const savedDuration = localStorage.getItem('selectedDuration');
@@ -39,7 +42,12 @@ export default function Home() {
     if (savedLock) setSuggestionLock(JSON.parse(savedLock));
 
     const today = new Date().toISOString().split('T')[0];
-    if (lastDate !== today) {
+    console.log('Hydration check:', { _hasHydrated, lastDate, today });
+    
+    // TEMPORARILY DISABLED TO DEBUG:
+    /*
+    if (lastDate && lastDate !== today) {
+      console.log('CLEARING DATA for new day');
       setSuggestions([]);
       setSelectedDuration(null);
       setSuggestionLock({});
@@ -47,7 +55,8 @@ export default function Home() {
       localStorage.removeItem('suggestions');
       localStorage.removeItem('suggestionLock');
     }
-  }, [lastDate, setNavigationSource]);
+    */
+  }, [lastDate, setNavigationSource, _hasHydrated]);
 
   useEffect(() => {
     if (selectedDuration) localStorage.setItem('selectedDuration', selectedDuration.toString());
@@ -67,7 +76,7 @@ export default function Home() {
     setActiveActivity(null);
   };
 
-  if (!mounted) return null;
+  if (!mounted || !_hasHydrated) return null;
 
   if (interests.length === 0 || !videoGenres || videoGenres.length === 0) {
     return <Onboarding />;

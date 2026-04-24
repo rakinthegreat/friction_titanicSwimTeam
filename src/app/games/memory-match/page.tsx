@@ -52,12 +52,17 @@ export default function MemoryMatchPage() {
   const router = useRouter();
   const interests = useUserStore((state) => state.interests);
   const updateStats = useUserStore((state) => state.updateStats);
+  const recordGameStart = useUserStore((state) => state.recordGameStart);
+  const recordGameResult = useUserStore((state) => state.recordGameResult);
   const [board, setBoard] = useState<MemoryCard[]>([]);
   const [flipped, setFlipped] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
   const [isWon, setIsWon] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  const startTime = React.useRef<number>(Date.now());
+  const gameEnded = React.useRef<boolean>(false);
 
   useEffect(() => {
     const hasSeen = localStorage.getItem('tutorial-memory-match');
@@ -68,6 +73,12 @@ export default function MemoryMatchPage() {
   }, []);
 
   const initGame = useCallback(() => {
+    // Record quit if starting new game without finishing current
+    if (!gameEnded.current && moves > 0) {
+      const timeSpent = (Date.now() - startTime.current) / 1000;
+      recordGameResult('memory-match', 'quit', timeSpent);
+    }
+
     // 1. Get icons based on interests
     let availableIcons: { id: string, icon: any }[] = [];
     interests.forEach(interest => {
@@ -113,11 +124,27 @@ export default function MemoryMatchPage() {
     setMoves(0);
     setIsWon(false);
     setIsProcessing(false);
-  }, [interests]);
+
+    // Track game start
+    recordGameStart('memory-match');
+    startTime.current = Date.now();
+    gameEnded.current = false;
+  }, [interests, moves, recordGameStart, recordGameResult]);
+
+  const movesRef = React.useRef(moves);
+  useEffect(() => {
+    movesRef.current = moves;
+  }, [moves]);
 
   useEffect(() => {
     initGame();
-  }, [initGame]);
+    return () => {
+      if (!gameEnded.current && movesRef.current > 0) {
+        const timeSpent = (Date.now() - startTime.current) / 1000;
+        recordGameResult('memory-match', 'quit', timeSpent);
+      }
+    };
+  }, []); // Only once on mount
 
   const handleFlip = (id: number) => {
     if (isProcessing || isWon) return;
@@ -150,9 +177,13 @@ export default function MemoryMatchPage() {
           setFlipped([]);
           setIsProcessing(false);
 
-          if (matchedBoard.every(c => c.isMatched)) {
+          if (matchedBoard.every(c => c.isMatched) && !gameEnded.current) {
             setIsWon(true);
             updateStats(10, 'memory-match');
+            
+            gameEnded.current = true;
+            const timeSpent = (Date.now() - startTime.current) / 1000;
+            recordGameResult('memory-match', 'win', timeSpent);
           }
         }, 500);
       } else {

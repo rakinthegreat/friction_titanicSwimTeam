@@ -20,10 +20,20 @@ type Player = 'X' | 'O' | null;
 export default function TicTacToePage() {
   const router = useRouter();
   const updateStats = useUserStore((state) => state.updateStats);
+  const recordGameStart = useUserStore((state) => state.recordGameStart);
+  const recordGameResult = useUserStore((state) => state.recordGameResult);
+  const startTime = React.useRef<number>(Date.now());
+  const gameEnded = React.useRef<boolean>(false);
+
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
+  const boardRef = React.useRef<Player[]>(board);
   const [isXNext, setIsXNext] = useState<boolean>(true);
   const [winner, setWinner] = useState<Player | 'Draw' | null>(null);
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    boardRef.current = board;
+  }, [board]);
 
   useEffect(() => {
     const hasSeen = localStorage.getItem('tutorial-tictactoe');
@@ -31,6 +41,18 @@ export default function TicTacToePage() {
       setIsTutorialOpen(true);
       localStorage.setItem('tutorial-tictactoe', 'true');
     }
+    
+    // Start game on mount
+    recordGameStart('tictactoe');
+    startTime.current = Date.now();
+    gameEnded.current = false;
+
+    return () => {
+      if (!gameEnded.current && boardRef.current.some(c => c !== null)) {
+        const timeSpent = (Date.now() - startTime.current) / 1000;
+        recordGameResult('tictactoe', 'quit', timeSpent);
+      }
+    };
   }, []);
 
   // Simple AI
@@ -109,15 +131,31 @@ export default function TicTacToePage() {
       if (newWinner === 'X') {
         updateStats(5, 'tictactoe');
       }
+      
+      if (!gameEnded.current) {
+        gameEnded.current = true;
+        const timeSpent = (Date.now() - startTime.current) / 1000;
+        // Treat Draw as a 'loss' or just don't count it towards wins
+        recordGameResult('tictactoe', newWinner === 'X' ? 'win' : 'loss', timeSpent);
+      }
     } else {
       setIsXNext(!isXNext);
     }
   };
 
   const resetGame = () => {
+    if (!gameEnded.current && board.some(c => c !== null)) {
+      const timeSpent = (Date.now() - startTime.current) / 1000;
+      recordGameResult('tictactoe', 'quit', timeSpent);
+    }
+
     setBoard(Array(9).fill(null));
     setIsXNext(true);
     setWinner(null);
+
+    recordGameStart('tictactoe');
+    startTime.current = Date.now();
+    gameEnded.current = false;
   };
 
   return (

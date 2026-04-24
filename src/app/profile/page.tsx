@@ -26,6 +26,7 @@ const VIDEO_GENRES = [
 
 export default function Profile() {
   const stats = useUserStore((state) => state.stats);
+  const gameStats = useUserStore((state) => state.gameStats);
   const interests = useUserStore((state) => state.interests);
   const videoGenres = useUserStore((state) => state.videoGenres);
   const uid = useUserStore((state) => state.uid);
@@ -247,6 +248,61 @@ export default function Profile() {
               )) : <p className="text-foreground/40 text-sm">No video interests added yet.</p>}
             </div>
           )}
+        </div>
+
+        <div className="bg-card rounded-[2.5rem] p-8 space-y-6 shadow-neo-out border border-white/5 md:col-span-3">
+          <div className="space-y-1">
+            <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Performance Analysis</p>
+            <h3 className="text-2xl font-black italic">GAME SESSION ANALYTICS</h3>
+          </div>
+
+          <div className="overflow-x-auto -mx-2 sm:mx-0">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-foreground/5">
+                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest">Game</th>
+                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center">Plays</th>
+                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center">Wins</th>
+                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center">Loss/Quit</th>
+                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center">Avg Time</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-foreground/5">
+                {Object.entries(gameStats || {}).length > 0 ? (
+                  Object.entries(gameStats).map(([id, s]) => (
+                    <tr key={id} className="group hover:bg-foreground/[0.02] transition-colors">
+                      <td className="py-4 px-2">
+                        <span className="font-black italic uppercase text-sm tracking-tight group-hover:text-accent transition-colors">{id}</span>
+                      </td>
+                      <td className="py-4 px-2 text-center">
+                        <span className="font-bold text-sm">{s.timesPlayed}</span>
+                      </td>
+                      <td className="py-4 px-2 text-center">
+                        <span className="font-bold text-sm text-green-500">{s.wins}</span>
+                      </td>
+                      <td className="py-4 px-2 text-center">
+                        <span className="font-bold text-sm text-red-500/60">{(s.losses || 0) + (s.quits || 0)}</span>
+                      </td>
+                      <td className="py-4 px-2 text-center">
+                        <span className="font-black text-xs text-accent">
+                          {s.averageTime > 60 
+                            ? `${Math.floor(s.averageTime / 60)}m ${Math.round(s.averageTime % 60)}s` 
+                            : `${Math.round(s.averageTime)}s`}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="py-12 text-center">
+                      <p className="text-foreground/30 font-bold italic text-sm">No game data recorded yet. Start playing to see your stats!</p>
+                      <Link href="/games" className="text-xs text-accent font-black uppercase tracking-widest mt-2 inline-block hover:underline">Go to Games →</Link>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 md:col-span-2 group">

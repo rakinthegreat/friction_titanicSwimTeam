@@ -1,8 +1,7 @@
-'use client';
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/Button';
 import { PartyPopper } from 'lucide-react';
+import { useUserStore } from '@/store/userStore';
 
 interface WordLessProps {
   onComplete: (xp: number) => void;
@@ -10,10 +9,33 @@ interface WordLessProps {
 }
 
 export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) => {
+  const recordGameStart = useUserStore((state) => state.recordGameStart);
+  const recordGameResult = useUserStore((state) => state.recordGameResult);
   const [guesses, setGuesses] = useState<string[]>([]);
   const [currentGuess, setCurrentGuess] = useState("");
   const [status, setStatus] = useState<'playing' | 'won' | 'lost'>('playing');
 
+  const startTime = React.useRef<number>(Date.now());
+  const gameEnded = React.useRef<boolean>(false);
+  const guessesRef = React.useRef<string[]>([]);
+
+  useEffect(() => {
+    // Record game start
+    recordGameStart('wordless');
+    startTime.current = Date.now();
+    gameEnded.current = false;
+
+    return () => {
+      if (!gameEnded.current && guessesRef.current.length > 0) {
+        const timeSpent = (Date.now() - startTime.current) / 1000;
+        recordGameResult('wordless', 'quit', timeSpent);
+      }
+    };
+  }, [recordGameResult, recordGameStart]); // Only on mount/unmount
+
+  useEffect(() => {
+    guessesRef.current = guesses;
+  }, [guesses]);
   const MAX_GUESSES = 6;
   const WORD_LENGTH = targetWord.length;
 
@@ -28,9 +50,19 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
 
         if (currentGuess.toUpperCase() === targetWord.toUpperCase()) {
           setStatus('won');
+          if (!gameEnded.current) {
+            gameEnded.current = true;
+            const timeSpent = (Date.now() - startTime.current) / 1000;
+            recordGameResult('wordless', 'win', timeSpent);
+          }
           setTimeout(() => onComplete(50), 1500);
         } else if (newGuesses.length >= MAX_GUESSES) {
           setStatus('lost');
+          if (!gameEnded.current) {
+            gameEnded.current = true;
+            const timeSpent = (Date.now() - startTime.current) / 1000;
+            recordGameResult('wordless', 'loss', timeSpent);
+          }
           setTimeout(() => onComplete(10), 1500);
         }
       }
@@ -39,7 +71,7 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
     } else if (/^[a-zA-Z]$/.test(e.key) && currentGuess.length < WORD_LENGTH) {
       setCurrentGuess(prev => prev + e.key.toUpperCase());
     }
-  }, [currentGuess, guesses, status, targetWord, WORD_LENGTH, onComplete]);
+  }, [currentGuess, guesses, status, targetWord, WORD_LENGTH, onComplete, recordGameResult]);
 
   useEffect(() => {
     window.addEventListener('keydown', onKeyPress);

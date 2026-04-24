@@ -34,9 +34,19 @@ export default function SudokuPage() {
     }
   }, []);
   const updateStats = useUserStore((state) => state.updateStats);
-  const [grid, setGrid] = useState<number[][]>([]); // Placeholder if needed or use existing board state
+  const recordGameStart = useUserStore((state) => state.recordGameStart);
+  const recordGameResult = useUserStore((state) => state.recordGameResult);
+  const startTime = React.useRef<number>(Date.now());
+  const gameEnded = React.useRef<boolean>(false);
 
   const startNewGame = useCallback(() => {
+    // Record quit if starting new game without finishing current
+    const hasProgress = board.some((row, r) => row.some((cell, c) => cell !== initialBoard[r][c]));
+    if (!gameEnded.current && hasProgress) {
+      const timeSpent = (Date.now() - startTime.current) / 1000;
+      recordGameResult('sudoku', 'quit', timeSpent);
+    }
+
     setIsLoading(true);
     const params = new URLSearchParams(window.location.search);
     const time = parseInt(params.get('time') || '10');
@@ -51,12 +61,33 @@ export default function SudokuPage() {
       setIsWon(false);
       setSelectedCell(null);
       setIsLoading(false);
+
+      // Track game start
+      recordGameStart('sudoku');
+      startTime.current = Date.now();
+      gameEnded.current = false;
     }, 10);
-  }, []);
+  }, [board, initialBoard, recordGameStart, recordGameResult]);
 
   useEffect(() => {
     startNewGame();
-  }, [startNewGame]);
+    return () => {
+      if (!gameEnded.current) {
+        const hasProgress = boardRef.current.some((row, r) => row.some((cell, c) => cell !== initialBoardRef.current[r][c]));
+        if (hasProgress) {
+          const timeSpent = (Date.now() - startTime.current) / 1000;
+          recordGameResult('sudoku', 'quit', timeSpent);
+        }
+      }
+    };
+  }, []); // Only on mount
+
+  const boardRef = React.useRef<SudokuBoard>(board);
+  const initialBoardRef = React.useRef<SudokuBoard>(initialBoard);
+  useEffect(() => {
+    boardRef.current = board;
+    initialBoardRef.current = initialBoard;
+  }, [board, initialBoard]);
 
   const handleCellClick = (r: number, c: number) => {
     // Cannot select initial clues if game is not over, wait, we actually can select them but not edit them.
@@ -83,11 +114,15 @@ export default function SudokuPage() {
 
     // Check win condition
     const isFull = newBoard.every(row => row.every(cell => cell !== null));
-    if (isFull && currentConflicts.length === 0) {
+    if (isFull && currentConflicts.length === 0 && !gameEnded.current) {
       setIsWon(true);
       setSelectedCell(null);
       updateStats(15, 'sudoku');
       useUserStore.getState().completeActivity('sudoku');
+
+      gameEnded.current = true;
+      const timeSpent = (Date.now() - startTime.current) / 1000;
+      recordGameResult('sudoku', 'win', timeSpent);
     }
   };
 
