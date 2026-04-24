@@ -290,13 +290,13 @@ export default function MazePage() {
   return (
     <main className="min-h-screen bg-background p-6 flex flex-col items-center select-none overflow-hidden touch-none">
       <header className="w-full max-w-md flex justify-between items-center mb-8">
-        <button onClick={() => router.push('/games')} className="p-3 rounded-2xl bg-card shadow-neo-out text-accent">
+        <button onClick={() => router.push('/games')} className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent">
           <ArrowLeft size={24} />
         </button>
         <h1 className="text-2xl font-black italic tracking-tighter text-foreground/80">MAZE SOLVER</h1>
         <button 
           onClick={() => setIsTutorialOpen(true)}
-          className="p-3 rounded-2xl bg-card shadow-neo-out text-accent"
+          className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent"
         >
           <HelpCircle size={24} />
         </button>

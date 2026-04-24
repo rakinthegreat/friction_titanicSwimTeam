@@ -173,7 +173,7 @@ export default function RapidMathPage() {
   return (
     <main className="min-h-screen bg-background p-6 flex flex-col items-center">
       <header className="w-full max-w-md flex justify-between items-center mb-12">
-        <button onClick={() => router.push('/games')} className="p-3 rounded-2xl bg-card shadow-neo-out text-accent">
+        <button onClick={() => router.push('/games')} className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent">
           <ArrowLeft size={24} />
         </button>
         <h1 className="text-2xl font-black italic tracking-tighter">RAPID MATH</h1>

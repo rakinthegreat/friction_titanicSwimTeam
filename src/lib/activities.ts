@@ -24,7 +24,7 @@ export const ACTIVITIES: ActivityDefinition[] = [
     href: '/games/tic-tac-toe',
     icon: Blocks,
     color: 'text-accent-secondary',
-    minTime: 1,
+    minTime: 5,
     maxTime: 5,
     interests: ['logic'],
     scalable: false
@@ -37,7 +37,7 @@ export const ACTIVITIES: ActivityDefinition[] = [
     href: '/games/rapid-math',
     icon: Zap,
     color: 'text-accent',
-    minTime: 1,
+    minTime: 5,
     maxTime: 10,
     interests: ['logic', 'tech', 'science'],
     scalable: true
@@ -169,7 +169,7 @@ export const ACTIVITIES: ActivityDefinition[] = [
     href: '/learn/trivia',
     icon: HelpCircle,
     color: 'text-accent',
-    minTime: 1,
+    minTime: 5,
     maxTime: 10,
     interests: ['history', 'tech', 'science', 'philosophy'],
     scalable: true

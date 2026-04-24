@@ -99,7 +99,7 @@ export default function SudokuPage() {
         <div className="flex items-center">
           <button 
             onClick={() => router.push('/games')}
-            className="p-3 rounded-2xl bg-card text-accent transition-all active:scale-95 shadow-neo-out"
+            className="p-3 rounded-2xl bg-transparent text-accent transition-all active:scale-95 hover:bg-foreground/5"
             aria-label="Back to games"
           >
             <ArrowLeft className="w-6 h-6" />
@@ -108,7 +108,7 @@ export default function SudokuPage() {
         </div>
         <button 
           onClick={() => setIsTutorialOpen(true)}
-          className="p-3 rounded-2xl bg-card text-accent transition-all active:scale-95 shadow-neo-out"
+          className="p-3 rounded-2xl bg-transparent text-accent transition-all active:scale-95 hover:bg-foreground/5"
         >
           <HelpCircle className="w-6 h-6" />
         </button>

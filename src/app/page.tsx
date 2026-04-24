@@ -6,7 +6,7 @@ import { WordLess } from "@/components/games/WordLess";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
 import { useEffect, useState } from "react";
-import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight, Sparkles } from "lucide-react";
+import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight, Sparkles, Hourglass } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ACTIVITIES } from "@/lib/activities";
@@ -129,16 +129,16 @@ export default function Home() {
         <WeatherWidget />
 
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-accent rounded-[2.5rem] p-8 text-white space-y-6 shadow-neo-out ring-1 ring-white/10 col-span-1 md:col-span-2 overflow-hidden relative group">
+          <div className="bg-accent-secondary rounded-[2.5rem] p-8 text-white space-y-6 shadow-neo-out ring-1 ring-white/10 col-span-1 md:col-span-2 overflow-hidden relative group">
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
-              <Gamepad2 size={120} />
+              <Hourglass size={120} />
             </div>
             <div className="space-y-2 relative z-10">
               <h2 className="text-3xl font-black">Ready to reclaim time?</h2>
               <p className="opacity-80 font-medium">Choose a wait duration to see activity options.</p>
             </div>
             <div className="flex flex-wrap gap-4 pt-2 relative z-10">
-              {[1, 5, 10, 15, 20, 25].map((mins) => (
+              {[5, 10, 15, 20, 25].map((mins) => (
                 <button
                   key={mins}
                   onClick={() => {
@@ -161,8 +161,8 @@ export default function Home() {
                   }}
                   className={`rounded-2xl px-6 py-4 font-black transition-all ${
                     selectedDuration === mins 
-                    ? "bg-white text-accent shadow-neo-in scale-95" 
-                    : "bg-accent shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105"
+                    ? "bg-white text-accent-secondary shadow-neo-in scale-95" 
+                    : "bg-accent-secondary shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105"
                   }`}
                 >
                   {mins}m
@@ -184,7 +184,7 @@ export default function Home() {
                     >
                       <div className="h-full p-4 bg-white/10 rounded-3xl border border-white/5 hover:bg-white/20 transition-all hover:-translate-y-1 relative">
                         {dailyCompleted.includes(activity.id) && (
-                          <div className="absolute top-3 right-3 bg-white text-accent rounded-full p-1 shadow-lg z-20">
+                          <div className="absolute top-3 right-3 bg-white text-accent-secondary rounded-full p-1 shadow-lg z-20">
                             <ShieldCheck className="w-4 h-4" />
                           </div>
                         )}
