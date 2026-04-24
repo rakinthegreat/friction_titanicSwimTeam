@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { LessonProgressBar } from '@/components/learn/LessonProgressBar';
+import { EnglishFITBInteraction } from '@/components/learn/EnglishFITBInteraction';
 import { Card } from '@/components/ui/Card';
 import { CheckCircle2, XCircle, BookOpen, ChevronLeft, Loader2, Play, Combine, RefreshCcw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -35,8 +36,6 @@ export default function EnglishModule() {
   // Fill & Review State
   const [fillQuestions, setFillQuestions] = useState<FillQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [isRevealed, setIsRevealed] = useState(false);
 
   // Match State
   const [matchRounds, setMatchRounds] = useState<MatchRound[]>([]);
@@ -103,14 +102,9 @@ export default function EnglishModule() {
     setLoading(false);
   };
 
-  const handleSelectFill = (index: number) => {
-    if (isRevealed) return;
-    setSelectedAnswer(index);
-    setIsRevealed(true);
-
+  const handleFITBSubmit = (isCorrect: boolean, selectedWord: string) => {
     const currentQ = fillQuestions[currentIndex];
-    const isCorrect = currentQ.options[index].word === currentQ.answer;
-
+    
     if (isCorrect) {
       setScore(prev => prev + 5);
       if (viewMode === 'review') {
@@ -120,11 +114,7 @@ export default function EnglishModule() {
       setScore(prev => prev - 3);
       addEnglishReviewWord(currentQ.answer);
     }
-  };
-
-  const handleNextFill = () => {
-    setSelectedAnswer(null);
-    setIsRevealed(false);
+    
     setCurrentIndex(prev => prev + 1);
   };
 
@@ -322,75 +312,14 @@ export default function EnglishModule() {
       </div>
 
       <div className="flex-1 pb-12 px-2 flex flex-col">
-        {/* FILL OR REVIEW MODE */}
-        {(viewMode === 'fill' || viewMode === 'review') && (
-          <div className="space-y-8 animate-in slide-in-from-bottom-8 duration-500 max-w-2xl mx-auto w-full">
-            <div className="space-y-2 text-center">
-              <h2 className="text-sm font-black text-blue-400 uppercase tracking-[0.2em]">
-                {viewMode === 'review' ? 'Review Word' : 'Fill in the blank'}
-              </h2>
-            </div>
-
-            <Card className="p-8 sm:p-10 bg-card rounded-[3rem] shadow-neo-out relative overflow-hidden">
-              <BookOpen className="absolute -top-12 -right-12 w-48 h-48 text-blue-400/5 rotate-12" />
-              <div className="text-2xl sm:text-3xl font-black leading-tight relative z-10">
-                {fillQuestions[currentIndex].text.split('___').map((part, i, arr) => (
-                  <React.Fragment key={i}>
-                    {part}
-                    {i < arr.length - 1 && (
-                      <span className={`inline-block px-4 py-1 mx-2 border-b-4 font-black ${isRevealed && selectedAnswer !== null ? 'border-blue-400 text-blue-400' : 'border-foreground/20 text-foreground/40'}`}>
-                        {isRevealed && selectedAnswer !== null ? fillQuestions[currentIndex].options[selectedAnswer].word : '______'}
-                      </span>
-                    )}
-                  </React.Fragment>
-                ))}
-              </div>
-            </Card>
-
-            <div className="grid grid-cols-1 gap-4 pt-4">
-              {fillQuestions[currentIndex].options.map((opt, i) => {
-                const isSelected = selectedAnswer === i;
-                const isCorrect = opt.word === fillQuestions[currentIndex].answer;
-
-                let btnStyle = "bg-card text-foreground border-2 border-transparent hover:border-blue-400 hover:scale-[1.02]";
-
-                if (isRevealed) {
-                  if (isCorrect) {
-                    btnStyle = "bg-green-500 text-white shadow-neo-out border-2 border-green-500";
-                  } else if (isSelected) {
-                    btnStyle = "bg-red-500 text-white shadow-neo-out border-2 border-red-500";
-                  } else {
-                    btnStyle = "bg-card text-foreground opacity-50 shadow-none border-2 border-transparent";
-                  }
-                }
-
-                return (
-                  <Card
-                    key={i}
-                    onClick={() => handleSelectFill(i)}
-                    className={`p-6 rounded-[2rem] transition-all duration-300 cursor-pointer flex flex-col justify-center shadow-neo-out ${btnStyle}`}
-                  >
-                    <div className="flex justify-between items-center w-full">
-                      <span className="text-2xl font-black capitalize">{opt.word}</span>
-                      {isRevealed && isCorrect && <CheckCircle2 className="w-8 h-8 text-white flex-shrink-0 drop-shadow-sm" />}
-                      {isRevealed && isSelected && !isCorrect && <XCircle className="w-8 h-8 text-white flex-shrink-0 drop-shadow-sm" />}
-                    </div>
-                    {isRevealed && (
-                      <div className={`mt-2 text-sm font-medium animate-in fade-in slide-in-from-top-2 duration-300 ${isCorrect || isSelected ? 'text-white/90' : 'text-foreground/70'}`}>
-                        {opt.meaning}
-                      </div>
-                    )}
-                  </Card>
-                );
-              })}
-            </div>
-
-            {isRevealed && (
-              <button onClick={handleNextFill} className="w-full py-5 mt-6 rounded-[2rem] font-black text-xl transition-all shadow-neo-out bg-blue-400 text-white hover:scale-[1.02] active:scale-95 animate-in slide-in-from-bottom-4 duration-300">
-                Continue
-              </button>
-            )}
-          </div>
+        {(viewMode === 'fill' || viewMode === 'review') && fillQuestions[currentIndex] && (
+          <EnglishFITBInteraction
+            key={currentIndex}
+            question={fillQuestions[currentIndex].text}
+            options={fillQuestions[currentIndex].options}
+            answer={fillQuestions[currentIndex].answer}
+            onSubmit={handleFITBSubmit}
+          />
         )}
 
         {/* MATCH MODE */}
@@ -456,20 +385,14 @@ export default function EnglishModule() {
       </div>
 
       {/* Universal Finish Early Button */}
-      {viewMode !== 'menu' && (!isRevealed && viewMode !== 'match') && (
-        <div className="pt-4 pb-8 px-2">
-          <button onClick={finishSession} className="w-full py-4 rounded-3xl font-bold text-sm transition-all uppercase tracking-widest text-foreground/30 hover:text-foreground/80 active:scale-95 bg-transparent">
-            Finish Learning Early
-          </button>
-        </div>
-      )}
-      {viewMode === 'match' && (
-        <div className="pt-4 pb-8 px-2 max-w-2xl mx-auto w-full">
-          <button onClick={finishSession} className="w-full py-4 rounded-3xl font-bold text-sm transition-all uppercase tracking-widest text-foreground/30 hover:text-foreground/80 active:scale-95 bg-transparent">
-            Finish Learning Early
-          </button>
-        </div>
-      )}
+      <div className={`pt-4 pb-8 px-2 w-full ${viewMode === 'match' ? 'max-w-2xl mx-auto' : ''}`}>
+        <button 
+          onClick={finishSession} 
+          className="w-full py-4 rounded-3xl font-bold text-sm transition-all uppercase tracking-widest text-foreground/30 hover:text-foreground/80 active:scale-95 bg-transparent"
+        >
+          Finish Learning Early
+        </button>
+      </div>
     </main>
   );
 }
