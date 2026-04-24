@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { LessonProgressBar } from '@/components/learn/LessonProgressBar';
+import { MCQInteraction } from '@/components/learn/MCQInteraction';
 import { Card } from '@/components/ui/Card';
 import { CheckCircle2, XCircle, BookOpen, ChevronLeft, Loader2, Play, Combine, RefreshCcw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -35,8 +36,8 @@ export default function EnglishModule() {
   // Fill & Review State
   const [fillQuestions, setFillQuestions] = useState<FillQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [isRevealed, setIsRevealed] = useState(false);
+
+
 
   // Match State
   const [matchRounds, setMatchRounds] = useState<MatchRound[]>([]);
@@ -103,28 +104,9 @@ export default function EnglishModule() {
     setLoading(false);
   };
 
-  const handleSelectFill = (index: number) => {
-    if (isRevealed) return;
-    setSelectedAnswer(index);
-    setIsRevealed(true);
 
-    const currentQ = fillQuestions[currentIndex];
-    const isCorrect = currentQ.options[index].word === currentQ.answer;
-
-    if (isCorrect) {
-      setScore(prev => prev + 5);
-      if (viewMode === 'review') {
-        recordEnglishReviewSuccess(currentQ.answer);
-      }
-    } else {
-      setScore(prev => prev - 3);
-      addEnglishReviewWord(currentQ.answer);
-    }
-  };
 
   const handleNextFill = () => {
-    setSelectedAnswer(null);
-    setIsRevealed(false);
     setCurrentIndex(prev => prev + 1);
   };
 
@@ -338,8 +320,8 @@ export default function EnglishModule() {
                   <React.Fragment key={i}>
                     {part}
                     {i < arr.length - 1 && (
-                      <span className={`inline-block px-4 py-1 mx-2 border-b-4 font-black ${isRevealed && selectedAnswer !== null ? 'border-blue-400 text-blue-400' : 'border-foreground/20 text-foreground/40'}`}>
-                        {isRevealed && selectedAnswer !== null ? fillQuestions[currentIndex].options[selectedAnswer].word : '______'}
+                      <span className={`inline-block px-4 py-1 mx-2 border-b-4 font-black border-foreground/20 text-foreground/40`}>
+                        {'______'}
                       </span>
                     )}
                   </React.Fragment>
@@ -347,49 +329,29 @@ export default function EnglishModule() {
               </div>
             </Card>
 
-            <div className="grid grid-cols-1 gap-4 pt-4">
-              {fillQuestions[currentIndex].options.map((opt, i) => {
-                const isSelected = selectedAnswer === i;
-                const isCorrect = opt.word === fillQuestions[currentIndex].answer;
-
-                let btnStyle = "bg-card text-foreground border-2 border-transparent hover:border-blue-400 hover:scale-[1.02]";
-
-                if (isRevealed) {
-                  if (isCorrect) {
-                    btnStyle = "bg-green-500 text-white shadow-neo-out border-2 border-green-500";
-                  } else if (isSelected) {
-                    btnStyle = "bg-red-500 text-white shadow-neo-out border-2 border-red-500";
-                  } else {
-                    btnStyle = "bg-card text-foreground opacity-50 shadow-none border-2 border-transparent";
+            <MCQInteraction
+              question={fillQuestions[currentIndex].text}
+              options={fillQuestions[currentIndex].options.map(opt => ({
+                optiontext: opt.word,
+                is_correct: opt.word === fillQuestions[currentIndex].answer,
+                description: opt.meaning
+              }))}
+              colorScheme="modern"
+              showQuestion={false}
+              onSubmit={(isCorrect) => {
+                if (isCorrect) {
+                  setScore(prev => prev + 5);
+                  if (viewMode === 'review') {
+                    recordEnglishReviewSuccess(fillQuestions[currentIndex].answer);
                   }
+                } else {
+                  setScore(prev => prev - 3);
+                  addEnglishReviewWord(fillQuestions[currentIndex].answer);
                 }
-
-                return (
-                  <Card
-                    key={i}
-                    onClick={() => handleSelectFill(i)}
-                    className={`p-6 rounded-[2rem] transition-all duration-300 cursor-pointer flex flex-col justify-center shadow-neo-out ${btnStyle}`}
-                  >
-                    <div className="flex justify-between items-center w-full">
-                      <span className="text-2xl font-black capitalize">{opt.word}</span>
-                      {isRevealed && isCorrect && <CheckCircle2 className="w-8 h-8 text-white flex-shrink-0 drop-shadow-sm" />}
-                      {isRevealed && isSelected && !isCorrect && <XCircle className="w-8 h-8 text-white flex-shrink-0 drop-shadow-sm" />}
-                    </div>
-                    {isRevealed && (
-                      <div className={`mt-2 text-sm font-medium animate-in fade-in slide-in-from-top-2 duration-300 ${isCorrect || isSelected ? 'text-white/90' : 'text-foreground/70'}`}>
-                        {opt.meaning}
-                      </div>
-                    )}
-                  </Card>
-                );
-              })}
-            </div>
-
-            {isRevealed && (
-              <button onClick={handleNextFill} className="w-full py-5 mt-6 rounded-[2rem] font-black text-xl transition-all shadow-neo-out bg-blue-400 text-white hover:scale-[1.02] active:scale-95 animate-in slide-in-from-bottom-4 duration-300">
-                Continue
-              </button>
-            )}
+                // The continue button in MCQInteraction will handle moving to next
+                handleNextFill();
+              }}
+            />
           </div>
         )}
 
@@ -409,8 +371,8 @@ export default function EnglishModule() {
                   const isError = errorPair?.word === i;
 
                   let style = "bg-card text-foreground border-2 border-transparent hover:border-blue-400/50 hover:scale-[1.02]";
-                  if (isMatched) style = "bg-green-500 text-white opacity-50 cursor-not-allowed shadow-none border-2 border-green-500";
-                  else if (isError) style = "bg-red-500 text-white border-2 border-red-500";
+                  if (isMatched) style = "bg-[#7EA68B] text-white opacity-50 cursor-not-allowed shadow-none border-2 border-[#7EA68B]";
+                  else if (isError) style = "bg-[#DC2626] text-white border-2 border-[#DC2626]";
                   else if (isSelected) style = "bg-card text-blue-500 border-2 border-blue-400";
 
                   return (
@@ -434,8 +396,8 @@ export default function EnglishModule() {
                   const isError = errorPair?.meaning === i;
 
                   let style = "bg-card text-foreground border-2 border-transparent hover:border-blue-400/50 hover:scale-[1.02]";
-                  if (isMatched) style = "bg-green-500 text-white opacity-50 cursor-not-allowed shadow-none border-2 border-green-500";
-                  else if (isError) style = "bg-red-500 text-white border-2 border-red-500";
+                  if (isMatched) style = "bg-[#7EA68B] text-white opacity-50 cursor-not-allowed shadow-none border-2 border-[#7EA68B]";
+                  else if (isError) style = "bg-[#DC2626] text-white border-2 border-[#DC2626]";
                   else if (isSelected) style = "bg-card text-blue-500 border-2 border-blue-400";
 
                   return (
@@ -456,7 +418,7 @@ export default function EnglishModule() {
       </div>
 
       {/* Universal Finish Early Button */}
-      {viewMode !== 'menu' && (!isRevealed && viewMode !== 'match') && (
+      {viewMode !== 'menu' && (viewMode !== 'match') && (
         <div className="pt-4 pb-8 px-2">
           <button onClick={finishSession} className="w-full py-4 rounded-3xl font-bold text-sm transition-all uppercase tracking-widest text-foreground/30 hover:text-foreground/80 active:scale-95 bg-transparent">
             Finish Learning Early
