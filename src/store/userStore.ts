@@ -50,6 +50,13 @@ interface UserState {
   // English
   englishReviewWords: Record<string, number>;
 
+  // Meditation
+  meditationLogs: Array<{
+    prompt: string;
+    reflection: string;
+    timestamp: number;
+  }>;
+
   dailyCompletedActivities: string[];
   lastCompletedDate: string | null;
   lastBackupDate: string | null;
@@ -72,6 +79,9 @@ interface UserState {
   // English Actions
   addEnglishReviewWord: (word: string) => void;
   recordEnglishReviewSuccess: (word: string) => void;
+
+  // Meditation Actions
+  addMeditationLog: (log: { prompt: string; reflection: string }) => void;
 
   completeActivity: (id: string) => void;
   syncWithFirebase: () => Promise<void>;
@@ -105,6 +115,9 @@ export const useUserStore = create<UserState>()(
 
       // English
       englishReviewWords: {},
+
+      // Meditation
+      meditationLogs: [],
 
       dailyCompletedActivities: [],
       lastCompletedDate: null,
@@ -223,6 +236,15 @@ export const useUserStore = create<UserState>()(
             },
           };
         }),
+
+      // Meditation
+      addMeditationLog: (log) =>
+        set((state) => ({
+          meditationLogs: [
+            { ...log, timestamp: Date.now() },
+            ...state.meditationLogs,
+          ],
+        })),
 
       completeActivity: (id) =>
         set((state) => {

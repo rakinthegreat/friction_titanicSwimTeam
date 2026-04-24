@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/Card';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { ArrowLeft, BookOpen, Brain, FlaskConical, HelpCircle } from 'lucide-react';
+import { ArrowLeft, BookOpen, Brain, FlaskConical, HelpCircle, Leaf } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { WordOfTheDayWidget } from '@/components/learn/WordOfTheDayWidget';
@@ -39,6 +39,13 @@ export default function LearnDirectoryPage() {
       icon: <HelpCircle className="w-8 h-8" />,
       href: '/learn/trivia',
       active: true,
+      color: 'text-accent'
+    },
+    {
+      title: 'Daily Meditation',
+      description: 'Reflect on your day and clear your mind.',
+      icon: <Leaf className="w-8 h-8" />,
+      href: '/learn/meditation',
       color: 'text-accent'
     }
   ];
