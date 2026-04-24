@@ -2,7 +2,7 @@ import admin from "@/lib/firebaseAdmin";
 import { cookies } from "next/headers";
 
 export async function GET() {
-    const session = cookies().get("session")?.value;
+    const session = (await cookies()).get("session")?.value;
 
     if (!session) {
         return new Response("Unauthorized", { status: 401 });
