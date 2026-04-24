@@ -42,10 +42,12 @@ export default function Profile() {
   const syncWithFirebase = useUserStore((state) => state.syncWithFirebase);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncSuccess, setSyncSuccess] = useState(false);
+  const setNavigationSource = useUserStore((state) => state.setNavigationSource);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    setNavigationSource('profile');
+  }, [setNavigationSource]);
 
   const handleToggleInterest = (id: string) => {
     if (tempInterests.includes(id)) {
@@ -94,7 +96,7 @@ export default function Profile() {
     <main className="min-h-screen bg-background p-6 md:p-12 max-w-5xl mx-auto space-y-12">
       <header className="flex justify-between items-center">
         <Link 
-          href="/dashboard"
+          href="/"
           className="p-4 bg-card rounded-2xl shadow-neo-out hover:scale-105 active:scale-95 transition-all group"
         >
           <ArrowLeft className="w-6 h-6 text-foreground/40 group-hover:text-accent transition-colors" />

@@ -6,9 +6,11 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { ArrowLeft, Leaf, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useUserStore } from '@/store/userStore';
 
 export default function ActivitiesDirectoryPage() {
   const router = useRouter();
+  const navigationSource = useUserStore((state) => state.navigationSource);
 
   const modules = [
     {
@@ -32,7 +34,7 @@ export default function ActivitiesDirectoryPage() {
       <header className="flex justify-between items-center">
         <div className="flex items-center">
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push(navigationSource === 'profile' ? '/profile' : '/')}
             className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors mr-2"
             aria-label="Back to home"
           >

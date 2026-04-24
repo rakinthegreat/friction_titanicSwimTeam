@@ -23,6 +23,7 @@ export default function Home() {
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
   const [suggestions, setSuggestions] = useState<typeof ACTIVITIES>([]);
   const [suggestionLock, setSuggestionLock] = useState<Record<number, typeof ACTIVITIES>>({});
+  const setNavigationSource = useUserStore((state) => state.setNavigationSource);
   
   const dailyCompleted = useUserStore(state => state.dailyCompletedActivities);
   const lastDate = useUserStore(state => state.lastCompletedDate);
@@ -78,6 +79,7 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
+    setNavigationSource('home');
     const savedDuration = localStorage.getItem('selectedDuration');
     const savedSuggestions = localStorage.getItem('suggestions');
     const savedLock = localStorage.getItem('suggestionLock');
@@ -94,7 +96,7 @@ export default function Home() {
       localStorage.removeItem('suggestions');
       localStorage.removeItem('suggestionLock');
     }
-  }, [lastDate]);
+  }, [lastDate, setNavigationSource]);
 
   useEffect(() => {
     if (selectedDuration) localStorage.setItem('selectedDuration', selectedDuration.toString());

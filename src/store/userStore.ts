@@ -36,6 +36,7 @@ interface UserState {
     darkMode: boolean;
     blockDoomscrolling: boolean;
   };
+  navigationSource: 'home' | 'profile';
 
   // Philosophy
   completedPhilosophyConcepts: string[];
@@ -107,6 +108,7 @@ interface UserState {
   completeRealLifeChallenge: (id: string, experience?: string) => void;
 
   completeActivity: (id: string) => void;
+  setNavigationSource: (source: 'home' | 'profile') => void;
   syncWithFirebase: () => Promise<void>;
 }
 
@@ -146,6 +148,7 @@ export const useUserStore = create<UserState>()(
       lastCompletedDate: null,
       lastBackupDate: null,
       realLifeChallenges: [],
+      navigationSource: 'home',
 
       setInterests: (interests) => set({ interests }),
       setVideoGenres: (genres) => set({ videoGenres: genres }),
@@ -304,6 +307,8 @@ export const useUserStore = create<UserState>()(
             lastCompletedDate: today,
           };
         }),
+      
+      setNavigationSource: (source) => set({ navigationSource: source }),
       
       syncWithFirebase: async () => {
         const state = useUserStore.getState();
