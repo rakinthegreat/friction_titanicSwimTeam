@@ -11,12 +11,21 @@ import { WaitLessDigitalWellbeing } from '@/lib/native-bridge';
 export default function PermissionsPage() {
   const router = useRouter();
   const [usageStatsGranted, setUsageStatsGranted] = useState(false);
+  const [notificationGranted, setNotificationGranted] = useState(false);
+  const [batteryGranted, setBatteryGranted] = useState(false);
   const [checking, setChecking] = useState(true);
 
   const checkPermissions = async () => {
     try {
-      const { granted } = await WaitLessDigitalWellbeing.hasUsageStatsPermission();
-      setUsageStatsGranted(granted);
+      const [usage, notify, battery] = await Promise.all([
+        WaitLessDigitalWellbeing.hasUsageStatsPermission(),
+        WaitLessDigitalWellbeing.hasNotificationPermission(),
+        WaitLessDigitalWellbeing.hasBatteryOptimizationPermission()
+      ]);
+      
+      setUsageStatsGranted(usage.granted);
+      setNotificationGranted(notify.granted);
+      setBatteryGranted(battery.granted);
     } catch (e) {
       console.error('Failed to check permissions', e);
     } finally {
@@ -31,11 +40,28 @@ export default function PermissionsPage() {
     return () => window.removeEventListener('focus', checkPermissions);
   }, []);
 
-  const handleOpenSettings = async () => {
+  const handleOpenUsageSettings = async () => {
     try {
       await WaitLessDigitalWellbeing.openUsageSettings();
     } catch (e) {
-      console.error('Failed to open settings', e);
+      console.error('Failed to open usage settings', e);
+    }
+  };
+
+  const handleRequestNotifications = async () => {
+    try {
+      const { granted } = await WaitLessDigitalWellbeing.requestNotificationPermission();
+      setNotificationGranted(granted);
+    } catch (e) {
+      console.error('Failed to request notifications', e);
+    }
+  };
+
+  const handleRequestBatteryOptimization = async () => {
+    try {
+      await WaitLessDigitalWellbeing.requestBatteryOptimizationPermission();
+    } catch (e) {
+      console.error('Failed to request battery optimization', e);
     }
   };
 
@@ -112,14 +138,16 @@ export default function PermissionsPage() {
             title="Notifications"
             description="Allows us to ping you when a waiting period is detected so you can reclaim your time."
             icon={Bell}
-            status="granted" // Handled natively on boot
+            status={checking ? 'checking' : notificationGranted ? 'granted' : 'missing'}
+            action={handleRequestNotifications}
           />
 
           <PermissionItem 
             title="Background Activity"
             description="Ensures the app can monitor your movement and screen time even when not active."
             icon={Battery}
-            status="granted" // Handled natively on boot
+            status={checking ? 'checking' : batteryGranted ? 'granted' : 'missing'}
+            action={handleRequestBatteryOptimization}
           />
 
           <PermissionItem 
@@ -127,17 +155,18 @@ export default function PermissionsPage() {
             description="Required to detect when you are using 'doomscrolling' apps and suggest a WaitLess activity instead."
             icon={Smartphone}
             status={checking ? 'checking' : usageStatsGranted ? 'granted' : 'missing'}
-            action={handleOpenSettings}
+            action={handleOpenUsageSettings}
           />
         </div>
       </section>
 
-      {!usageStatsGranted && !checking && (
+      {(!usageStatsGranted || !notificationGranted || !batteryGranted) && !checking && (
         <div className="flex items-center gap-2 p-4 bg-red-500/10 rounded-2xl border border-red-500/20 text-red-500 text-xs font-bold justify-center">
           <AlertCircle size={14} />
-          Some features may be limited without Usage Access
+          Some features may be limited without all permissions
         </div>
       )}
     </main>
   );
 }
+

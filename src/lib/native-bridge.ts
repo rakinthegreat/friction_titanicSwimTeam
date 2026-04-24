@@ -8,6 +8,10 @@ export interface WaitLessDigitalWellbeingPlugin {
   getForegroundApp(): Promise<{ packageName: string }>;
   hasUsageStatsPermission(): Promise<{ granted: boolean }>;
   openUsageSettings(): Promise<void>;
+  hasNotificationPermission(): Promise<{ granted: boolean }>;
+  requestNotificationPermission(): Promise<{ granted: boolean }>;
+  hasBatteryOptimizationPermission(): Promise<{ granted: boolean }>;
+  requestBatteryOptimizationPermission(): Promise<void>;
 }
 
 const isNative = Capacitor.isNativePlatform();
@@ -23,8 +27,13 @@ const WaitLessSensors: WaitLessSensorsPlugin = isNative ? WaitLessSensorsBase : 
 const WaitLessDigitalWellbeing: WaitLessDigitalWellbeingPlugin = isNative ? WaitLessDigitalWellbeingBase : {
   getForegroundApp: async () => ({ packageName: 'com.browser.web' }),
   hasUsageStatsPermission: async () => ({ granted: true }),
-  openUsageSettings: async () => { console.log('Settings only available on Android'); }
+  openUsageSettings: async () => { console.log('Settings only available on Android'); },
+  hasNotificationPermission: async () => ({ granted: true }),
+  requestNotificationPermission: async () => ({ granted: true }),
+  hasBatteryOptimizationPermission: async () => ({ granted: true }),
+  requestBatteryOptimizationPermission: async () => { console.log('Battery optimization only on Android'); }
 };
+
 
 export { WaitLessSensors, WaitLessDigitalWellbeing };
 
