@@ -40,3 +40,25 @@
 - [ ] Integrate **Haptic Feedback** for Android via Capacitor Haptics
 - [ ] Final UI/UX audit for "Premium" feel (Micro-interactions, Transitions)
 - [ ] Production build and Android APK generation
+
+## Phase 6: Testing & Bug Fixes
+- [ ] Onboarding Page
+- [ ] Dashboard Page
+- [ ] Learning Page
+    - [ ] English Learning
+    - [ ] Philosophy Learning
+    - [ ] Science Learning
+    - [ ] History Trivia
+- [x] Games Page
+    - [x] WordLess
+    - [x] Sudoku
+    - [x] Tic Tac Toe
+    - [x] Memory Match
+    - [x] 2048
+    - [x] Rapid Math
+- [ ] Profile Page
+- [ ] Settings Page
+- [ ] Notification Permission Page
+- [ ] Battery Optimization Page
+- [ ] Digital Wellbeing Page
+- [ ] Location Permission Page
