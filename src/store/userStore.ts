@@ -44,6 +44,9 @@ interface UserState {
   customScienceConcepts: any[];
   scienceReflections: LearningSession[];
 
+  // English
+  englishReviewWords: Record<string, number>;
+
   dailyCompletedActivities: string[];
   lastCompletedDate: string | null;
 
@@ -60,6 +63,10 @@ interface UserState {
   completeScienceConcept: (name: string) => void;
   addCustomScienceConcepts: (concepts: any[]) => void;
   addScienceReflection: (session: Omit<LearningSession, 'timestamp'>) => void;
+
+  // English Actions
+  addEnglishReviewWord: (word: string) => void;
+  recordEnglishReviewSuccess: (word: string) => void;
 
   completeActivity: (id: string) => void;
 }
@@ -88,6 +95,9 @@ export const useUserStore = create<UserState>()(
       completedScienceConcepts: [],
       customScienceConcepts: [],
       scienceReflections: [],
+
+      // English
+      englishReviewWords: {},
 
       dailyCompletedActivities: [],
       lastCompletedDate: null,
@@ -175,6 +185,35 @@ export const useUserStore = create<UserState>()(
             ...state.scienceReflections,
           ],
         })),
+
+      // English
+      addEnglishReviewWord: (word) =>
+        set((state) => {
+          if (state.englishReviewWords[word] !== undefined) return state;
+          return {
+            englishReviewWords: { ...state.englishReviewWords, [word]: 0 },
+          };
+        }),
+      recordEnglishReviewSuccess: (word) =>
+        set((state) => {
+          const currentCount = state.englishReviewWords[word];
+          if (currentCount === undefined) return state;
+          
+          if (currentCount >= 1) {
+            // Reached 2 successes, remove the word
+            const newReviewWords = { ...state.englishReviewWords };
+            delete newReviewWords[word];
+            return { englishReviewWords: newReviewWords };
+          }
+          
+          // Otherwise increment
+          return {
+            englishReviewWords: {
+              ...state.englishReviewWords,
+              [word]: currentCount + 1,
+            },
+          };
+        }),
 
       completeActivity: (id) =>
         set((state) => {

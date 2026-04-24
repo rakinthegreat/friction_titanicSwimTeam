@@ -1,0 +1,2007 @@
+[
+    {
+        "question": "He was known for his ______ approach to problem-solving, always finding the most practical solution.",
+        "answer": "pragmatic",
+        "definition": "Dealing with things sensibly and realistically in a way that is based on practical rather than theoretical considerations."
+    },
+    {
+        "question": "The beauty of a sunset is ______, lasting only for a few fleeting minutes before the dark sets in.",
+        "answer": "ephemeral",
+        "definition": "Lasting for a very short time."
+    },
+    {
+        "question": "In today's digital age, smartphones have become ______, seen in the hands of almost everyone on the street.",
+        "answer": "ubiquitous",
+        "definition": "Present, appearing, or found everywhere."
+    },
+    {
+        "question": "The ______ salesman kept talking for an hour, barely giving anyone else a chance to speak.",
+        "answer": "loquacious",
+        "definition": "Tending to talk a great deal; talkative."
+    },
+    {
+        "question": "She was incredibly ______ in her accounting work, double-checking every single receipt and ledger entry.",
+        "answer": "meticulous",
+        "definition": "Showing great attention to detail; very careful and precise."
+    },
+    {
+        "question": "His ______ attention to his appearance meant he never left the house with even a single wrinkle in his shirt.",
+        "answer": "fastidious",
+        "definition": "Very attentive to and concerned about accuracy and detail."
+    },
+    {
+        "question": "The politician tried to ______ the issue by giving a long, confusing answer that avoided the main point.",
+        "answer": "obfuscate",
+        "definition": "To render obscure, unclear, or unintelligible."
+    },
+    {
+        "question": "To ______ the effects of the drought, the city implemented strict water conservation rules.",
+        "answer": "mitigate",
+        "definition": "To make less severe, serious, or painful."
+    },
+    {
+        "question": "Scratching the mosquito bite will only ______ the itch and make it redder.",
+        "answer": "exacerbate",
+        "definition": "To make a problem, bad situation, or negative feeling worse."
+    },
+    {
+        "question": "Despite the harsh winter, the ______ plants in the garden bloomed beautifully in the spring.",
+        "answer": "resilient",
+        "definition": "Able to withstand or recover quickly from difficult conditions."
+    },
+    {
+        "question": "Her ______ mood swings made it difficult for her friends to know how she would react to any given situation.",
+        "answer": "capricious",
+        "definition": "Given to sudden and unaccountable changes of mood or behavior."
+    },
+    {
+        "question": "The professor's lecture on quantum mechanics was so ______ that only a few graduate students understood it.",
+        "answer": "esoteric",
+        "definition": "Intended for or likely to be understood by only a small number of people with specialized knowledge."
+    },
+    {
+        "question": "Stephen King is a ______ author, having written and published dozens of bestselling novels.",
+        "answer": "prolific",
+        "definition": "Producing much fruit, foliage, or many offspring; (of an artist/author) producing many works."
+    },
+    {
+        "question": "The billionaire's ______ display of wealth included gold-plated cars and diamond-encrusted watches.",
+        "answer": "ostentatious",
+        "definition": "Characterized by vulgar or pretentious display; designed to impress or attract notice."
+    },
+    {
+        "question": "After weeks of thrilling travel, returning to her ______ office job felt incredibly boring.",
+        "answer": "mundane",
+        "definition": "Lacking interest or excitement; dull."
+    },
+    {
+        "question": "How the ancient pyramids were built remains an ______ to many modern historians and engineers.",
+        "answer": "enigma",
+        "definition": "A person or thing that is mysterious, puzzling, or difficult to understand."
+    },
+    {
+        "question": "Voter ______ was high this year, resulting in the lowest election turnout in a decade.",
+        "answer": "apathy",
+        "definition": "Lack of interest, enthusiasm, or concern."
+    },
+    {
+        "question": "The instructions were so ______ that I wasn't sure whether to turn left or right at the fork.",
+        "answer": "ambiguous",
+        "definition": "Open to more than one interpretation; having a double meaning."
+    },
+    {
+        "question": "My brother is a ______ person who loves attending parties and meeting new people.",
+        "answer": "gregarious",
+        "definition": "Fond of company; sociable."
+    },
+    {
+        "question": "Birds have an ______ sense of direction that allows them to migrate thousands of miles without a map.",
+        "answer": "innate",
+        "definition": "Inborn; natural."
+    },
+    {
+        "question": "Many cultures ______ their elders, treating them with the utmost respect and seeking their wisdom.",
+        "answer": "revere",
+        "definition": "To feel deep respect or admiration for something."
+    },
+    {
+        "question": "Normally outgoing, she was unusually ______ about her new job and refused to share any details.",
+        "answer": "reticent",
+        "definition": "Not revealing one's thoughts or feelings readily."
+    },
+    {
+        "question": "The boss was surrounded by ______, employees who constantly agreed with him just to get a promotion.",
+        "answer": "sycophants",
+        "definition": "A person who acts obsequiously toward someone important in order to gain advantage."
+    },
+    {
+        "question": "He approached the haunted house with a sense of ______, his heart pounding in his chest.",
+        "answer": "trepidation",
+        "definition": "A feeling of fear or agitation about something that may happen."
+    },
+    {
+        "question": "New DNA evidence helped to ______ the man who had been falsely imprisoned for twenty years.",
+        "answer": "vindicate",
+        "definition": "Clear someone of blame or suspicion."
+    },
+    {
+        "question": "The ______ sports fans painted their faces and screamed until their voices were hoarse.",
+        "answer": "zealous",
+        "definition": "Having or showing great energy or enthusiasm in pursuit of a cause or an objective."
+    },
+    {
+        "question": "The ______ donor anonymously gave one million dollars to the children's hospital.",
+        "answer": "benevolent",
+        "definition": "Well meaning and kindly."
+    },
+    {
+        "question": "The hacker's ______ software was designed to steal passwords and destroy personal files.",
+        "answer": "malicious",
+        "definition": "Intending or intended to do harm."
+    },
+    {
+        "question": "After winning the championship three years in a row, the team grew ______ and lost their competitive edge.",
+        "answer": "complacent",
+        "definition": "Showing smug or uncritical satisfaction with oneself or one's achievements."
+    },
+    {
+        "question": "If you are ______ in your studies, you are much more likely to earn high grades.",
+        "answer": "diligent",
+        "definition": "Having or showing care and conscientiousness in one's work or duties."
+    },
+    {
+        "question": "The speaker delivered an ______ speech that moved the entire audience to tears.",
+        "answer": "eloquent",
+        "definition": "Fluent or persuasive in speaking or writing."
+    },
+    {
+        "question": "Living a ______ lifestyle allowed them to save up enough money to buy a house in cash.",
+        "answer": "frugal",
+        "definition": "Sparing or economical with regard to money or food."
+    },
+    {
+        "question": "The ______ waiter looked down his nose at us when we asked for ketchup at the fancy restaurant.",
+        "answer": "haughty",
+        "definition": "Arrogantly superior and disdainful."
+    },
+    {
+        "question": "His ______ decision to quit his job without having another one lined up caused him a lot of stress.",
+        "answer": "impetuous",
+        "definition": "Acting or done quickly and without thought or care."
+    },
+    {
+        "question": "The art exhibit sought to ______ classical paintings with modern street art to show the contrast in styles.",
+        "answer": "juxtapose",
+        "definition": "Place or deal with close together for contrasting effect."
+    },
+    {
+        "question": "After eating the massive Thanksgiving dinner, everyone felt too ______ to get off the couch.",
+        "answer": "lethargic",
+        "definition": "Affected by lethargy; sluggish and apathetic."
+    },
+    {
+        "question": "It was ______ of the winner to praise her opponent's skill during the trophy presentation.",
+        "answer": "magnanimous",
+        "definition": "Generous or forgiving, especially toward a rival or less powerful person."
+    },
+    {
+        "question": "He tried to look ______ about failing the driving test, but we could tell he was deeply upset.",
+        "answer": "nonchalant",
+        "definition": "Feeling or appearing casually calm and relaxed; not displaying anxiety, interest, or enthusiasm."
+    },
+    {
+        "question": "Cassette tapes have become largely ______ in the era of digital music streaming.",
+        "answer": "obsolete",
+        "definition": "No longer produced or used; out of date."
+    },
+    {
+        "question": "She sat by the window in a ______ mood, quietly reflecting on the choices she had made.",
+        "answer": "pensive",
+        "definition": "Engaged in, involving, or reflecting deep or serious thought."
+    },
+    {
+        "question": "His ______ dream of single-handedly ending world poverty was noble, but highly unrealistic.",
+        "answer": "quixotic",
+        "definition": "Exceedingly idealistic; unrealistic and impractical."
+    },
+    {
+        "question": "The phrase 'free gift' is ______, since a gift is inherently free by definition.",
+        "answer": "redundant",
+        "definition": "Not or no longer needed or useful; superfluous."
+    },
+    {
+        "question": "The board of directors ignored the minor details and focused only on the most ______ points of the presentation.",
+        "answer": "salient",
+        "definition": "Most noticeable or important."
+    },
+    {
+        "question": "The police need ______ evidence, like a weapon or fingerprints, to make an arrest, not just rumors.",
+        "answer": "tangible",
+        "definition": "Perceptible by touch; clear and definite; real."
+    },
+    {
+        "question": "The sheer scale of the hurricane was ______, causing more destruction than any storm in recorded history.",
+        "answer": "unprecedented",
+        "definition": "Never done or known before."
+    },
+    {
+        "question": "The stock market can be highly ______, with prices violently rising and falling in a single day.",
+        "answer": "volatile",
+        "definition": "Liable to change rapidly and unpredictably, especially for the worse."
+    },
+    {
+        "question": "As the night wore on, the partygoers' energy began to ______ and people started heading home.",
+        "answer": "wane",
+        "definition": "Decrease in vigor, power, or extent; become weaker."
+    },
+    {
+        "question": "At the ______ of his career, the actor was starring in three blockbuster movies a year.",
+        "answer": "zenith",
+        "definition": "The time at which something is most powerful or successful."
+    },
+    {
+        "question": "The king was forced to ______ his throne after the successful revolution by the working class.",
+        "answer": "abdicate",
+        "definition": "Renounce one's throne; fail to fulfill or undertake a duty or responsibility."
+    },
+    {
+        "question": "The celebrity was hit with a ______ of questions from the paparazzi the moment she stepped out of the car.",
+        "answer": "barrage",
+        "definition": "A concentrated outpouring of questions or blows."
+    },
+    {
+        "question": "The elementary school band's first practice sounded like a ______ of squeaking clarinets and banging drums.",
+        "answer": "cacophony",
+        "definition": "A harsh, discordant mixture of sounds."
+    },
+    {
+        "question": "There is a ______ of fresh produce in the desert town, making fruits and vegetables very expensive.",
+        "answer": "dearth",
+        "definition": "A scarcity or lack of something."
+    },
+    {
+        "question": "The ______ children ran into the amusement park, bubbling over with excitement.",
+        "answer": "ebullient",
+        "definition": "Cheerful and full of energy."
+    },
+    {
+        "question": "I was just being ______ when I said I would eat a hundred hot dogs; I didn't actually mean it.",
+        "answer": "facetious",
+        "definition": "Treating serious issues with deliberately inappropriate humor."
+    },
+    {
+        "question": "The coach's inspiring halftime speech helped to ______ the losing team into playing their best.",
+        "answer": "galvanize",
+        "definition": "Shock or excite someone into taking action."
+    },
+    {
+        "question": "The movie relied on ______ plot twists that audiences have seen a million times before.",
+        "answer": "hackneyed",
+        "definition": "Lacking significance through having been overused; unoriginal and trite."
+    },
+    {
+        "question": "As an ______, the artist constantly challenged traditional artistic conventions and societal norms.",
+        "answer": "iconoclast",
+        "definition": "A person who attacks settled beliefs or institutions."
+    },
+    {
+        "question": "The legal document was filled with so much ______ that the average person couldn't understand it.",
+        "answer": "jargon",
+        "definition": "Special words or expressions that are used by a particular profession or group."
+    },
+    {
+        "question": "The teacher tried to ______ a love of reading in her students by introducing them to fantasy novels.",
+        "answer": "kindle",
+        "definition": "To light or set on fire; to arouse or inspire an emotion."
+    },
+    {
+        "question": "The sequel to the hit movie was a ______ disappointment, lacking the charm and energy of the original.",
+        "answer": "lackluster",
+        "definition": "Lacking in vitality, force, or conviction; uninspired or uninspiring."
+    },
+    {
+        "question": "The author is famous for his ______ tales of horror, ghosts, and gruesome murders.",
+        "answer": "macabre",
+        "definition": "Disturbing and horrifying because of involvement with or depiction of death and injury."
+    },
+    {
+        "question": "His constant taking of selfies and talking about himself revealed a deep level of ______.",
+        "answer": "narcissism",
+        "definition": "Excessive interest in or admiration of oneself and one's physical appearance."
+    },
+    {
+        "question": "The wrecking ball was brought in to completely ______ the old, condemned apartment building.",
+        "answer": "obliterate",
+        "definition": "To destroy utterly; wipe out."
+    },
+    {
+        "question": "The invention of the internet created a massive ______ shift in how humanity communicates.",
+        "answer": "paradigm",
+        "definition": "A typical example or pattern of something; a model."
+    },
+    {
+        "question": "She was in a ______ over whether to accept the high-paying job she hated, or the low-paying job she loved.",
+        "answer": "quandary",
+        "definition": "A state of perplexity or uncertainty over what to do in a difficult situation."
+    },
+    {
+        "question": "The disease ran ______ through the overcrowded city before the vaccine could be distributed.",
+        "answer": "rampant",
+        "definition": "Flourishing or spreading unchecked (especially something unwelcome or unpleasant)."
+    },
+    {
+        "question": "The ______ old woman gave the young couple excellent advice about how to maintain a happy marriage.",
+        "answer": "sagacious",
+        "definition": "Having or showing keen mental discernment and good judgment; shrewd."
+    },
+    {
+        "question": "The usually ______ teenager shocked his parents by talking non-stop about his new favorite video game.",
+        "answer": "taciturn",
+        "definition": "Reserved or uncommunicative in speech; saying little."
+    },
+    {
+        "question": "The sudden loud noise in the dark alley was enough to ______ even the bravest police officer.",
+        "answer": "unnerve",
+        "definition": "To make someone lose courage or confidence."
+    },
+    {
+        "question": "He tended to ______ between the two options, unable to make a final, firm decision.",
+        "answer": "vacillate",
+        "definition": "Alternate or waver between different opinions or actions; be indecisive."
+    },
+    {
+        "question": "The university decided to ______ the application fee for low-income students to encourage them to apply.",
+        "answer": "waive",
+        "definition": "Refrain from insisting on or using (a right or claim)."
+    },
+    {
+        "question": "The politician's speech was full of ______, blaming immigrants and foreigners for all the country's problems.",
+        "answer": "xenophobia",
+        "definition": "Dislike of or prejudice against people from other countries."
+    },
+    {
+        "question": "After living in the snowy mountains for years, I began to ______ for the warm beaches of my hometown.",
+        "answer": "yearn",
+        "definition": "Have an intense feeling of longing for something, typically something that one has lost or been separated from."
+    },
+    {
+        "question": "The religious ______ stood on the street corner screaming at passersby about the end of the world.",
+        "answer": "zealot",
+        "definition": "A person who is fanatical and uncompromising in pursuit of their religious, political, or other ideals."
+    },
+    {
+        "question": "The rock star soaked up the ______ of the screaming fans in the front row.",
+        "answer": "adulation",
+        "definition": "Excessive admiration or praise."
+    },
+    {
+        "question": "The small town began to ______ into a bustling city once the new tech company built its headquarters there.",
+        "answer": "burgeon",
+        "definition": "Begin to grow or increase rapidly; flourish."
+    },
+    {
+        "question": "The child tried to ______ his mother into buying him candy by giving her extra hugs.",
+        "answer": "cajole",
+        "definition": "Persuade someone to do something by sustained coaxing or flattery."
+    },
+    {
+        "question": "The younger monks bowed their heads in ______ to the elder abbot of the monastery.",
+        "answer": "deference",
+        "definition": "Humble submission and respect."
+    },
+    {
+        "question": "Many young basketball players try to ______ the shooting style of their favorite professional athletes.",
+        "answer": "emulate",
+        "definition": "Match or surpass (a person or achievement), typically by imitation."
+    },
+    {
+        "question": "The article was based on a ______ premise, leading to an entirely incorrect conclusion.",
+        "answer": "fallacious",
+        "definition": "Based on a mistaken belief."
+    },
+    {
+        "question": "The independent filmmaker hopes to ______ enough support online to fund her next project.",
+        "answer": "garner",
+        "definition": "Gather or collect (something, especially information or approval)."
+    },
+    {
+        "question": "The sudden drop in barometric pressure is often a ______ of a severe thunderstorm.",
+        "answer": "harbinger",
+        "definition": "A person or thing that announces or signals the approach of another."
+    },
+    {
+        "question": "The dark, swirling clouds indicated that a tornado was ______ and people needed to seek shelter.",
+        "answer": "imminent",
+        "definition": "About to happen."
+    },
+    {
+        "question": "A ______ buyer will always compare prices and read reviews before making a large purchase.",
+        "answer": "judicious",
+        "definition": "Having, showing, or done with good judgment or sense."
+    },
+    {
+        "question": "The diplomats worked late into the night trying to untangle the ______ political conflict.",
+        "answer": "knotty",
+        "definition": "Extremely difficult or intricate."
+    },
+    {
+        "question": "The extreme heat made everyone feel ______, preferring to lie in the shade rather than move around.",
+        "answer": "languid",
+        "definition": "Displaying or having a disinclination for physical exertion or effort; slow and relaxed."
+    },
+    {
+        "question": "He was a ______ in the scientific community, often rejecting accepted theories to pursue his own wild ideas.",
+        "answer": "maverick",
+        "definition": "An unorthodox or independent-minded person."
+    },
+    {
+        "question": "As a ______ in chess, she frequently fell for simple traps set by her more experienced opponents.",
+        "answer": "novice",
+        "definition": "A person new to or inexperienced in a field or situation."
+    },
+    {
+        "question": "The ancient text was filled with ______ references that even the best historians couldn't translate.",
+        "answer": "obscure",
+        "definition": "Not discovered or known about; uncertain."
+    },
+    {
+        "question": "The new manager believed that free coffee was a ______ for all the company's morale problems.",
+        "answer": "panacea",
+        "definition": "A solution or remedy for all difficulties or diseases."
+    },
+    {
+        "question": "The riot police used tear gas to ______ the violent uprising in the city square.",
+        "answer": "quell",
+        "definition": "Put an end to (a rebellion or other disorder), typically by the use of force."
+    },
+    {
+        "question": "Despite their messy divorce, the two parents tried to raise their child without any ______ toward each other.",
+        "answer": "rancor",
+        "definition": "Bitterness or resentfulness, especially when long-standing."
+    },
+    {
+        "question": "The detectives had to ______ the security footage frame by frame to identify the license plate.",
+        "answer": "scrutinize",
+        "definition": "Examine or inspect closely and thoroughly."
+    },
+    {
+        "question": "The superhero arrived just in time to ______ the villain's evil plan to destroy the city.",
+        "answer": "thwart",
+        "definition": "Prevent (someone) from accomplishing something."
+    },
+    {
+        "question": "The wheat fields seemed to ______ in the gentle breeze, looking like ocean waves.",
+        "answer": "undulate",
+        "definition": "Move or go with a smooth up-and-down motion."
+    },
+    {
+        "question": "She made a ______ denial of the accusations, shouting her innocence for everyone to hear.",
+        "answer": "vehement",
+        "definition": "Showing strong feeling; forceful, passionate, or intense."
+    },
+    {
+        "question": "The ______ fox managed to sneak past the guard dogs and steal a chicken from the coop.",
+        "answer": "wily",
+        "definition": "Skilled at gaining an advantage, especially deceitfully."
+    },
+    {
+        "question": "The invention of the printing press was a ______ moment in human history, changing education forever.",
+        "answer": "watershed",
+        "definition": "An event or period marking a turning point in a course of action or state of affairs."
+    },
+    {
+        "question": "The general refused to ______ to the enemy's demands, vowing to fight to the last man.",
+        "answer": "yield",
+        "definition": "Surrender or submit to another's authority."
+    },
+    {
+        "question": "The gentle ______ blowing through the open window provided a welcome relief from the summer heat.",
+        "answer": "zephyr",
+        "definition": "A soft gentle breeze."
+    },
+    {
+        "question": "The storm will ______ by morning, allowing us to travel safely.",
+        "answer": "abate",
+        "definition": "Become less intense or widespread."
+    },
+    {
+        "question": "His angry outburst was an ______, as he is usually very calm.",
+        "answer": "aberration",
+        "definition": "A departure from what is normal or expected."
+    },
+    {
+        "question": "I ______ violence of any kind and refuse to watch action movies.",
+        "answer": "abhor",
+        "definition": "Regard with disgust and hatred."
+    },
+    {
+        "question": "The refugees lived in ______ poverty, lacking even basic shelter.",
+        "answer": "abject",
+        "definition": "Extremely bad, unpleasant, and degrading."
+    },
+    {
+        "question": "The priest agreed to ______ the man of his sins.",
+        "answer": "absolve",
+        "definition": "Set or declare someone free from blame or guilt."
+    },
+    {
+        "question": "During the diet, she decided to ______ from eating chocolate entirely.",
+        "answer": "abstain",
+        "definition": "Restrain oneself from doing or enjoying something."
+    },
+    {
+        "question": "The professor's ______ philosophical theories confused most of the class.",
+        "answer": "abstruse",
+        "definition": "Difficult to understand; obscure."
+    },
+    {
+        "question": "The food at that restaurant is so ______ that I will never return.",
+        "answer": "abysmal",
+        "definition": "Extremely bad; appalling."
+    },
+    {
+        "question": "The scientist received an ______ for her groundbreaking cancer research.",
+        "answer": "accolade",
+        "definition": "An award or privilege granted as a special honor."
+    },
+    {
+        "question": "Reporters will often ______ celebrities in the street to get a quote.",
+        "answer": "accost",
+        "definition": "Approach and address someone boldly or aggressively."
+    },
+    {
+        "question": "The movie critic was known for his ______ reviews that ruined careers.",
+        "answer": "acerbic",
+        "definition": "Sharp and forthright; tasting sour or bitter."
+    },
+    {
+        "question": "I did not want to go, but I had to ______ to my boss's demands.",
+        "answer": "acquiesce",
+        "definition": "Accept something reluctantly but without protest."
+    },
+    {
+        "question": "The burning plastic produced an ______ smoke that burned our eyes.",
+        "answer": "acrid",
+        "definition": "Having an irritatingly strong and unpleasant taste or smell."
+    },
+    {
+        "question": "Their divorce was highly ______, filled with shouting and bitter arguments.",
+        "answer": "acrimonious",
+        "definition": "Angry and bitter."
+    },
+    {
+        "question": "Her business ______ allowed her to turn a small startup into an empire.",
+        "answer": "acumen",
+        "definition": "The ability to make good judgments and quick decisions."
+    },
+    {
+        "question": "Dogs have an ______ sense of smell, much stronger than humans.",
+        "answer": "acute",
+        "definition": "Present or experienced to a severe or intense degree."
+    },
+    {
+        "question": "He was ______ that he was right, refusing to change his mind.",
+        "answer": "adamant",
+        "definition": "Refusing to be persuaded or to change one's mind."
+    },
+    {
+        "question": "She is a strict ______ to the rules of her religion.",
+        "answer": "adherent",
+        "definition": "Someone who supports a particular party, person, or set of ideas."
+    },
+    {
+        "question": "The teacher had to ______ the student for talking during the exam.",
+        "answer": "admonish",
+        "definition": "Warn or reprimand someone firmly."
+    },
+    {
+        "question": "He was an ______ negotiator, easily convincing others to agree with him.",
+        "answer": "adroit",
+        "definition": "Clever or skillful in using the hands or mind."
+    },
+    {
+        "question": "Greedy merchants used to ______ the flour by mixing it with cheap chalk.",
+        "answer": "adulterate",
+        "definition": "Render something poorer in quality by adding another substance."
+    },
+    {
+        "question": "The medicine had several ______ side effects, including nausea and headaches.",
+        "answer": "adverse",
+        "definition": "Preventing success or development; harmful."
+    },
+    {
+        "question": "The new building has a modern ______ that appeals to younger buyers.",
+        "answer": "aesthetic",
+        "definition": "Concerned with beauty or the appreciation of beauty."
+    },
+    {
+        "question": "The new neighbor was very ______ and quickly made friends with everyone.",
+        "answer": "affable",
+        "definition": "Friendly, good-natured, or easy to talk to."
+    },
+    {
+        "question": "His fake British accent was just an ______ to make him seem wealthy.",
+        "answer": "affectation",
+        "definition": "Behavior, speech, or writing that is artificial and designed to impress."
+    },
+    {
+        "question": "She felt a strong ______ for the stray dog and immediately adopted him.",
+        "answer": "affinity",
+        "definition": "A spontaneous or natural liking or sympathy for someone or something."
+    },
+    {
+        "question": "The ______ businessman owned three mansions and a private jet.",
+        "answer": "affluent",
+        "definition": "Having a great deal of money; wealthy."
+    },
+    {
+        "question": "The country had an ______ economy based mostly on farming and agriculture.",
+        "answer": "agrarian",
+        "definition": "Relating to cultivated land or the cultivation of land."
+    },
+    {
+        "question": "She accepted the job offer with ______, thrilled to start working.",
+        "answer": "alacrity",
+        "definition": "Brisk and cheerful readiness."
+    },
+    {
+        "question": "The prosecutor will ______ that the defendant stole the money.",
+        "answer": "allege",
+        "definition": "Claim or assert that someone has done something illegal or wrong."
+    },
+    {
+        "question": "Applying ice to the injury will help ______ the swelling and pain.",
+        "answer": "alleviate",
+        "definition": "Make suffering, deficiency, or a problem less severe."
+    },
+    {
+        "question": "The government will ______ one million dollars to the new school project.",
+        "answer": "allocate",
+        "definition": "Distribute resources or duties for a particular purpose."
+    },
+    {
+        "question": "He was an ______ teenager who preferred to sit alone rather than socialize.",
+        "answer": "aloof",
+        "definition": "Not friendly or forthcoming; cool and distant."
+    },
+    {
+        "question": "Volunteering at the homeless shelter is an act of pure ______.",
+        "answer": "altruism",
+        "definition": "The belief in or practice of disinterested and selfless concern for the well-being of others."
+    },
+    {
+        "question": "The two competing software companies decided to ______ into one massive corporation.",
+        "answer": "amalgamate",
+        "definition": "Combine or unite to form one organization or structure."
+    },
+    {
+        "question": "The candlelight and soft music gave the restaurant a romantic ______.",
+        "answer": "ambience",
+        "definition": "The character and atmosphere of a place."
+    },
+    {
+        "question": "He felt ______ about the move, excited for the new job but sad to leave his friends.",
+        "answer": "ambivalent",
+        "definition": "Having mixed feelings or contradictory ideas about something or someone."
+    },
+    {
+        "question": "The new manager sought to ______ the terrible working conditions in the factory.",
+        "answer": "ameliorate",
+        "definition": "Make something bad or unsatisfactory better."
+    },
+    {
+        "question": "My parents were usually ______ to letting my friends sleep over on weekends.",
+        "answer": "amenable",
+        "definition": "Open and responsive to suggestion; easily persuaded or controlled."
+    },
+    {
+        "question": "The ______ hostess made sure every guest at the party felt welcome.",
+        "answer": "amiable",
+        "definition": "Having or displaying a friendly and pleasant manner."
+    },
+    {
+        "question": "The newly elected president granted ______ to all political prisoners.",
+        "answer": "amnesty",
+        "definition": "An official pardon for people who have been convicted of political offenses."
+    },
+    {
+        "question": "He wrote an ______ poem for his wife on their anniversary.",
+        "answer": "amorous",
+        "definition": "Showing, feeling, or relating to sexual desire."
+    },
+    {
+        "question": "The slime was an ______ blob that lacked any specific shape.",
+        "answer": "amorphous",
+        "definition": "Without a clearly defined shape or form."
+    },
+    {
+        "question": "Seeing a smartphone in a movie set in the 1920s is a glaring ______.",
+        "answer": "anachronism",
+        "definition": "A thing belonging or appropriate to a period other than that in which it exists."
+    },
+    {
+        "question": "The teacher used an ______ to explain how the human heart is like a water pump.",
+        "answer": "analogy",
+        "definition": "A comparison between two things, typically for the purpose of explanation."
+    },
+    {
+        "question": "When the government collapsed, the country descended into total ______.",
+        "answer": "anarchy",
+        "definition": "A state of disorder due to absence or nonrecognition of authority."
+    },
+    {
+        "question": "The grandfather told a funny ______ about his childhood on the farm.",
+        "answer": "anecdote",
+        "definition": "A short and amusing or interesting story about a real incident or person."
+    },
+    {
+        "question": "She cried out in ______ when she heard the terrible news.",
+        "answer": "anguish",
+        "definition": "Severe mental or physical pain or suffering."
+    },
+    {
+        "question": "There was a long history of ______ between the two rival families.",
+        "answer": "animosity",
+        "definition": "Strong hostility."
+    },
+    {
+        "question": "Finding a penguin in the desert would certainly be an ______.",
+        "answer": "anomaly",
+        "definition": "Something that deviates from what is standard, normal, or expected."
+    },
+    {
+        "question": "The typewriter is the historical ______ to the modern computer keyboard.",
+        "answer": "antecedent",
+        "definition": "A thing or event that existed before or logically precedes another."
+    },
+    {
+        "question": "Cats and dogs are often said to have a natural ______ toward one another.",
+        "answer": "antipathy",
+        "definition": "A deep-seated feeling of dislike; aversion."
+    },
+    {
+        "question": "His cowardly actions were the exact ______ of bravery.",
+        "answer": "antithesis",
+        "definition": "A person or thing that is the direct opposite of someone or something else."
+    },
+    {
+        "question": "Many teenagers view politics with pure ______, not caring who wins the election.",
+        "answer": "apathy",
+        "definition": "Lack of interest, enthusiasm, or concern."
+    },
+    {
+        "question": "My grandmother frequently repeated the ______ 'a penny saved is a penny earned'.",
+        "answer": "aphorism",
+        "definition": "A pithy observation that contains a general truth."
+    },
+    {
+        "question": "The zombie movie depicted the ______ of modern civilization.",
+        "answer": "apocalypse",
+        "definition": "The complete final destruction of the world."
+    },
+    {
+        "question": "The story about George Washington chopping down the cherry tree is likely ______.",
+        "answer": "apocryphal",
+        "definition": "Of doubtful authenticity, although widely circulated as being true."
+    },
+    {
+        "question": "To ______ the crying child, the mother bought him a toy.",
+        "answer": "appease",
+        "definition": "Pacify or placate someone by acceding to their demands."
+    },
+    {
+        "question": "I felt very ______ about flying in an airplane for the first time.",
+        "answer": "apprehensive",
+        "definition": "Anxious or fearful that something bad or unpleasant will happen."
+    },
+    {
+        "question": "The mayor's plan met with the general ______ of the city council.",
+        "answer": "approbation",
+        "definition": "Approval or praise."
+    },
+    {
+        "question": "The manager decided to ______ company funds to pay for his personal vacation.",
+        "answer": "appropriate",
+        "definition": "Take something for one's own use, typically without the owner's permission."
+    },
+    {
+        "question": "She has a natural ______ for mathematics, solving complex equations easily.",
+        "answer": "aptitude",
+        "definition": "A natural ability to do something."
+    },
+    {
+        "question": "The judge served as the final ______ in the legal dispute.",
+        "answer": "arbiter",
+        "definition": "A person who settles a dispute or has ultimate authority in a matter."
+    },
+    {
+        "question": "The teacher's grading system seemed entirely ______, based on mood rather than merit.",
+        "answer": "arbitrary",
+        "definition": "Based on random choice or personal whim, rather than any reason or system."
+    },
+    {
+        "question": "The ancient wizard studied ______ spells that few living people understood.",
+        "answer": "arcane",
+        "definition": "Understood by few; mysterious or secret."
+    },
+    {
+        "question": "Using a floppy disk to store data is completely ______ in the 21st century.",
+        "answer": "archaic",
+        "definition": "Very old or old-fashioned."
+    },
+    {
+        "question": "Superman is the classic ______ of a comic book hero.",
+        "answer": "archetype",
+        "definition": "A very typical example of a certain person or thing."
+    },
+    {
+        "question": "He was an ______ supporter of environmental protection, protesting every weekend.",
+        "answer": "ardent",
+        "definition": "Enthusiastic or passionate."
+    },
+    {
+        "question": "Climbing Mount Everest is an physically ______ task that takes months of training.",
+        "answer": "arduous",
+        "definition": "Involving or requiring strenuous effort; difficult and tiring."
+    },
+    {
+        "question": "The royal family's ______ manners made them seem out of touch with regular people.",
+        "answer": "aristocratic",
+        "definition": "Of, belonging to, or typical of the aristocracy; grand and stylish."
+    },
+    {
+        "question": "The ______ lawyer managed to find a loophole that kept his client out of jail.",
+        "answer": "artful",
+        "definition": "Clever or skillful, typically in a crafty or cunning way."
+    },
+    {
+        "question": "The magician's entire show was an ______ designed to fool the audience's eyes.",
+        "answer": "artifice",
+        "definition": "Clever or cunning devices or expedients, especially as used to trick or deceive others."
+    },
+    {
+        "question": "The rebel army quickly gained ______ over the weakened government forces.",
+        "answer": "ascendancy",
+        "definition": "Occupation of a position of dominant power or influence."
+    },
+    {
+        "question": "The monk lived an ______ life in the mountains, eating only rice and drinking water.",
+        "answer": "ascetic",
+        "definition": "Characterized by or suggesting the practice of severe self-discipline and abstention from all forms of indulgence."
+    },
+    {
+        "question": "The detective was ______ in his investigation, refusing to overlook a single clue.",
+        "answer": "assiduous",
+        "definition": "Showing great care and perseverance."
+    },
+    {
+        "question": "Immigrants often try to ______ into the culture of their new country.",
+        "answer": "assimilate",
+        "definition": "Take in (information, ideas, or culture) and understand fully."
+    },
+    {
+        "question": "Taking aspirin helped to ______ the severe headache she was suffering from.",
+        "answer": "assuage",
+        "definition": "Make an unpleasant feeling less intense."
+    },
+    {
+        "question": "The ______ detective solved the murder case in less than 24 hours.",
+        "answer": "astute",
+        "definition": "Having or showing an ability to accurately assess situations or people and turn this to one's advantage."
+    },
+    {
+        "question": "The long war became a battle of ______, with each side trying to wear the other down.",
+        "answer": "attrition",
+        "definition": "The action or process of gradually reducing the strength or effectiveness of someone or something through sustained attack or pressure."
+    },
+    {
+        "question": "I couldn't believe he had the ______ to ask for a raise after arriving late all week.",
+        "answer": "audacity",
+        "definition": "The willingness to take bold risks; rude or disrespectful behavior."
+    },
+    {
+        "question": "He took a second job at night to ______ his regular income.",
+        "answer": "augment",
+        "definition": "Make something greater by adding to it; increase."
+    },
+    {
+        "question": "Finding a four-leaf clover was seen as an ______ start to their journey.",
+        "answer": "auspicious",
+        "definition": "Conducive to success; favorable."
+    },
+    {
+        "question": "The ______ prison cell contained nothing but a hard cot and a toilet.",
+        "answer": "austere",
+        "definition": "Severe or strict in manner, attitude, or appearance; having no comforts or luxuries."
+    },
+    {
+        "question": "The dictator was an ______ ruler who demanded absolute obedience from his citizens.",
+        "answer": "autocratic",
+        "definition": "Taking no account of other people's wishes or opinions; domineering."
+    },
+    {
+        "question": "The province demanded to become ______, making its own laws separate from the capital.",
+        "answer": "autonomous",
+        "definition": "Having the freedom to govern itself or control its own affairs."
+    },
+    {
+        "question": "His ______ led him to steal millions of dollars from his own employees.",
+        "answer": "avarice",
+        "definition": "Extreme greed for wealth or material gain."
+    },
+    {
+        "question": "The captured spy finally decided to ______ his true identity to the interrogators.",
+        "answer": "avow",
+        "definition": "Assert or confess openly."
+    },
+    {
+        "question": "The kindly old teacher treated his students with ______ affection.",
+        "answer": "avuncular",
+        "definition": "Kind and friendly toward a younger or less experienced person."
+    },
+    {
+        "question": "Our picnic plans went ______ when it suddenly started to pour down rain.",
+        "answer": "awry",
+        "definition": "Away from the appropriate, planned, or expected course; amiss."
+    },
+    {
+        "question": "It is a widely accepted ______ that what goes up must come down.",
+        "answer": "axiom",
+        "definition": "A statement or proposition that is regarded as being established, accepted, or self-evidently true."
+    },
+    {
+        "question": "The pop song was incredibly ______, with predictable lyrics and a boring melody.",
+        "answer": "banal",
+        "definition": "So lacking in originality as to be obvious and boring."
+    },
+    {
+        "question": "Mosquitoes are the ______ of my existence during the humid summer months.",
+        "answer": "bane",
+        "definition": "A cause of great distress or annoyance."
+    },
+    {
+        "question": "The university was seen as a ______ of free speech and progressive thinking.",
+        "answer": "bastion",
+        "definition": "An institution, place, or person strongly defending or upholding particular principles."
+    },
+    {
+        "question": "The dictator's harsh laws will only ______ more rebellion among the citizens.",
+        "answer": "beget",
+        "definition": "Give rise to; bring about."
+    },
+    {
+        "question": "We all understood the point, so there was no need to ______ the issue further.",
+        "answer": "belabor",
+        "definition": "Argue or elaborate a subject in excessive detail."
+    },
+    {
+        "question": "The enemy troops sought to ______ the castle by surrounding it completely.",
+        "answer": "beleaguer",
+        "definition": "Lay siege to; beset with difficulties."
+    },
+    {
+        "question": "Her calm smile seemed to ______ the extreme panic she was actually feeling.",
+        "answer": "belie",
+        "definition": "Fail to give a true notion or impression of something; disguise or contradict."
+    },
+    {
+        "question": "The bully loved to ______ the smaller children to make himself feel powerful.",
+        "answer": "belittle",
+        "definition": "Make someone or something seem unimportant."
+    },
+    {
+        "question": "The ______ drunk started picking fights with everyone in the bar.",
+        "answer": "belligerent",
+        "definition": "Hostile and aggressive."
+    },
+    {
+        "question": "I was completely ______ by the complex instructions on the exam.",
+        "answer": "bemused",
+        "definition": "Puzzled, confused, or bewildered."
+    },
+    {
+        "question": "An anonymous ______ donated new computers to the entire school.",
+        "answer": "benefactor",
+        "definition": "A person who gives money or other help to a person or cause."
+    },
+    {
+        "question": "The ______ king gave land and gold to the poor farmers.",
+        "answer": "beneficent",
+        "definition": "Generous or doing good."
+    },
+    {
+        "question": "The doctor smiled and told her the tumor was ______, not cancerous.",
+        "answer": "benign",
+        "definition": "Gentle; kindly; not harmful in effect."
+    },
+    {
+        "question": "He received a large ______ of money in his grandfather's will.",
+        "answer": "bequest",
+        "definition": "A legacy; the property or money that you promise in your will to give to someone after you die."
+    },
+    {
+        "question": "The ______ widow wept loudly at her husband's funeral.",
+        "answer": "bereaved",
+        "definition": "Deprived of a close relation or friend through their death."
+    },
+    {
+        "question": "The explorer's journey was ______ with danger, from wild animals to treacherous weather.",
+        "answer": "beset",
+        "definition": "Trouble or threaten persistently."
+    },
+    {
+        "question": "Screaming insults inside the church was considered pure ______.",
+        "answer": "blasphemy",
+        "definition": "The act or offense of speaking sacrilegiously about God or sacred things; profane talk."
+    },
+    {
+        "question": "He told a ______ lie, claiming he was at work when we saw him at the beach.",
+        "answer": "blatant",
+        "definition": "Done openly and unashamedly; very obvious."
+    },
+    {
+        "question": "The abandoned, ruined factories were a ______ on the city's landscape.",
+        "answer": "blight",
+        "definition": "A thing that spoils or damages something."
+    },
+    {
+        "question": "She showed a ______ disregard for the rules, walking right past the 'Do Not Enter' sign.",
+        "answer": "blithe",
+        "definition": "Showing a casual and cheerful indifference considered to be callous or improper."
+    },
+    {
+        "question": "The artist hated the ______ lifestyle, preferring to live free from suburban norms.",
+        "answer": "bourgeois",
+        "definition": "Of or characteristic of the middle class, typically with reference to its perceived materialistic values."
+    },
+    {
+        "question": "The slow-moving, heavy man had an almost ______ appearance as he chewed his food.",
+        "answer": "bovine",
+        "definition": "Relating to or affecting cattle; sluggish or stupid."
+    },
+    {
+        "question": "The ______ of the CEO's speech was appreciated by the tired employees.",
+        "answer": "brevity",
+        "definition": "Concise and exact use of words in writing or speech; shortness of time."
+    },
+    {
+        "question": "I didn't know how to ______ the subject of a raise with my strict boss.",
+        "answer": "broach",
+        "definition": "Raise a sensitive or difficult subject for discussion."
+    },
+    {
+        "question": "The painting depicted a calm, ______ scene of sheep grazing in a green meadow.",
+        "answer": "bucolic",
+        "definition": "Relating to the pleasant aspects of the countryside and country life."
+    },
+    {
+        "question": "Getting a new passport involves dealing with endless government ______ and paperwork.",
+        "answer": "bureaucracy",
+        "definition": "A system of government in which most of the important decisions are made by state officials rather than by elected representatives."
+    },
+    {
+        "question": "The comedian's ______ of the president had the audience roaring with laughter.",
+        "answer": "burlesque",
+        "definition": "An absurd or comically exaggerated imitation of something, especially in a literary or dramatic work."
+    },
+    {
+        "question": "The ______ young soldier had never seen combat before.",
+        "answer": "callow",
+        "definition": "Inexperienced and immature."
+    },
+    {
+        "question": "I appreciated her ______, as she told me the honest truth even when it hurt.",
+        "answer": "candor",
+        "definition": "The quality of being open and honest in expression; frankness."
+    },
+    {
+        "question": "Under the pressure of the siege, the city was eventually forced to ______.",
+        "answer": "capitulate",
+        "definition": "Cease to resist an opponent or an unwelcome demand; surrender."
+    },
+    {
+        "question": "The street artist drew a funny ______ of me with a giant head and tiny body.",
+        "answer": "caricature",
+        "definition": "A picture, description, or imitation of a person in which certain striking characteristics are exaggerated in order to create a comic or grotesque effect."
+    },
+    {
+        "question": "The principal decided to ______ the boys publicly for vandalizing the lockers.",
+        "answer": "castigate",
+        "definition": "Reprimand someone severely."
+    },
+    {
+        "question": "The assassination of the archduke served as the ______ for World War I.",
+        "answer": "catalyst",
+        "definition": "A substance that increases the rate of a chemical reaction without itself undergoing any permanent chemical change; a person or thing that precipitates an event."
+    },
+    {
+        "question": "The CEO issued a ______ denial of all the fraud allegations.",
+        "answer": "categorical",
+        "definition": "Unambiguously explicit and direct."
+    },
+    {
+        "question": "Screaming into a pillow can be a great emotional ______ for relieving stress.",
+        "answer": "catharsis",
+        "definition": "The process of releasing, and thereby providing relief from, strong or repressed emotions."
+    },
+    {
+        "question": "Her musical tastes are very ______, ranging from classical opera to heavy metal.",
+        "answer": "catholic",
+        "definition": "Including a wide variety of things; all-embracing."
+    },
+    {
+        "question": "His ______ sarcastic remarks offended everyone at the dinner table.",
+        "answer": "caustic",
+        "definition": "Able to burn or corrode organic tissue by chemical action; sarcastic in a scathing and bitter way."
+    },
+    {
+        "question": "The monk took a vow of ______ when he entered the monastery.",
+        "answer": "celibacy",
+        "definition": "The state of abstaining from marriage and sexual relations."
+    },
+    {
+        "question": "The corrupt politician received a formal ______ from the ethics committee.",
+        "answer": "censure",
+        "definition": "Express severe disapproval of someone or something, especially in a formal statement."
+    },
+    {
+        "question": "Chess is a highly ______ game that requires deep thinking and strategy.",
+        "answer": "cerebral",
+        "definition": "Intellectual rather than emotional or physical."
+    },
+    {
+        "question": "Much to his ______, he realized he had worn mismatched shoes to the job interview.",
+        "answer": "chagrin",
+        "definition": "Distress or embarrassment at having failed or been humiliated."
+    },
+    {
+        "question": "The cult leader possessed a dark ______ that drew vulnerable people to him.",
+        "answer": "charisma",
+        "definition": "Compelling attractiveness or charm that can inspire devotion in others."
+    },
+    {
+        "question": "The traveling salesman was a ______ who sold fake medicine made of sugar water.",
+        "answer": "charlatan",
+        "definition": "A person falsely claiming to have a special knowledge or skill; a fraud."
+    },
+    {
+        "question": "The earthquake opened a deep ______ in the middle of the highway.",
+        "answer": "chasm",
+        "definition": "A deep fissure in the earth, rock, or another surface."
+    },
+    {
+        "question": "The mother had to ______ her son for running out into the street without looking.",
+        "answer": "chastise",
+        "definition": "Rebuke or reprimand severely."
+    },
+    {
+        "question": "The shady lawyer used legal ______ to swindle the old woman out of her money.",
+        "answer": "chicanery",
+        "definition": "The use of trickery to achieve a political, financial, or legal purpose."
+    },
+    {
+        "question": "His hope of becoming a billionaire overnight was nothing but a foolish ______.",
+        "answer": "chimera",
+        "definition": "A thing that is hoped or wished for but in fact is illusory or impossible to achieve."
+    },
+    {
+        "question": "The ______ old man yelled at anyone who accidentally stepped on his lawn.",
+        "answer": "choleric",
+        "definition": "Bad-tempered or irritable."
+    },
+    {
+        "question": "She suffered from ______ back pain that lasted for years without stopping.",
+        "answer": "chronic",
+        "definition": "Persisting for a long time or constantly recurring."
+    },
+    {
+        "question": "The historian wrote a detailed ______ of the ancient Roman empire's rise and fall.",
+        "answer": "chronicle",
+        "definition": "A factual written account of important or historical events in the order of their occurrence."
+    },
+    {
+        "question": "Because the main road was flooded, we had to take a ______ route through the mountains.",
+        "answer": "circuitous",
+        "definition": "Longer than the most direct way."
+    },
+    {
+        "question": "The politician's ______ made it obvious he didn't want to answer the direct question.",
+        "answer": "circumlocution",
+        "definition": "The use of many words where fewer would do, especially in a deliberate attempt to be vague or evasive."
+    },
+    {
+        "question": "The electric fence was built to ______ the pasture and keep the wolves out.",
+        "answer": "circumscribe",
+        "definition": "Restrict something within limits."
+    },
+    {
+        "question": "A ______ investor will thoroughly research a company before buying its stock.",
+        "answer": "circumspect",
+        "definition": "Wary and unwilling to take risks."
+    },
+    {
+        "question": "The hackers found a way to ______ the bank's security firewall.",
+        "answer": "circumvent",
+        "definition": "Find a way around an obstacle; overcome a problem or difficulty, typically in a clever and surreptitious way."
+    },
+    {
+        "question": "Even though they were divorced, they managed to be ______ to each other for their kids' sake.",
+        "answer": "civil",
+        "definition": "Courteous and polite."
+    },
+    {
+        "question": "The prisoner begged the governor for ______, hoping to avoid the death penalty.",
+        "answer": "clemency",
+        "definition": "Mercy; lenience."
+    },
+    {
+        "question": "The romance movie was full of every ______, from running in the rain to stopping a wedding.",
+        "answer": "cliche",
+        "definition": "A phrase or opinion that is overused and betrays a lack of original thought."
+    },
+    {
+        "question": "The popular girls in high school formed an exclusive ______ that ignored everyone else.",
+        "answer": "clique",
+        "definition": "A small group of people, with shared interests or other features in common, who spend time together and do not readily allow others to join them."
+    },
+    {
+        "question": "The scattered drops of water began to ______ into a single large puddle.",
+        "answer": "coalesce",
+        "definition": "Come together and form one mass or whole."
+    },
+    {
+        "question": "The mafia tried to ______ the witness into lying by threatening his family.",
+        "answer": "coerce",
+        "definition": "Persuade an unwilling person to do something by using force or threats."
+    },
+    {
+        "question": "The lawyer presented a ______ argument that convinced the jury of his client's innocence.",
+        "answer": "cogent",
+        "definition": "Clear, logical, and convincing."
+    },
+    {
+        "question": "The puzzle was designed to test the ______ abilities of young children.",
+        "answer": "cognitive",
+        "definition": "Relating to cognition; the mental action or process of acquiring knowledge and understanding."
+    },
+    {
+        "question": "A good driver must be ______ of their surroundings at all times.",
+        "answer": "cognizant",
+        "definition": "Having knowledge or being aware of."
+    },
+    {
+        "question": "The drunk man could not form a ______ sentence when the police questioned him.",
+        "answer": "coherent",
+        "definition": "Logical and consistent; united as or forming a whole."
+    },
+    {
+        "question": "The novel was written in a ______ style, using everyday slang and casual language.",
+        "answer": "colloquial",
+        "definition": "Used in ordinary or familiar conversation; not formal or literary."
+    },
+    {
+        "question": "The rival gas stations acted in ______ to artificially raise the price of fuel.",
+        "answer": "collusion",
+        "definition": "Secret or illegal cooperation or conspiracy, especially in order to cheat or deceive others."
+    },
+    {
+        "question": "Your salary will be ______ with your level of experience and education.",
+        "answer": "commensurate",
+        "definition": "Corresponding in size or degree; in proportion."
+    },
+    {
+        "question": "The documentary offered a ______ look at the devastating effects of climate change.",
+        "answer": "compelling",
+        "definition": "Evoking interest, attention, or admiration in a powerfully irresistible way."
+    },
+    {
+        "question": "He published a massive ______ of all known insect species in the Amazon.",
+        "answer": "compendium",
+        "definition": "A collection of concise but detailed information about a particular subject."
+    },
+    {
+        "question": "A nice red wine will perfectly ______ the steak dinner.",
+        "answer": "complement",
+        "definition": "A thing that completes or brings to perfection."
+    },
+    {
+        "question": "The getaway driver was charged with ______ in the bank robbery.",
+        "answer": "complicity",
+        "definition": "The state of being involved with others in an illegal activity or wrongdoing."
+    },
+    {
+        "question": "The final exam will be ______, covering everything we learned this semester.",
+        "answer": "comprehensive",
+        "definition": "Complete; including all or nearly all elements or aspects of something."
+    },
+    {
+        "question": "The United States is ______ of fifty individual states.",
+        "answer": "comprise",
+        "definition": "Consist of; be made up of."
+    },
+    {
+        "question": "He sent her a bouquet of flowers as a ______ gesture after their big fight.",
+        "answer": "conciliatory",
+        "definition": "Intended or likely to placate or pacify."
+    },
+    {
+        "question": "Please be ______ in your presentation; we only have five minutes.",
+        "answer": "concise",
+        "definition": "Giving a lot of information clearly and in a few words; brief but comprehensive."
+    },
+    {
+        "question": "The DNA test provided ______ proof that he was the child's father.",
+        "answer": "conclusive",
+        "definition": "Serving to prove a case; decisive or convincing."
+    },
+    {
+        "question": "The chef managed to ______ a delicious soup out of leftover vegetables.",
+        "answer": "concoct",
+        "definition": "Make a dish or meal by combining various ingredients; create or devise a story or plan."
+    },
+    {
+        "question": "Deafness is a frequent ______ symptom of advanced old age.",
+        "answer": "concomitant",
+        "definition": "Naturally accompanying or associated."
+    },
+    {
+        "question": "The two warring nations finally signed a treaty of ______ and peace.",
+        "answer": "concord",
+        "definition": "Agreement or harmony between people or groups."
+    },
+    {
+        "question": "I completely ______ with your assessment of the situation; you are absolutely right.",
+        "answer": "concur",
+        "definition": "Be of the same opinion; agree."
+    },
+    {
+        "question": "The arrogant professor would never ______ to speak to an undergraduate student.",
+        "answer": "condescend",
+        "definition": "Show feelings of superiority; be patronizing."
+    },
+    {
+        "question": "The school absolutely does not ______ cheating on exams under any circumstances.",
+        "answer": "condone",
+        "definition": "Accept and allow behavior that is considered morally wrong or offensive to continue."
+    },
+    {
+        "question": "A quiet room is highly ______ to studying and retaining information.",
+        "answer": "conducive",
+        "definition": "Making a certain situation or outcome likely or possible."
+    },
+    {
+        "question": "The city of Pittsburgh sits at the ______ of three major rivers.",
+        "answer": "confluence",
+        "definition": "The junction of two rivers, especially rivers of approximately equal width."
+    },
+    {
+        "question": "The ______ host made sure that every guest at the dinner party felt perfectly comfortable.",
+        "answer": "congenial",
+        "definition": "Pleasant because of a personality, qualities, or interests that are similar to one's own."
+    },
+    {
+        "question": "The baby was born with a ______ heart defect that required immediate surgery.",
+        "answer": "congenital",
+        "definition": "Present from birth."
+    },
+    {
+        "question": "The fans began to ______ outside the stadium hours before the concert started.",
+        "answer": "congregate",
+        "definition": "Gather into a crowd or mass."
+    },
+    {
+        "question": "Without any hard evidence, the detective's theory was nothing but pure ______.",
+        "answer": "conjecture",
+        "definition": "An opinion or conclusion formed on the basis of incomplete information."
+    },
+    {
+        "question": "The witch chanted a spell to ______ a demon from the underworld.",
+        "answer": "conjure",
+        "definition": "Make something appear unexpectedly or seemingly from nowhere as if by magic."
+    },
+    {
+        "question": "He is a ______ of fine wines, able to identify the vintage just by smelling it.",
+        "answer": "connoisseur",
+        "definition": "An expert judge in matters of taste."
+    },
+    {
+        "question": "The bishop arrived to ______ the new church building, making it holy ground.",
+        "answer": "consecrate",
+        "definition": "Make or declare sacred; dedicate formally to a religious or divine purpose."
+    },
+    {
+        "question": "The jury debated for hours before finally reaching a ______ on the verdict.",
+        "answer": "consensus",
+        "definition": "A general agreement."
+    },
+    {
+        "question": "His actions were simply not ______ with the promises he made during the campaign.",
+        "answer": "consonant",
+        "definition": "In agreement or harmony with."
+    },
+    {
+        "question": "His silence could easily be ______ as an admission of guilt.",
+        "answer": "construe",
+        "definition": "Interpret a word or action in a particular way."
+    },
+    {
+        "question": "He was a ______ professional, handling the difficult client with perfect grace and skill.",
+        "answer": "consummate",
+        "definition": "Showing a high degree of skill and flair; complete or perfect."
+    },
+    {
+        "question": "Abortion remains a highly ______ issue in American politics.",
+        "answer": "contentious",
+        "definition": "Causing or likely to cause an argument; controversial."
+    },
+    {
+        "question": "The United States and Canada share a massive ______ border.",
+        "answer": "contiguous",
+        "definition": "Sharing a common border; touching."
+    },
+    {
+        "question": "The outdoor wedding is completely ______ on the weather being sunny.",
+        "answer": "contingent",
+        "definition": "Subject to chance; occurring or existing only if certain other circumstances are the case."
+    },
+    {
+        "question": "The ______ thief apologized to the family he had stolen from and returned the money.",
+        "answer": "contrite",
+        "definition": "Feeling or expressing remorse or penitence; affected by guilt."
+    },
+    {
+        "question": "The movie's ending felt very ______, as if the writers just threw it together at the last second.",
+        "answer": "contrived",
+        "definition": "Deliberately created rather than arising naturally or spontaneously."
+    },
+    {
+        "question": "He wore a ______ black tuxedo to the formal event, blending in with everyone else.",
+        "answer": "conventional",
+        "definition": "Based on or in accordance with what is generally done or believed."
+    },
+    {
+        "question": "The ______ atmosphere at the pub made everyone feel like old friends.",
+        "answer": "convivial",
+        "definition": "Friendly, lively, and enjoyable."
+    },
+    {
+        "question": "She took ______ notes during the lecture, filling up an entire notebook.",
+        "answer": "copious",
+        "definition": "Abundant in supply or quantity."
+    },
+    {
+        "question": "A higher crime rate is often the inevitable ______ of rising poverty levels.",
+        "answer": "corollary",
+        "definition": "A proposition that follows from one already proved; a direct or natural consequence or result."
+    },
+    {
+        "question": "The witness stepped forward to ______ the suspect's alibi, proving he wasn't at the scene.",
+        "answer": "corroborate",
+        "definition": "Confirm or give support to a statement, theory, or finding."
+    },
+    {
+        "question": "London is a highly ______ city, filled with people and cultures from all over the world.",
+        "answer": "cosmopolitan",
+        "definition": "Familiar with and at ease in many different countries and cultures."
+    },
+    {
+        "question": "I cannot ______ your decision to drop out of high school.",
+        "answer": "countenance",
+        "definition": "Admit as acceptable or possible."
+    },
+    {
+        "question": "The military staged a violent ______ and overthrew the democratic government.",
+        "answer": "covert",
+        "definition": "Not openly acknowledged or displayed; secret."
+    },
+    {
+        "question": "The CIA agent was sent on a highly ______ mission behind enemy lines.",
+        "answer": "covert",
+        "definition": "Not openly acknowledged or displayed."
+    },
+    {
+        "question": "Thou shalt not ______ thy neighbor's wife or possessions.",
+        "answer": "covet",
+        "definition": "Yearn to possess or have something."
+    },
+    {
+        "question": "The ______ soldier abandoned his post the moment he heard the enemy approaching.",
+        "answer": "craven",
+        "definition": "Contemptibly lacking in courage; cowardly."
+    },
+    {
+        "question": "Scammers often target ______ individuals who believe everything they are told.",
+        "answer": "credulous",
+        "definition": "Having or showing too great a readiness to believe things."
+    },
+    {
+        "question": "The music built to a dramatic ______, with every instrument playing at maximum volume.",
+        "answer": "crescendo",
+        "definition": "A gradual increase in loudness in a piece of music; the highest point of intensity."
+    },
+    {
+        "question": "Years of hard work and training will ______ in her competing at the Olympic games.",
+        "answer": "culminate",
+        "definition": "Reach a climax or point of highest development."
+    },
+    {
+        "question": "The corrupt politician's ______ led him to accept bribes from wealthy developers.",
+        "answer": "cupidity",
+        "definition": "Greed for money or possessions."
+    },
+    {
+        "question": "The neighborhood ______ yelled at the kids to get off his perfectly manicured lawn.",
+        "answer": "curmudgeon",
+        "definition": "A bad-tempered or surly person."
+    },
+    {
+        "question": "He has a ______ view of the world, believing everyone is only out for themselves.",
+        "answer": "cynical",
+        "definition": "Believing that people are motivated by self-interest; distrustful of human sincerity."
+    },
+    {
+        "question": "The product launch was a complete ______, with servers crashing and negative reviews pouring in.",
+        "answer": "debacle",
+        "definition": "A sudden and ignominious failure; a fiasco."
+    },
+    {
+        "question": "The severe illness will ______ him for several months, requiring complete bed rest.",
+        "answer": "debilitate",
+        "definition": "Make someone very weak and infirm."
+    },
+    {
+        "question": "The scientist went on television to ______ the popular myth about brain capacity.",
+        "answer": "debunk",
+        "definition": "Expose the falseness or hollowness of a myth, idea, or belief."
+    },
+    {
+        "question": "Students are expected to behave with ______ during the graduation ceremony.",
+        "answer": "decorum",
+        "definition": "Behavior in keeping with good taste and propriety."
+    },
+    {
+        "question": "Smoking has a highly ______ effect on lung capacity and overall health.",
+        "answer": "deleterious",
+        "definition": "Causing harm or damage."
+    },
+    {
+        "question": "The architect used a red marker to ______ the boundaries of the new property on the map.",
+        "answer": "delineate",
+        "definition": "Describe or portray something precisely; indicate the exact position of a border."
+    },
+    {
+        "question": "The ______ rose to power by appealing to the fears and prejudices of the voters.",
+        "answer": "demagogue",
+        "definition": "A political leader who seeks support by appealing to popular desires and prejudices rather than by using rational argument."
+    },
+    {
+        "question": "It is unfair to ______ her hard work just because you disagree with her methods.",
+        "answer": "denigrate",
+        "definition": "Criticize unfairly; disparage."
+    },
+    {
+        "question": "The serial killer's actions showed a level of moral ______ that shocked the entire nation.",
+        "answer": "depravity",
+        "definition": "Moral corruption; wickedness."
+    },
+    {
+        "question": "The software company will ______ the old app and replace it with a new, faster version.",
+        "answer": "deprecate",
+        "definition": "Express disapproval of; (of a software feature) be usable but regarded as obsolete."
+    },
+    {
+        "question": "The critics were quick to ______ the director's latest film as a complete waste of time.",
+        "answer": "deride",
+        "definition": "Express contempt for; ridicule."
+    },
+    {
+        "question": "Her art style was highly ______, copying heavily from Picasso without adding anything new.",
+        "answer": "derivative",
+        "definition": "Imitative of the work of another person, and usually disapproved of for that reason."
+    },
+    {
+        "question": "The hot desert sun will quickly ______ any plant that isn't adapted to drought conditions.",
+        "answer": "desiccate",
+        "definition": "Remove the moisture from something; cause to become completely dry."
+    },
+    {
+        "question": "After failing the bar exam for the third time, he felt completely ______.",
+        "answer": "despondent",
+        "definition": "In low spirits from loss of hope or courage."
+    },
+    {
+        "question": "The country was ruled by a ruthless ______ who imprisoned anyone who opposed him.",
+        "answer": "despot",
+        "definition": "A ruler or other person who holds absolute power, typically one who exercises it in a cruel or oppressive way."
+    },
+    {
+        "question": "The earthquake left thousands of families ______, without food, money, or shelter.",
+        "answer": "destitute",
+        "definition": "Without the basic necessities of life."
+    },
+    {
+        "question": "She made a ______ attempt to clean her room, picking up two shirts and then giving up.",
+        "answer": "desultory",
+        "definition": "Lacking a plan, purpose, or enthusiasm."
+    },
+    {
+        "question": "The high fence and security cameras are meant to ______ trespassers.",
+        "answer": "deter",
+        "definition": "Discourage someone from doing something by instilling doubt or fear of the consequences."
+    },
+    {
+        "question": "The ugly scratch on the hood does not ______ from the overall performance of the car.",
+        "answer": "detract",
+        "definition": "Diminish the worth or value of a quality or achievement."
+    },
+    {
+        "question": "Eating too much sugar is ______ to your dental health.",
+        "answer": "detrimental",
+        "definition": "Tending to cause harm."
+    },
+    {
+        "question": "The villain used ______ tactics to trick the hero into a trap.",
+        "answer": "devious",
+        "definition": "Showing a skillful use of underhanded tactics to achieve goals."
+    },
+    {
+        "question": "The coach launched into a furious ______ against the referee's unfair calls.",
+        "answer": "diatribe",
+        "definition": "A forceful and bitter verbal attack against someone or something."
+    },
+    {
+        "question": "Children's books are often ______, designed to teach a moral lesson along with the story.",
+        "answer": "didactic",
+        "definition": "Intended to teach, particularly in having moral instruction as an ulterior motive."
+    },
+    {
+        "question": "The ______ young boy rarely spoke in class and avoided making eye contact.",
+        "answer": "diffident",
+        "definition": "Modest or shy because of a lack of self-confidence."
+    },
+    {
+        "question": "I don't mean to ______, but that reminds me of a funny story from my childhood.",
+        "answer": "digress",
+        "definition": "Leave the main subject temporarily in speech or writing."
+    },
+    {
+        "question": "The homeowner used ______ tactics to delay paying the contractor for the roof repair.",
+        "answer": "dilatory",
+        "definition": "Slow to act; intended to cause delay."
+    },
+    {
+        "question": "He's just a ______ when it comes to photography, rarely touching his expensive camera.",
+        "answer": "dilettante",
+        "definition": "A person who cultivates an area of interest, such as the arts, without real commitment or knowledge."
+    },
+    {
+        "question": "The choir sang a slow, mournful ______ at the soldier's funeral.",
+        "answer": "dirge",
+        "definition": "A lament for the dead, especially one forming part of a funeral rite."
+    },
+    {
+        "question": "I must ______ you of the notion that starting a business is easy and stress-free.",
+        "answer": "disabuse",
+        "definition": "Persuade someone that an idea or belief is mistaken."
+    },
+    {
+        "question": "It was difficult to ______ any truth in his chaotic and rambling story.",
+        "answer": "discern",
+        "definition": "Perceive or recognize something."
+    },
+    {
+        "question": "The beginner orchestra produced a highly ______ sound as they tried to tune their instruments.",
+        "answer": "discordant",
+        "definition": "Disagreeing or incongruous; harsh and jarring because of a lack of harmony."
+    },
+    {
+        "question": "The opposing political party tried to ______ the mayor by leaking his private emails.",
+        "answer": "discredit",
+        "definition": "Harm the good reputation of someone or something."
+    },
+    {
+        "question": "There was a major ______ between the witness's testimony and the video footage.",
+        "answer": "discrepancy",
+        "definition": "A lack of compatibility or similarity between two or more facts."
+    },
+    {
+        "question": "The seminar was broken down into five ______ sessions, each covering a different topic.",
+        "answer": "discrete",
+        "definition": "Individually separate and distinct."
+    },
+    {
+        "question": "The city is made up of ______ cultures that rarely interact with one another.",
+        "answer": "disparate",
+        "definition": "Essentially different in kind; not allowing comparison."
+    },
+    {
+        "question": "An honest person will find it very difficult to ______ their true feelings.",
+        "answer": "dissemble",
+        "definition": "Conceal one's true motives, feelings, or beliefs."
+    },
+    {
+        "question": "The internet makes it incredibly easy to ______ information globally in seconds.",
+        "answer": "disseminate",
+        "definition": "Spread something, especially information, widely."
+    },
+    {
+        "question": "The severe ______ between her religious beliefs and her actions caused her great guilt.",
+        "answer": "dissonance",
+        "definition": "A tension or clash resulting from the combination of two inharmonious or unsuitable elements."
+    },
+    {
+        "question": "Malnutrition can cause a child's stomach to ______ unnaturally.",
+        "answer": "distend",
+        "definition": "Swell or cause to swell by pressure from inside."
+    },
+    {
+        "question": "The two friends' career paths began to ______ after they graduated from college.",
+        "answer": "diverge",
+        "definition": "Separate from another route, especially a main one, and go in a different direction."
+    },
+    {
+        "question": "He was highly ______ about his political views, refusing to listen to any counterarguments.",
+        "answer": "dogmatic",
+        "definition": "Inclined to lay down principles as incontrovertibly true."
+    },
+    {
+        "question": "The volcano has been ______ for centuries, but scientists fear it may erupt soon.",
+        "answer": "dormant",
+        "definition": "Having normal physical functions suspended or slowed down for a period of time; in or as if in a deep sleep."
+    },
+    {
+        "question": "The con artist managed to ______ several elderly people into giving him their credit card numbers.",
+        "answer": "dupe",
+        "definition": "Deceive; trick."
+    },
+    {
+        "question": "His ______ was finally exposed when both of his secret families found out about each other.",
+        "answer": "duplicity",
+        "definition": "Deceitfulness; double-dealing."
+    },
+    {
+        "question": "Her music taste is highly ______, featuring everything from jazz to heavy metal.",
+        "answer": "eclectic",
+        "definition": "Deriving ideas, style, or taste from a broad and diverse range of sources."
+    },
+    {
+        "question": "The pastor delivered a sermon meant to ______ the congregation and encourage better morals.",
+        "answer": "edify",
+        "definition": "Instruct or improve someone morally or intellectually."
+    },
+    {
+        "question": "Over hundreds of years, the wind and rain began to ______ the writing on the tombstone.",
+        "answer": "efface",
+        "definition": "Erase a mark from a surface; make oneself appear insignificant or inconspicuous."
+    },
+    {
+        "question": "Her ______ personality made her the life of every party she attended.",
+        "answer": "effervescent",
+        "definition": "Vivacious and enthusiastic; giving off bubbles."
+    },
+    {
+        "question": "The new vaccine was proven to be highly ______ in preventing the spread of the virus.",
+        "answer": "efficacious",
+        "definition": "Successful in producing a desired or intended result; effective."
+    },
+    {
+        "question": "I can't believe he had the ______ to ask for a raise after being caught stealing.",
+        "answer": "effrontery",
+        "definition": "Insolent or impertinent behavior."
+    },
+    {
+        "question": "The poet read a beautiful ______ at his best friend's memorial service.",
+        "answer": "elegy",
+        "definition": "A poem of serious reflection, typically a lament for the dead."
+    },
+    {
+        "question": "The detective tried to ______ a confession from the suspect by offering a lighter sentence.",
+        "answer": "elicit",
+        "definition": "Evoke or draw out a response, answer, or fact from someone."
+    },
+    {
+        "question": "The textbook used helpful diagrams to ______ the complex physics concepts.",
+        "answer": "elucidate",
+        "definition": "Make something clear; explain."
+    },
+    {
+        "question": "The snow leopard is an ______ creature, rarely seen by human eyes in the wild.",
+        "answer": "elusive",
+        "definition": "Difficult to find, catch, or achieve."
+    },
+    {
+        "question": "He tends to ______ his stories, adding dragons and explosions to things that never happened.",
+        "answer": "embellish",
+        "definition": "Make something more attractive by the addition of decorative details or features; exaggerate."
+    },
+    {
+        "question": "The scientist demanded ______ evidence, refusing to rely on theories and guesswork.",
+        "answer": "empirical",
+        "definition": "Based on, concerned with, or verifiable by observation or experience rather than theory or pure logic."
+    },
+    {
+        "question": "Malaria is ______ to certain tropical regions, meaning it is regularly found there.",
+        "answer": "endemic",
+        "definition": "Regularly found among particular people or in a certain area."
+    },
+    {
+        "question": "The intense humidity of the jungle will quickly ______ an unprepared hiker.",
+        "answer": "enervate",
+        "definition": "Cause someone to feel drained of energy or vitality; weaken."
+    },
+    {
+        "question": "The mayor's controversial comments will certainly ______ a lot of anger in the community.",
+        "answer": "engender",
+        "definition": "Cause or give rise to a feeling, situation, or condition."
+    },
+    {
+        "question": "The wealthy heir suffered from extreme ______, finding no joy or excitement in his luxurious life.",
+        "answer": "ennui",
+        "definition": "A feeling of listlessness and dissatisfaction arising from a lack of occupation or excitement."
+    },
+    {
+        "question": "As a true ______, she traveled to France simply to taste the region's famous cheeses.",
+        "answer": "epicure",
+        "definition": "A person who takes particular pleasure in fine food and drink."
+    },
+    {
+        "question": "The airline pilot handled the engine failure with perfect ______, safely landing the plane without panic.",
+        "answer": "equanimity",
+        "definition": "Mental calmness, composure, and evenness of temper, especially in a difficult situation."
+    },
+    {
+        "question": "When asked if he stole the money, the suspect began to ______ rather than give a straight answer.",
+        "answer": "equivocate",
+        "definition": "Use ambiguous language so as to conceal the truth or avoid committing oneself."
+    },
+    {
+        "question": "The stock market's ______ behavior made investors incredibly nervous.",
+        "answer": "erratic",
+        "definition": "Not even or regular in pattern or movement; unpredictable."
+    },
+    {
+        "question": "The ______ professor could fluently read Latin, Greek, and ancient Sumerian.",
+        "answer": "erudite",
+        "definition": "Having or showing great knowledge or learning."
+    },
+    {
+        "question": "She is an ______ scientist whose research has saved countless lives.",
+        "answer": "estimable",
+        "definition": "Worthy of great respect."
+    },
+    {
+        "question": "The president delivered a moving ______ at the funeral of the fallen general.",
+        "answer": "eulogy",
+        "definition": "A speech or piece of writing that praises someone or something highly, typically someone who has just died."
+    },
+    {
+        "question": "Saying someone 'passed away' is a common ______ for saying they died.",
+        "answer": "euphemism",
+        "definition": "A mild or indirect word or expression substituted for one considered to be too harsh or blunt."
+    },
+    {
+        "question": "The security camera footage will ______ the defendant, proving he wasn't at the bank.",
+        "answer": "exculpate",
+        "definition": "Show or declare that someone is not guilty of wrongdoing."
+    },
+    {
+        "question": "The hotel room was in ______ condition, with mold on the walls and cockroaches on the floor.",
+        "answer": "execrable",
+        "definition": "Extremely bad or unpleasant."
+    },
+    {
+        "question": "The patient's failing heart condition created an ______ need for a transplant.",
+        "answer": "exigent",
+        "definition": "Pressing; demanding."
+    },
+    {
+        "question": "The DNA results finally ______ the man who had been falsely accused of the crime.",
+        "answer": "exonerate",
+        "definition": "Absolve someone from blame for a fault or wrongdoing."
+    },
+    {
+        "question": "The theme park charged an ______ price for a simple bottle of water.",
+        "answer": "exorbitant",
+        "definition": "Unreasonably high in price or amount."
+    },
+    {
+        "question": "The professor loves to ______ on the history of ancient Rome, talking for hours without stopping.",
+        "answer": "expatiate",
+        "definition": "Speak or write at length or in detail."
+    },
+    {
+        "question": "Many American writers lived as ______ in Paris during the 1920s.",
+        "answer": "expatriate",
+        "definition": "A person who lives outside their native country."
+    },
+    {
+        "question": "Given the approaching storm, it is ______ that we leave the island immediately.",
+        "answer": "expedient",
+        "definition": "Convenient and practical, although possibly improper or immoral."
+    },
+    {
+        "question": "He volunteered at the homeless shelter to ______ for his past selfish behavior.",
+        "answer": "expiate",
+        "definition": "Atone for guilt or sin."
+    },
+    {
+        "question": "The teacher gave ______ instructions, telling the students exactly what to do step-by-step.",
+        "answer": "explicit",
+        "definition": "Stated clearly and in detail, leaving no room for confusion or doubt."
+    },
+    {
+        "question": "After the pardon, the judge ordered the clerk to ______ the crime from the man's permanent record.",
+        "answer": "expunge",
+        "definition": "Erase or remove completely something unwanted or unpleasant."
+    },
+    {
+        "question": "The school board decided to ______ the novel, removing the curse words before giving it to students.",
+        "answer": "expurgate",
+        "definition": "Remove matter thought to be objectionable or unsuitable from a book or account."
+    },
+    {
+        "question": "There are only three ______ copies of this 16th-century map left in the world.",
+        "answer": "extant",
+        "definition": "Still in existence; surviving."
+    },
+    {
+        "question": "The judge gave a lighter sentence due to the ______ circumstances surrounding the theft.",
+        "answer": "extenuating",
+        "definition": "Serving to lessen the seriousness of an offence."
+    },
+    {
+        "question": "The health magazine continues to ______ the benefits of a plant-based diet.",
+        "answer": "extol",
+        "definition": "Praise enthusiastically."
+    },
+    {
+        "question": "Please keep your presentation focused and remove any ______ details that waste time.",
+        "answer": "extraneous",
+        "definition": "Irrelevant or unrelated to the subject being dealt with."
+    },
+    {
+        "question": "Based on current sales, we can ______ that revenue will double by next year.",
+        "answer": "extrapolate",
+        "definition": "Extend the application of a method or conclusion to an unknown situation by assuming existing trends will continue."
+    },
+    {
+        "question": "The firefighters had to use the jaws of life to ______ the driver from the crushed car.",
+        "answer": "extricate",
+        "definition": "Free someone or something from a constraint or difficulty."
+    },
+    {
+        "question": "The puppy was naturally ______, bouncing around the room and licking everyone's faces.",
+        "answer": "exuberant",
+        "definition": "Filled with or characterized by a lively energy and excitement."
+    },
+    {
+        "question": "The employee had to ______ a complicated lie to explain why he was late to work.",
+        "answer": "fabricate",
+        "definition": "Invent or concoct something, typically with deceitful intent."
+    },
+    {
+        "question": "His essay provided a very ______ explanation of the war, completely ignoring the complex economic causes.",
+        "answer": "facile",
+        "definition": "Appearing neat and comprehensive only by ignoring the true complexities of an issue; superficial."
+    },
+    {
+        "question": "He was ______ about cleanliness, scrubbing his floors with a toothbrush every night.",
+        "answer": "fanatical",
+        "definition": "Filled with excessive and single-minded zeal."
+    },
+    {
+        "question": "I simply cannot ______ why anyone would want to jump out of a perfectly good airplane.",
+        "answer": "fathom",
+        "definition": "Understand a difficult problem or an enigmatic person after much thought."
+    },
+    {
+        "question": "Asking if the sun is hot is a perfectly ______ question.",
+        "answer": "fatuous",
+        "definition": "Silly and pointless."
+    },
+    {
+        "question": "The celebrity was surrounded by an entourage of ______ assistants who agreed with his every word.",
+        "answer": "fawning",
+        "definition": "Displaying exaggerated flattery or affection; obsequious."
+    }
+]
