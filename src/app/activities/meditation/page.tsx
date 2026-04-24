@@ -7,7 +7,8 @@ import { ArrowLeft, Leaf, Play, Pause, Volume2, VolumeX, RotateCcw, CheckCircle2
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const CALM_MUSIC_URL = "https://cdn.pixabay.com/audio/2022/05/27/audio_1808f3030c.mp3";
+const CALM_MUSIC_FILES = ["/music1.mp3"];
+const CALM_MUSIC_URL = CALM_MUSIC_FILES[Math.floor(Math.random() * CALM_MUSIC_FILES.length)];
 
 const MORNING_PROMPTS = [
   "Take a moment to observe your current thoughts. What is your intention for the next few hours?",
@@ -23,6 +24,26 @@ const EVENING_PROMPTS = [
   "What was a moment of unexpected joy or peace in your day today?"
 ];
 
+const MINDFULNESS_TEXTS = [
+  "Breathe in deeply, hold for a moment, and release.",
+  "Notice the sensation of your feet on the ground.",
+  "Let go of any thoughts about the past or future.",
+  "Feel the weight of your body against your seat.",
+  "Observe the quiet space between your thoughts.",
+  "Acknowledge any tension and let it soften.",
+  "You are exactly where you need to be right now.",
+  "Listen to the sounds around you without judgment.",
+  "Softening your shoulders, let your breath be natural.",
+  "Each breath is a new beginning, a fresh start.",
+  "Your mind is like the sky; thoughts are just clouds passing through.",
+  "In this moment, there is nothing you need to do but be.",
+  "Gently bring your attention back whenever it wanders.",
+  "Feel the air entering and leaving your nostrils.",
+  "Allow yourself to simply exist, without expectation.",
+  "Your presence is the greatest gift you can offer yourself.",
+  "Peace is not the absence of noise, but calmness within."
+];
+
 type Step = 'prompt' | 'timer' | 'complete';
 
 export default function MeditationPage() {
@@ -30,12 +51,13 @@ export default function MeditationPage() {
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<Step>('prompt');
   const [currentPrompt, setCurrentPrompt] = useState("");
-  
+  const [currentMindfulnessText, setCurrentMindfulnessText] = useState(MINDFULNESS_TEXTS[0]);
+
   const [isActive, setIsActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [selectedDuration, setSelectedDuration] = useState(60);
   const [musicEnabled, setMusicEnabled] = useState(false);
-  
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -52,7 +74,20 @@ export default function MeditationPage() {
   useEffect(() => {
     if (isActive && timeLeft > 0) {
       timerRef.current = setInterval(() => {
-        setTimeLeft(prev => prev - 1);
+        setTimeLeft(prev => {
+          const next = prev - 1;
+          // Change mindfulness text every 30 seconds
+          if (next > 0 && next % 15 === 0) {
+            setCurrentMindfulnessText(prevText => {
+              let newText = prevText;
+              while (newText === prevText) {
+                newText = MINDFULNESS_TEXTS[Math.floor(Math.random() * MINDFULNESS_TEXTS.length)];
+              }
+              return newText;
+            });
+          }
+          return next;
+        });
       }, 1000);
     } else if (timeLeft === 0) {
       handleComplete();
@@ -130,7 +165,7 @@ export default function MeditationPage() {
   return (
     <main className="min-h-screen bg-background p-6 sm:p-8 animate-in fade-in duration-700">
       <audio ref={audioRef} src={CALM_MUSIC_URL} loop />
-      
+
       <div className="max-w-3xl mx-auto space-y-12">
         <header className="flex justify-between items-start">
           <div className="space-y-2">
@@ -148,7 +183,7 @@ export default function MeditationPage() {
             <div className="absolute -top-10 -right-10 opacity-5 rotate-12">
               <Compass size={240} className="text-accent" />
             </div>
-            
+
             <div className="space-y-6 relative z-10">
               <div className="w-20 h-20 bg-accent/10 rounded-3xl flex items-center justify-center mx-auto shadow-neo-in mb-4">
                 <Sparkles className="w-10 h-10 text-accent" />
@@ -169,6 +204,7 @@ export default function MeditationPage() {
                   onClick={() => {
                     setSelectedDuration(d);
                     setTimeLeft(d);
+                    setCurrentMindfulnessText(MINDFULNESS_TEXTS[Math.floor(Math.random() * MINDFULNESS_TEXTS.length)]);
                     setStep('timer');
                     setIsActive(true); // Start automatically
                   }}
@@ -183,16 +219,25 @@ export default function MeditationPage() {
         ) : (
           <section className="bg-card rounded-[2.5rem] p-8 sm:p-16 shadow-neo-out border border-white/5 text-center space-y-12 relative overflow-hidden animate-in zoom-in duration-500">
             <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-accent/5 rounded-full blur-3xl transition-all duration-1000 ${isActive ? 'scale-150 opacity-100' : 'scale-100 opacity-0'}`} />
-            
+
             <div className="space-y-6 relative z-10">
               <div className={`w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center mx-auto shadow-neo-in mb-8 transition-transform duration-1000 ${isActive ? 'scale-110' : ''}`}>
                 <Leaf className={`w-12 h-12 text-accent transition-all duration-1000 ${isActive ? 'animate-pulse' : ''}`} />
               </div>
-              
+
               <div className="space-y-2">
-                <div className="text-8xl sm:text-9xl font-black tracking-tighter tabular-nums text-foreground drop-shadow-sm">
+                <div className="text-6xl sm:text-7xl font-black tracking-tighter tabular-nums text-foreground drop-shadow-sm">
                   {formatTime(timeLeft)}
                 </div>
+              </div>
+
+              <div className="max-w-md mx-auto pt-4 min-h-[4rem] flex items-center justify-center">
+                <p
+                  key={currentMindfulnessText}
+                  className="text-2xl sm:text-1xl font-black text-accent italic animate-in fade-in slide-in-from-bottom-2 duration-1000"
+                >
+                  "{currentMindfulnessText}"
+                </p>
               </div>
             </div>
 
