@@ -1,9 +1,9 @@
 'use server';
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from 'openai';
 
 const SYSTEM_PROMPT = `You are an expert philosophy curator for an educational app.
-Your task is to generate exactly 10 new, unique, and advanced philosophical concepts.
+Your task is to generate exactly 5 new, unique, and advanced philosophical concepts.
 
 IMPORTANT REQUIREMENTS:
 1. Return ONLY a valid JSON array.
@@ -42,70 +42,65 @@ SCHEMA:
   }
 ]`;
 
+const client = new OpenAI({
+  apiKey: process.env.NVIDIA_API_KEY,
+  baseURL: 'https://integrate.api.nvidia.com/v1',
+});
+
 export async function generateConcepts(interests: string[] = []) {
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error('GEMINI_API_KEY is not configured.');
-    }
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-    // Note: gemini-3-flash-preview does not exist yet; using gemini-1.5-flash for stability
-    const model = genAI.getGenerativeModel({
-      model: "gemini-3.1-flash-lite-preview",
-      systemInstruction: SYSTEM_PROMPT
-    });
-
-    let userPrompt = "Generate 10 advanced philosophical concepts.";
+    console.log("Generating philosophy concepts...");
+    let userPrompt = "Generate 5 advanced philosophical concepts.";
     if (interests && interests.length > 0) {
       userPrompt += ` Try to relate some of the concepts to these user interests if possible: ${interests.join(', ')}. However, prioritize deep, classic philosophical concepts over forced relations.`;
     }
 
-    console.log("Curating concepts with Gemini SDK...");
-
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: userPrompt }] }],
-      generationConfig: {
-        temperature: 1,
-        topP: 0.95,
-        topK: 40,
-        maxOutputTokens: 8192,
-        responseMimeType: "application/json",
-      },
+    const completion = await client.chat.completions.create({
+      model: "moonshotai/kimi-k2-instruct-0905",
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: userPrompt }
+      ],
+      temperature: 0.6,
+      top_p: 0.9,
+      max_tokens: 4096,
+      stream: true
     });
 
-    const content = result.response.text();
-
-    if (!content) {
-      throw new Error('No content received from Gemini SDK.');
+    let fullContent = "";
+    for await (const chunk of completion) {
+      const delta = chunk.choices[0]?.delta;
+      if (delta?.content) {
+        fullContent += delta.content;
+      }
     }
 
-    const parsedConcepts = JSON.parse(content);
+    try {
+      const startIdx = fullContent.indexOf('[');
+      const endIdx = fullContent.lastIndexOf(']') + 1;
+      const jsonStr = startIdx !== -1 && endIdx !== -1 ? fullContent.substring(startIdx, endIdx) : fullContent;
+      
+      const parsed = JSON.parse(jsonStr);
+      const concepts = Array.isArray(parsed) ? parsed : (parsed.concepts || parsed.data || Object.values(parsed)[0]);
 
-    if (!Array.isArray(parsedConcepts) || parsedConcepts.length === 0) {
-      throw new Error('Parsed data is not an array of concepts.');
+      if (!Array.isArray(concepts)) {
+        throw new Error('Parsed data is not an array.');
+      }
+
+      return { success: true, concepts: concepts.slice(0, 5) };
+    } catch (parseError) {
+      console.error("JSON Parse Error:", fullContent);
+      throw new Error("Failed to parse AI response as valid JSON.");
     }
-
-    return { success: true, concepts: parsedConcepts };
 
   } catch (error: any) {
-    console.error("Concept generation failed:", error);
+    console.error("Philosophy generation failed:", error.message);
     return { success: false, error: error.message || 'Unknown error occurred.' };
   }
 }
 
 export async function getPhilosophyFeedback(conceptName: string, conceptText: string, question: string, userAnswer: string) {
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error('GEMINI_API_KEY is not configured.');
-    }
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: "gemini-3.1-flash-lite-preview",
-    });
-
     const prompt = `
       You are a wise and encouraging philosophical mentor. 
       A student is learning about the concept: "${conceptName}".
@@ -122,12 +117,20 @@ export async function getPhilosophyFeedback(conceptName: string, conceptText: st
       Keep the tone warm, intellectual, and inspiring. Avoid being overly critical.
     `;
 
-    const result = await model.generateContent(prompt);
-    const feedback = result.response.text();
+    const completion = await client.chat.completions.create({
+      model: "moonshotai/kimi-k2-instruct-0905",
+      messages: [
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.5,
+      max_tokens: 512,
+    });
 
+    const feedback = completion.choices[0].message.content;
     return { success: true, feedback };
+
   } catch (error: any) {
-    console.error("Feedback generation failed:", error);
+    console.error("Philosophy feedback failed:", error.message);
     return { success: false, error: "I couldn't generate feedback right now, but your reflection is valuable!" };
   }
 }

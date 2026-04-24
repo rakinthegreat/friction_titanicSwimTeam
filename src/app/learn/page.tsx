@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/Card';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { ArrowLeft, BookOpen, Brain, FlaskConical, HelpCircle } from 'lucide-react';
+import { ArrowLeft, BookOpen, Brain, FlaskConical, HelpCircle, Leaf, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { WordOfTheDayWidget } from '@/components/learn/WordOfTheDayWidget';
@@ -40,7 +40,7 @@ export default function LearnDirectoryPage() {
       href: '/learn/trivia',
       active: true,
       color: 'text-accent'
-    }
+    },
   ];
 
   return (

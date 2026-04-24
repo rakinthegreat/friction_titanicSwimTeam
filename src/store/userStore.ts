@@ -7,12 +7,12 @@ import { doc, setDoc, writeBatch, collection, getDoc, getDocs } from 'firebase/f
 interface LearningSession {
   conceptName: string;
   conceptText: string;
-  mcqs: Array<{
+  mcqs: {
     question: string;
-    userAnswer: string;
-    correctAnswer: string;
+    selectedOption: string;
+    correctOption: string;
     isCorrect: boolean;
-  }>;
+  }[];
   reflection: {
     question: string;
     answer: string;
@@ -24,6 +24,7 @@ interface LearningSession {
 interface UserState {
   uid: string | null;
   interests: string[];
+  videoGenres: string[];
   stats: {
     totalMinutesSaved: number;
     activitiesCompleted: number;
@@ -49,11 +50,33 @@ interface UserState {
   // English
   englishReviewWords: Record<string, number>;
 
+  // Meditation
+  meditationLogs: Array<{
+    prompt: string;
+    reflection: string;
+    timestamp: number;
+  }>;
+
   dailyCompletedActivities: string[];
   lastCompletedDate: string | null;
   lastBackupDate: string | null;
+  realLifeChallenges: Array<{
+    id: string;
+    challenge: string;
+    context: {
+      location: string;
+      posture: string;
+      vibe: string;
+      energy: string;
+    };
+    estimatedTime: number; // in seconds
+    experience?: string;
+    timestamp: number;
+    status: 'pending' | 'completed';
+  }>;
 
   setInterests: (interests: string[]) => void;
+  setVideoGenres: (genres: string[]) => void;
   updateStats: (minutes: number, gameId?: string, score?: number) => void;
   setDarkMode: (enabled: boolean) => void;
 
@@ -71,6 +94,18 @@ interface UserState {
   addEnglishReviewWord: (word: string) => void;
   recordEnglishReviewSuccess: (word: string) => void;
 
+  // Meditation Actions
+  addMeditationLog: (log: { prompt: string; reflection: string }) => void;
+
+  // Challenge Actions
+  addRealLifeChallenge: (challenge: { challenge: string; context: {
+    location: string;
+    posture: string;
+    vibe: string;
+    energy: string;
+  }; estimatedTime: number }) => string;
+  completeRealLifeChallenge: (id: string, experience?: string) => void;
+
   completeActivity: (id: string) => void;
   syncWithFirebase: () => Promise<void>;
 }
@@ -80,6 +115,7 @@ export const useUserStore = create<UserState>()(
     (set) => ({
       uid: null,
       interests: [],
+      videoGenres: [],
       stats: {
         totalMinutesSaved: 0,
         activitiesCompleted: 0,
@@ -89,7 +125,7 @@ export const useUserStore = create<UserState>()(
       },
       preferences: {
         darkMode: false,
-        blockDoomscrolling: false,
+        blockDoomscrolling: true,
       },
 
       completedPhilosophyConcepts: [],
@@ -103,11 +139,16 @@ export const useUserStore = create<UserState>()(
       // English
       englishReviewWords: {},
 
+      // Meditation
+      meditationLogs: [],
+
       dailyCompletedActivities: [],
       lastCompletedDate: null,
       lastBackupDate: null,
+      realLifeChallenges: [],
 
       setInterests: (interests) => set({ interests }),
+      setVideoGenres: (genres) => set({ videoGenres: genres }),
       updateStats: (minutes, gameId, score) =>
         set((state) => {
           const newHighScores = { ...state.stats.highScores };
@@ -148,21 +189,25 @@ export const useUserStore = create<UserState>()(
             },
           };
         }),
+
       setDarkMode: (enabled) =>
         set((state) => ({
           preferences: { ...state.preferences, darkMode: enabled },
         })),
 
-      // Philosophy
       completePhilosophyConcept: (name) =>
         set((state) => ({
-          completedPhilosophyConcepts: state.completedPhilosophyConcepts.includes(name)
-            ? state.completedPhilosophyConcepts
-            : [...state.completedPhilosophyConcepts, name],
+          completedPhilosophyConcepts: [
+            ...state.completedPhilosophyConcepts,
+            name,
+          ],
         })),
       addCustomPhilosophyConcepts: (concepts) =>
         set((state) => ({
-          customPhilosophyConcepts: [...state.customPhilosophyConcepts, ...concepts],
+          customPhilosophyConcepts: [
+            ...state.customPhilosophyConcepts,
+            ...concepts,
+          ],
         })),
       addPhilosophyReflection: (session) =>
         set((state) => ({
@@ -172,12 +217,9 @@ export const useUserStore = create<UserState>()(
           ],
         })),
 
-      // Science
       completeScienceConcept: (name) =>
         set((state) => ({
-          completedScienceConcepts: state.completedScienceConcepts.includes(name)
-            ? state.completedScienceConcepts
-            : [...state.completedScienceConcepts, name],
+          completedScienceConcepts: [...state.completedScienceConcepts, name],
         })),
       addCustomScienceConcepts: (concepts) =>
         set((state) => ({
@@ -220,16 +262,45 @@ export const useUserStore = create<UserState>()(
           };
         }),
 
+      // Meditation
+      addMeditationLog: (log) =>
+        set((state) => ({
+          meditationLogs: [
+            { ...log, timestamp: Date.now() },
+            ...state.meditationLogs,
+          ],
+        })),
+
+      // Challenge Actions
+      addRealLifeChallenge: (challenge) => {
+        const id = Math.random().toString(36).substring(7);
+        set((state) => ({
+          realLifeChallenges: [
+            { ...challenge, id, timestamp: Date.now(), status: 'pending' },
+            ...state.realLifeChallenges,
+          ],
+        }));
+        return id;
+      },
+      completeRealLifeChallenge: (id, experience) =>
+        set((state) => ({
+          realLifeChallenges: state.realLifeChallenges.map((c) =>
+            c.id === id ? { ...c, status: 'completed', experience } : c
+          ),
+        })),
+
       completeActivity: (id) =>
         set((state) => {
           const today = new Date().toISOString().split('T')[0];
-          const isNewDay = state.lastCompletedDate !== today;
-          const currentList = isNewDay ? [] : state.dailyCompletedActivities;
-          
-          if (currentList.includes(id)) return state;
-          
+          if (state.lastCompletedDate !== today) {
+            return {
+              dailyCompletedActivities: [id],
+              lastCompletedDate: today,
+            };
+          }
+          if (state.dailyCompletedActivities.includes(id)) return state;
           return {
-            dailyCompletedActivities: [...currentList, id],
+            dailyCompletedActivities: [...state.dailyCompletedActivities, id],
             lastCompletedDate: today,
           };
         }),
@@ -252,10 +323,10 @@ export const useUserStore = create<UserState>()(
 
         // 2. MERGE: Intelligent merging logic
         
-        // Interests: Union of both sets
+        // Simple Union/Max Fields
         const mergedInterests = Array.from(new Set([...state.interests, ...(remoteData.interests || [])]));
-
-        // Stats: Max of both values
+        const mergedVideoGenres = Array.from(new Set([...state.videoGenres, ...(remoteData.videoGenres || [])]));
+        
         const mergedStats = {
           totalMinutesSaved: Math.max(state.stats.totalMinutesSaved, remoteData.stats?.totalMinutesSaved || 0),
           activitiesCompleted: Math.max(state.stats.activitiesCompleted, remoteData.stats?.activitiesCompleted || 0),
@@ -266,24 +337,60 @@ export const useUserStore = create<UserState>()(
           highScores: { ...(remoteData.stats?.highScores || {}), ...state.stats.highScores }
         };
 
-        // Reflections: Merge by timestamp to prevent duplicates
-        const mergeReflections = (local: LearningSession[], remote: LearningSession[]) => {
-          const map = new Map<number, LearningSession>();
-          remote.forEach(item => map.set(item.timestamp, item));
-          local.forEach(item => map.set(item.timestamp, item));
-          return Array.from(map.values()).sort((a, b) => b.timestamp - a.timestamp);
+        // Helper for timestamp-based merging (Reflections, Meditation, Challenges)
+        const mergeByTimestamp = (local: any[], remote: any[]) => {
+          const map = new Map();
+          remote.forEach(item => map.set(item.timestamp || item.id, item));
+          local.forEach(item => map.set(item.timestamp || item.id, item));
+          return Array.from(map.values()).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
         };
 
-        const mergedPhil = mergeReflections(state.philosophyReflections, remotePhil);
-        const mergedSci = mergeReflections(state.scienceReflections, remoteSci);
+        const mergedPhil = mergeByTimestamp(state.philosophyReflections, remotePhil);
+        const mergedSci = mergeByTimestamp(state.scienceReflections, remoteSci);
+        const mergedMeditation = mergeByTimestamp(state.meditationLogs, remoteData.meditationLogs || []);
+        const mergedChallenges = mergeByTimestamp(state.realLifeChallenges, remoteData.realLifeChallenges || []);
+
+        // Concepts & Words
+        const mergedCompletedPhil = Array.from(new Set([...state.completedPhilosophyConcepts, ...(remoteData.completedPhilosophyConcepts || [])]));
+        const mergedCompletedSci = Array.from(new Set([...state.completedScienceConcepts, ...(remoteData.completedScienceConcepts || [])]));
+        
+        const mergeCustom = (local: any[], remote: any[]) => {
+          const map = new Map<string, any>();
+          remote.forEach(c => map.set(c.name || c.title || c.concept_name, c));
+          local.forEach(c => map.set(c.name || c.title || c.concept_name, c));
+          return Array.from(map.values());
+        };
+
+        const mergedCustomPhil = mergeCustom(state.customPhilosophyConcepts, remoteData.customPhilosophyConcepts || []);
+        const mergedCustomSci = mergeCustom(state.customScienceConcepts, remoteData.customScienceConcepts || []);
+        const mergedEnglish = { ...(remoteData.englishReviewWords || {}), ...state.englishReviewWords };
+
+        // Daily Progress (Keep newest)
+        const mergedLastCompletedDate = (state.lastCompletedDate || '') > (remoteData.lastCompletedDate || '')
+          ? state.lastCompletedDate
+          : (remoteData.lastCompletedDate || null);
+        
+        const mergedDailyActivities = state.lastCompletedDate === mergedLastCompletedDate
+          ? state.dailyCompletedActivities
+          : (remoteData.dailyCompletedActivities || []);
 
         // 3. UPDATE LOCAL STORE
         const now = new Date().toISOString();
         set({
           interests: mergedInterests,
+          videoGenres: mergedVideoGenres,
           stats: mergedStats,
           philosophyReflections: mergedPhil,
           scienceReflections: mergedSci,
+          meditationLogs: mergedMeditation,
+          realLifeChallenges: mergedChallenges,
+          completedPhilosophyConcepts: mergedCompletedPhil,
+          completedScienceConcepts: mergedCompletedSci,
+          customPhilosophyConcepts: mergedCustomPhil,
+          customScienceConcepts: mergedCustomSci,
+          englishReviewWords: mergedEnglish,
+          dailyCompletedActivities: mergedDailyActivities,
+          lastCompletedDate: mergedLastCompletedDate,
           lastBackupDate: now
         });
 
@@ -292,19 +399,24 @@ export const useUserStore = create<UserState>()(
         
         const profileToPush = {
           interests: mergedInterests,
+          videoGenres: mergedVideoGenres,
           stats: mergedStats,
           preferences: state.preferences,
-          completedPhilosophyConcepts: Array.from(new Set([...state.completedPhilosophyConcepts, ...(remoteData.completedPhilosophyConcepts || [])])),
-          completedScienceConcepts: Array.from(new Set([...state.completedScienceConcepts, ...(remoteData.completedScienceConcepts || [])])),
-          englishReviewWords: { ...(remoteData.englishReviewWords || {}), ...state.englishReviewWords },
-          dailyCompletedActivities: state.dailyCompletedActivities,
-          lastCompletedDate: state.lastCompletedDate,
+          completedPhilosophyConcepts: mergedCompletedPhil,
+          completedScienceConcepts: mergedCompletedSci,
+          customPhilosophyConcepts: mergedCustomPhil,
+          customScienceConcepts: mergedCustomSci,
+          meditationLogs: mergedMeditation,
+          realLifeChallenges: mergedChallenges,
+          englishReviewWords: mergedEnglish,
+          dailyCompletedActivities: mergedDailyActivities,
+          lastCompletedDate: mergedLastCompletedDate,
           lastBackupDate: now,
         };
 
         batch.set(userDocRef, profileToPush, { merge: true });
 
-        // Push merged logs
+        // Push merged detailed logs to subcollections
         mergedPhil.forEach(session => {
           const refDoc = doc(collection(userDocRef, 'philosophy_reflections'), session.timestamp.toString());
           batch.set(refDoc, session, { merge: true });

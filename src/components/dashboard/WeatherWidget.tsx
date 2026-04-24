@@ -95,31 +95,40 @@ export const WeatherWidget = () => {
       }
     };
 
-    // Check cache first
-    const cached = localStorage.getItem(CACHE_KEY);
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      if (Date.now() - parsed.timestamp < CACHE_DURATION) {
-        setWeather(parsed);
-        setLoading(false);
-        return;
+    const initWeather = (forceFetch = false) => {
+      // Check cache first
+      if (!forceFetch) {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Date.now() - parsed.timestamp < CACHE_DURATION) {
+            setWeather(parsed);
+            setLoading(false);
+            return;
+          }
+        }
       }
-    }
 
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          fetchWeatherData(position.coords.latitude, position.coords.longitude);
-        },
-        (error) => {
-          console.log("Geolocation denied or failed, using IP fallback.", error);
-          fetchIPLocationFallback();
-        },
-        { timeout: 5000 }
-      );
-    } else {
-      fetchIPLocationFallback();
-    }
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            fetchWeatherData(position.coords.latitude, position.coords.longitude);
+          },
+          (error) => {
+            console.log("Geolocation denied or failed, using IP fallback.", error);
+            fetchIPLocationFallback();
+          },
+          { timeout: 5000 }
+        );
+      } else {
+        fetchIPLocationFallback();
+      }
+    };
+
+    initWeather();
+    const weatherInterval = setInterval(() => initWeather(true), CACHE_DURATION);
+    
+    return () => clearInterval(weatherInterval);
   }, []);
 
   const getWeatherIcon = (code: number) => {
