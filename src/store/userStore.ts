@@ -46,6 +46,7 @@ interface UserState {
   preferences: {
     darkMode: boolean;
     blockDoomscrolling: boolean;
+    showDevTiles: boolean;
   };
   navigationSource: 'home' | 'profile';
 
@@ -86,6 +87,10 @@ interface UserState {
     timestamp: number;
     status: 'pending' | 'completed';
   }>;
+  
+  quotePool: string[];
+  currentQuote: string | null;
+  lastQuoteUpdate: number;
 
   setInterests: (interests: string[]) => void;
   setVideoGenres: (genres: string[]) => void;
@@ -94,6 +99,7 @@ interface UserState {
   recordGameStart: (gameId: string) => void;
   recordGameResult: (gameId: string, result: 'win' | 'loss' | 'quit', timeSpentSeconds: number) => void;
   setDarkMode: (enabled: boolean) => void;
+  setShowDevTiles: (enabled: boolean) => void;
 
   // Philosophy Actions
   completePhilosophyConcept: (name: string) => void;
@@ -126,6 +132,8 @@ interface UserState {
   completeActivity: (id: string) => void;
   setNavigationSource: (source: 'home' | 'profile') => void;
   syncWithFirebase: () => Promise<void>;
+  setQuotePool: (quotes: string[]) => void;
+  refreshQuote: () => void;
   _hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
 }
@@ -150,6 +158,7 @@ export const useUserStore = create<UserState>()(
       preferences: {
         darkMode: false,
         blockDoomscrolling: true,
+        showDevTiles: false,
       },
 
       completedPhilosophyConcepts: [],
@@ -170,6 +179,9 @@ export const useUserStore = create<UserState>()(
       lastCompletedDate: null,
       lastBackupDate: null,
       realLifeChallenges: [],
+      quotePool: [],
+      currentQuote: null,
+      lastQuoteUpdate: 0,
       navigationSource: 'home',
 
       setInterests: (interests) => set({ interests }),
@@ -277,6 +289,11 @@ export const useUserStore = create<UserState>()(
       setDarkMode: (enabled) =>
         set((state) => ({
           preferences: { ...state.preferences, darkMode: enabled },
+        })),
+
+      setShowDevTiles: (enabled) =>
+        set((state) => ({
+          preferences: { ...state.preferences, showDevTiles: enabled },
         })),
 
       completePhilosophyConcept: (name) =>
@@ -390,6 +407,21 @@ export const useUserStore = create<UserState>()(
         }),
 
       setNavigationSource: (source) => set({ navigationSource: source }),
+
+      setQuotePool: (quotes) => set({ quotePool: quotes }),
+      
+      refreshQuote: () => set((state) => {
+        if (state.quotePool.length === 0) return state;
+        const randomIndex = Math.floor(Math.random() * state.quotePool.length);
+        const newQuote = state.quotePool[randomIndex];
+        // Remove the used quote from the pool
+        const newPool = state.quotePool.filter((_, i) => i !== randomIndex);
+        return {
+          currentQuote: newQuote,
+          quotePool: newPool,
+          lastQuoteUpdate: Date.now()
+        };
+      }),
 
       syncWithFirebase: async () => {
         const state = useUserStore.getState();
