@@ -3,9 +3,10 @@
 import { useUserStore } from "@/store/userStore";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useFirebaseAuth } from "@/hooks/useFirebaseAuth";
-import { LogOut, ArrowLeft, CloudUpload, Settings2, Check, X, Laptop, History, Puzzle, Languages, FlaskConical, Brain, Leaf, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Trophy } from "lucide-react";
+import { LogOut, ArrowLeft, CloudUpload, Settings2, Check, X, Laptop, History, Puzzle, Languages, FlaskConical, Brain, Leaf, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Trophy, Search, X as XIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ALL_LANGUAGES } from "@/lib/languages";
 
 const INTEREST_OPTIONS = [
   { id: 'tech', label: 'Technology', icon: Laptop },
@@ -29,15 +30,23 @@ export default function Profile() {
   const gameStats = useUserStore((state) => state.gameStats);
   const interests = useUserStore((state) => state.interests);
   const videoGenres = useUserStore((state) => state.videoGenres);
+  const preferredLanguages = useUserStore((state) => state.preferredLanguages);
   const uid = useUserStore((state) => state.uid);
   const { logout, signInWithGoogle, isLoading } = useFirebaseAuth();
   const setInterests = useUserStore((state) => state.setInterests);
   const setVideoGenres = useUserStore((state) => state.setVideoGenres);
+  const setPreferredLanguages = useUserStore((state) => state.setPreferredLanguages);
   const [mounted, setMounted] = useState(false);
+  
   const [isEditingInterests, setIsEditingInterests] = useState(false);
   const [tempInterests, setTempInterests] = useState<string[]>(interests);
+  
   const [isEditingVideoGenres, setIsEditingVideoGenres] = useState(false);
   const [tempVideoGenres, setTempVideoGenres] = useState<string[]>(videoGenres || []);
+
+  const [isEditingLanguages, setIsEditingLanguages] = useState(false);
+  const [tempLanguages, setTempLanguages] = useState<string[]>(preferredLanguages || []);
+  const [languageSearch, setLanguageSearch] = useState('');
 
   const lastBackupDate = useUserStore((state) => state.lastBackupDate);
   const syncWithFirebase = useUserStore((state) => state.syncWithFirebase);
@@ -90,6 +99,23 @@ export default function Profile() {
     setVideoGenres(tempVideoGenres);
     setIsEditingVideoGenres(false);
   };
+
+  const handleToggleLanguage = (id: string) => {
+    if (tempLanguages.includes(id)) {
+      setTempLanguages(tempLanguages.filter(l => l !== id));
+    } else {
+      setTempLanguages([...tempLanguages, id]);
+    }
+  };
+
+  const handleSaveLanguages = () => {
+    setPreferredLanguages(tempLanguages);
+    setIsEditingLanguages(false);
+  };
+
+  const filteredLanguages = ALL_LANGUAGES.filter(lang =>
+    lang.label.toLowerCase().includes(languageSearch.toLowerCase())
+  );
 
   if (!mounted) return null;
 
@@ -248,6 +274,94 @@ export default function Profile() {
                   {i}
                 </span>
               )) : <p className="text-foreground/40 text-sm">No video interests added yet.</p>}
+            </div>
+          )}
+        </div>
+        
+        <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 flex flex-col justify-between md:col-span-2">
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Content Language</p>
+            <button 
+              onClick={() => {
+                setTempLanguages(preferredLanguages || []);
+                setIsEditingLanguages(!isEditingLanguages);
+                setLanguageSearch('');
+              }}
+              className={`p-2 rounded-xl shadow-neo-out transition-all ${isEditingLanguages ? 'text-red-500' : 'text-accent'}`}
+            >
+              {isEditingLanguages ? <X size={18} /> : <Settings2 size={18} />}
+            </button>
+          </div>
+
+          {isEditingLanguages ? (
+            <div className="space-y-6 animate-in fade-in zoom-in duration-300">
+              <div className="relative group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-accent transition-colors" size={20} />
+                <input 
+                  type="text" 
+                  placeholder="Search languages..."
+                  value={languageSearch}
+                  onChange={(e) => setLanguageSearch(e.target.value)}
+                  className="w-full bg-card py-4 pl-12 pr-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-bold"
+                />
+              </div>
+
+              {tempLanguages.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {tempLanguages.map(id => {
+                    const lang = ALL_LANGUAGES.find(l => l.id === id);
+                    return (
+                      <div key={id} className="px-4 py-2 bg-accent/10 text-accent rounded-full text-[10px] font-black flex items-center gap-2 animate-in zoom-in duration-300">
+                        {lang?.label}
+                        <XIcon size={14} className="cursor-pointer" onClick={() => handleToggleLanguage(id)} />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="max-h-[250px] overflow-y-auto pr-2 space-y-2 custom-scrollbar shadow-neo-in rounded-3xl p-4">
+                {filteredLanguages.length > 0 ? (
+                  filteredLanguages.map((lang) => {
+                    const isSelected = tempLanguages.includes(lang.id);
+                    return (
+                      <div
+                        key={lang.id}
+                        onClick={() => handleToggleLanguage(lang.id)}
+                        className={`flex items-center justify-between p-3 rounded-xl transition-all cursor-pointer ${isSelected
+                          ? 'bg-accent text-white'
+                          : 'hover:bg-foreground/5 text-foreground/40'
+                          }`}
+                      >
+                        <span className="font-bold text-xs uppercase tracking-wider">{lang.label}</span>
+                        {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="py-8 text-center text-foreground/30 font-bold text-sm">No languages found.</p>
+                )}
+              </div>
+
+              <button
+                onClick={handleSaveLanguages}
+                disabled={tempLanguages.length < 1}
+                className="w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out active:shadow-neo-in active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <Check size={20} />
+                SAVE LANGUAGE PREFERENCES
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {preferredLanguages && preferredLanguages.length > 0 ? preferredLanguages.map(l => {
+                const lang = ALL_LANGUAGES.find(opt => opt.id === l);
+                return (
+                  <span key={l} className="px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-bold capitalize">
+                    {lang?.label || l}
+                  </span>
+                );
+              }) : <p className="text-foreground/40 text-sm">No languages selected.</p>}
             </div>
           )}
         </div>

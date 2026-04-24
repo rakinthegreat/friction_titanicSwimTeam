@@ -25,6 +25,7 @@ export default function Home() {
   const [suggestionLock, setSuggestionLock] = useState<Record<number, typeof ACTIVITIES>>({});
   const setNavigationSource = useUserStore((state) => state.setNavigationSource);
   
+  const preferredLanguages = useUserStore((state) => state.preferredLanguages);
   const dailyCompleted = useUserStore(state => state.dailyCompletedActivities);
   const _hasHydrated = useUserStore(state => state._hasHydrated);
   const lastDate = useUserStore(state => state.lastCompletedDate);
@@ -255,6 +256,7 @@ export default function Home() {
         <VideoRecommendation 
           interests={interests}
           videoGenres={videoGenres}
+          preferredLanguages={preferredLanguages}
           dailyCompleted={dailyCompleted}
           updateStats={updateStats}
         />
