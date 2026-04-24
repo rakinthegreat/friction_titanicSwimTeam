@@ -1,0 +1,42 @@
+[
+    {
+        "Genre": "Travel",
+        "CreatorLink": "https://www.youtube.com/@NadirOnTheGoBangla"
+    },
+    {
+        "Genre": "Travel",
+        "CreatorLink": "https://www.youtube.com/@drewbinsky"
+    },
+    {
+        "Genre": "Politics",
+        "CreatorLink": "https://www.youtube.com/@PinakiBhattacharya"
+    },
+    {
+        "Genre": "Politics",
+        "CreatorLink": "https://www.youtube.com/@EliasHossain"
+    },
+    {
+        "Genre": "News",
+        "CreatorLink": "https://www.youtube.com/@aljazeeraenglish"
+    },
+    {
+        "Genre": "News",
+        "CreatorLink": "https://www.youtube.com/@ATNBanglanews"
+    },
+    {
+        "Genre": "History",
+        "CreatorLink": "https://www.youtube.com/@ADYOPANTO"
+    },
+    {
+        "Genre": "Educational",
+        "CreatorLink": "https://www.youtube.com/@veritasium"
+    },
+    {
+        "Genre": "Educational",
+        "CreatorLink": "https://www.youtube.com/@10msmain"
+    },
+    {
+        "Genre": "Educational",
+        "CreatorLink": "https://www.youtube.com/@kurzgesagt"
+    }
+]

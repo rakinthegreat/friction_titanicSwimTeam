@@ -3,7 +3,7 @@
 import { useUserStore } from "@/store/userStore";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useFirebaseAuth } from "@/hooks/useFirebaseAuth";
-import { LogOut, ArrowLeft, CloudUpload, Settings2, Check, X, Laptop, History, Puzzle, Languages, FlaskConical, Brain, Leaf } from "lucide-react";
+import { LogOut, ArrowLeft, CloudUpload, Settings2, Check, X, Laptop, History, Puzzle, Languages, FlaskConical, Brain, Leaf, Plane, Landmark, GraduationCap, Megaphone, Newspaper } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -16,15 +16,27 @@ const INTEREST_OPTIONS = [
   { id: 'philosophy', label: 'Philosophy', icon: Brain },
 ];
 
+const VIDEO_GENRES = [
+  { id: 'Travel', label: 'Travel', icon: Plane },
+  { id: 'History', label: 'History', icon: Landmark },
+  { id: 'Educational', label: 'Educational', icon: GraduationCap },
+  { id: 'Politics', label: 'Politics', icon: Megaphone },
+  { id: 'News', label: 'News', icon: Newspaper },
+];
+
 export default function Profile() {
   const stats = useUserStore((state) => state.stats);
   const interests = useUserStore((state) => state.interests);
+  const videoGenres = useUserStore((state) => state.videoGenres);
   const uid = useUserStore((state) => state.uid);
   const { logout, signInWithGoogle, isLoading } = useFirebaseAuth();
   const setInterests = useUserStore((state) => state.setInterests);
+  const setVideoGenres = useUserStore((state) => state.setVideoGenres);
   const [mounted, setMounted] = useState(false);
   const [isEditingInterests, setIsEditingInterests] = useState(false);
   const [tempInterests, setTempInterests] = useState<string[]>(interests);
+  const [isEditingVideoGenres, setIsEditingVideoGenres] = useState(false);
+  const [tempVideoGenres, setTempVideoGenres] = useState<string[]>(videoGenres || []);
 
   const lastBackupDate = useUserStore((state) => state.lastBackupDate);
   const syncWithFirebase = useUserStore((state) => state.syncWithFirebase);
@@ -61,6 +73,19 @@ export default function Profile() {
     } finally {
       setIsSyncing(false);
     }
+  };
+
+  const handleToggleVideoGenre = (id: string) => {
+    if (tempVideoGenres.includes(id)) {
+      setTempVideoGenres(tempVideoGenres.filter(i => i !== id));
+    } else {
+      setTempVideoGenres([...tempVideoGenres, id]);
+    }
+  };
+
+  const handleSaveVideoGenres = () => {
+    setVideoGenres(tempVideoGenres);
+    setIsEditingVideoGenres(false);
   };
 
   if (!mounted) return null;
@@ -142,6 +167,61 @@ export default function Profile() {
                   {i}
                 </span>
               )) : <p className="text-foreground/40 text-sm">No interests added yet.</p>}
+            </div>
+          )}
+        </div>
+
+        <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 md:col-span-2">
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Video Interests</p>
+            <button 
+              onClick={() => {
+                setTempVideoGenres(videoGenres || []);
+                setIsEditingVideoGenres(!isEditingVideoGenres);
+              }}
+              className={`p-2 rounded-xl shadow-neo-out transition-all ${isEditingVideoGenres ? 'text-red-500' : 'text-accent'}`}
+            >
+              {isEditingVideoGenres ? <X size={18} /> : <Settings2 size={18} />}
+            </button>
+          </div>
+
+          {isEditingVideoGenres ? (
+            <div className="space-y-6 animate-in fade-in zoom-in duration-300">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {VIDEO_GENRES.map((opt) => {
+                  const Icon = opt.icon;
+                  const isSelected = tempVideoGenres.includes(opt.id);
+                  return (
+                    <div
+                      key={opt.id}
+                      onClick={() => handleToggleVideoGenre(opt.id)}
+                      className={`flex flex-col items-center justify-center p-4 rounded-2xl transition-all cursor-pointer ${isSelected
+                        ? 'shadow-neo-in text-accent'
+                        : 'shadow-neo-out text-foreground/40 hover:scale-[1.02]'
+                      }`}
+                    >
+                      <Icon size={24} className="mb-2" />
+                      <span className="font-bold text-[10px] uppercase tracking-wider">{opt.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <button
+                onClick={handleSaveVideoGenres}
+                disabled={tempVideoGenres.length < 1}
+                className="w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out active:shadow-neo-in active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <Check size={20} />
+                SAVE VIDEO INTERESTS
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {videoGenres && videoGenres.length > 0 ? videoGenres.map(i => (
+                <span key={i} className="px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-bold capitalize">
+                  {i}
+                </span>
+              )) : <p className="text-foreground/40 text-sm">No video interests added yet.</p>}
             </div>
           )}
         </div>

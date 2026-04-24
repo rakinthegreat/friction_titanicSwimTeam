@@ -24,6 +24,7 @@ interface LearningSession {
 interface UserState {
   uid: string | null;
   interests: string[];
+  videoGenres: string[];
   stats: {
     totalMinutesSaved: number;
     activitiesCompleted: number;
@@ -54,6 +55,7 @@ interface UserState {
   lastBackupDate: string | null;
 
   setInterests: (interests: string[]) => void;
+  setVideoGenres: (genres: string[]) => void;
   updateStats: (minutes: number, gameId?: string, score?: number) => void;
   setDarkMode: (enabled: boolean) => void;
 
@@ -80,6 +82,7 @@ export const useUserStore = create<UserState>()(
     (set) => ({
       uid: null,
       interests: [],
+      videoGenres: [],
       stats: {
         totalMinutesSaved: 0,
         activitiesCompleted: 0,
@@ -108,6 +111,7 @@ export const useUserStore = create<UserState>()(
       lastBackupDate: null,
 
       setInterests: (interests) => set({ interests }),
+      setVideoGenres: (genres) => set({ videoGenres: genres }),
       updateStats: (minutes, gameId, score) =>
         set((state) => {
           const newHighScores = { ...state.stats.highScores };
