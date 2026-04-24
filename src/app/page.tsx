@@ -6,11 +6,11 @@ import { WordLess } from "@/components/games/WordLess";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
 import { useEffect, useState } from "react";
-import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight, PlayCircle, X, Sparkles } from "lucide-react";
+import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ACTIVITIES } from "@/lib/activities";
-import videosDb from "@/stored-data/videos-db.json";
+import { VideoRecommendation } from "@/components/recreation/VideoRecommendation";
 
 export default function Home() {
   const router = useRouter();
@@ -27,55 +27,6 @@ export default function Home() {
   
   const dailyCompleted = useUserStore(state => state.dailyCompletedActivities);
   const lastDate = useUserStore(state => state.lastCompletedDate);
-
-  // Video Section States
-  const [shuffledVideos, setShuffledVideos] = useState<typeof videosDb>([]);
-  const [selectedGenre, setSelectedGenre] = useState<string>("For You");
-  const [videoDurationFilter, setVideoDurationFilter] = useState<string>("all");
-  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
-  const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>({
-    "For You": 8,
-    "Travel": 6,
-    "History": 6,
-    "Educational": 6,
-    "Politics": 6,
-    "News": 6
-  });
-  const [videoSuggestion, setVideoSuggestion] = useState<any>(null);
-
-  useEffect(() => {
-    setShuffledVideos([...videosDb].sort(() => Math.random() - 0.5));
-  }, []);
-
-  const baseFilteredVideos = shuffledVideos.filter(v => {
-    if (v.duration < 60) return false; // Don't show videos shorter than 1 min
-    if (videoDurationFilter === "all") return true;
-    if (videoDurationFilter === "under5") return v.duration < 300;
-    if (videoDurationFilter === "5-10") return v.duration >= 300 && v.duration <= 600;
-    if (videoDurationFilter === "10-15") return v.duration > 600 && v.duration <= 900;
-    if (videoDurationFilter === "15+") return v.duration > 900;
-    return true;
-  });
-
-  let finalVideos = [];
-  if (selectedGenre === "For You") {
-    const interested = baseFilteredVideos.filter(v => videoGenres.includes(v.genre));
-    const others = baseFilteredVideos.filter(v => !videoGenres.includes(v.genre));
-    let combined = [];
-    let i = 0, j = 0;
-    while (i < interested.length || j < others.length) {
-      combined.push(...interested.slice(i, i + 5));
-      combined.push(...others.slice(j, j + 3));
-      i += 5;
-      j += 3;
-    }
-    finalVideos = combined;
-  } else {
-    finalVideos = baseFilteredVideos.filter(v => v.genre === selectedGenre);
-  }
-
-  const currentVisibleCount = visibleCounts[selectedGenre] || 6;
-  const visibleVideos = finalVideos.slice(0, currentVisibleCount);
 
   useEffect(() => {
     setMounted(true);
@@ -182,33 +133,6 @@ export default function Home() {
                 <button
                   key={mins}
                   onClick={() => {
-                    // Lock entire logic if at least one activity from ANY set is completed
-                    // Wait, user said "until an activity is completed".
-                    // I will stick to current behavior: once you start one, you're locked into THAT session.
-                    if (anySuggestionCompleted && !allSuggestionsCompleted && selectedDuration !== 1) {
-                      return; 
-                    }
-
-                    // Check if we have locked suggestions for THIS duration
-                    if (suggestionLock[mins] && !allSuggestionsCompleted) {
-                      setSuggestions(suggestionLock[mins]);
-                      setSelectedDuration(mins);
-                      
-                      // Update video suggestion even if locked
-                      if (mins > 1) {
-                        const relevantVideos = shuffledVideos.filter(v => 
-                          (videoGenres.includes(v.genre)) && 
-                          v.duration >= 60 &&
-                          v.duration <= mins * 60
-                        );
-                        const videoPool = relevantVideos.length > 0 ? relevantVideos : shuffledVideos.filter(v => v.duration >= 60);
-                        setVideoSuggestion(videoPool[Math.floor(Math.random() * videoPool.length)]);
-                      } else {
-                        setVideoSuggestion(null);
-                      }
-                      return;
-                    }
-
                     const pool = ACTIVITIES.filter(a => 
                       a.minTime <= mins && 
                       a.maxTime >= mins &&
@@ -223,29 +147,14 @@ export default function Home() {
                     
                     setSuggestions(newSuggestions);
                     setSelectedDuration(mins);
-                    
-                    // Add a video suggestion for the timer (Skip for 1 min)
-                    if (mins > 1) {
-                      const relevantVideos = shuffledVideos.filter(v => 
-                        (videoGenres.includes(v.genre)) && 
-                        v.duration >= 60 && // Exclude < 1min
-                        v.duration <= mins * 60
-                      );
-                      const videoPool = relevantVideos.length > 0 ? relevantVideos : shuffledVideos.filter(v => v.duration >= 60);
-                      setVideoSuggestion(videoPool[Math.floor(Math.random() * videoPool.length)]);
-                    } else {
-                      setVideoSuggestion(null);
-                    }
 
-                    // Save to lock
                     setSuggestionLock(prev => ({ ...prev, [mins]: newSuggestions }));
                   }}
                   className={`rounded-2xl px-6 py-4 font-black transition-all ${
                     selectedDuration === mins 
                     ? "bg-white text-accent shadow-neo-in scale-95" 
-                    : (anySuggestionCompleted && !allSuggestionsCompleted && selectedDuration !== 1 && mins !== 1) ? "bg-accent/40 cursor-not-allowed opacity-50 shadow-none" : "bg-accent shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105"
+                    : "bg-accent shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105"
                   }`}
-                  disabled={anySuggestionCompleted && !allSuggestionsCompleted && selectedDuration !== 1 && mins !== 1}
                 >
                   {mins}m
                 </button>
@@ -283,28 +192,6 @@ export default function Home() {
                     </Link>
                   ))}
                 </div>
-
-                {videoSuggestion && (
-                  <div className="pt-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-3">Recreation Highlight</p>
-                    <button
-                      onClick={() => setPlayingVideo(videoSuggestion.ytId)}
-                      className="w-full flex items-center gap-4 p-4 bg-white/10 rounded-[2rem] border border-white/5 hover:bg-white/20 transition-all text-left group"
-                    >
-                      <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center shadow-[4px_4px_8px_rgba(0,0,0,0.2),-4px_-4px_8px_rgba(255,255,255,0.1)] group-hover:scale-110 transition-transform">
-                        <PlayCircle className="w-8 h-8 text-white" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="px-2 py-0.5 bg-white/10 rounded text-[8px] font-black uppercase tracking-tighter text-white/60">{videoSuggestion.genre}</span>
-                        </div>
-                        <h3 className="text-sm font-black text-white truncate">{videoSuggestion.title}</h3>
-                        <p className="text-[10px] text-white/60 font-medium uppercase tracking-widest">{videoSuggestion.creator}</p>
-                      </div>
-                      <ArrowRight className="w-5 h-5 text-white/40 group-hover:text-white transition-colors mr-2" />
-                    </button>
-                  </div>
-                )}
               </div>
             )}
           </div>
@@ -356,117 +243,13 @@ export default function Home() {
           </Link>
         </section>
 
-        {/* RECREATION: Videos Section */}
-        <section className="bg-card rounded-[2.5rem] p-8 space-y-6 shadow-neo-out border border-white/5 relative z-10">
-          <div className="space-y-1">
-            <h2 className="text-3xl font-black">Recreation</h2>
-            <p className="text-foreground/60 font-medium">Watch curated videos directly in the app.</p>
-          </div>
-
-          {/* Genre Tabs */}
-          <div className="flex flex-wrap gap-3">
-            {["For You", "Travel", "History", "Educational", "Politics", "News"].map(genre => (
-              <button
-                key={genre}
-                onClick={() => {
-                  setSelectedGenre(genre);
-                }}
-                className={`px-5 py-2 rounded-full font-black text-sm transition-all shadow-sm ${selectedGenre === genre ? 'bg-accent text-white shadow-neo-in' : 'bg-background hover:bg-accent/10'}`}
-              >
-                {genre}
-              </button>
-            ))}
-          </div>
-
-          {/* Duration Filters */}
-          <div className="flex flex-wrap gap-2 pt-2">
-            {[
-              { id: 'all', label: 'All' },
-              { id: 'under5', label: 'Under 5 mins' },
-              { id: '5-10', label: '5-10 mins' },
-              { id: '10-15', label: '10-15 mins' },
-              { id: '15+', label: '15+ mins' }
-            ].map(f => (
-              <button
-                key={f.id}
-                onClick={() => {
-                  setVideoDurationFilter(f.id);
-                }}
-                className={`px-4 py-1.5 rounded-full font-bold text-xs transition-all border ${videoDurationFilter === f.id ? 'border-accent text-accent bg-accent/10' : 'border-foreground/10 text-foreground/60 hover:border-foreground/30'}`}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Video Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
-            {visibleVideos.map(video => (
-              <button
-                key={video.id}
-                onClick={() => setPlayingVideo(video.ytId || video.id)}
-                className="group relative bg-background rounded-2xl overflow-hidden shadow-sm hover:shadow-neo-out transition-all border border-transparent hover:border-accent/30 text-left flex flex-col"
-              >
-                <div className="relative aspect-video w-full overflow-hidden">
-                  <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors flex items-center justify-center">
-                     <PlayCircle className="w-12 h-12 text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all drop-shadow-lg" />
-                  </div>
-                  <div className="absolute bottom-2 right-2 px-2 py-1 bg-black/80 text-white text-[10px] font-black rounded-md backdrop-blur-md">
-                    {Math.floor(video.duration / 60)}:{String(video.duration % 60).padStart(2, '0')}
-                  </div>
-                </div>
-                <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
-                  <h3 className="font-bold text-sm leading-tight line-clamp-2">{video.title}</h3>
-                  <p className="text-[10px] uppercase font-black tracking-widest text-accent opacity-80">{video.creator}</p>
-                </div>
-              </button>
-            ))}
-            {finalVideos.length === 0 && (
-              <div className="col-span-full py-12 text-center text-foreground/50 font-medium">
-                No videos found for this duration in this category.
-              </div>
-            )}
-          </div>
-
-          {finalVideos.length > currentVisibleCount && (
-            <div className="pt-4 flex justify-center">
-              <button
-                onClick={() => setVisibleCounts(prev => ({
-                  ...prev,
-                  [selectedGenre]: (prev[selectedGenre] || (selectedGenre === "For You" ? 8 : 6)) + 3
-                }))}
-                className="px-8 py-3 rounded-full bg-accent text-white font-black hover:scale-105 active:scale-95 transition-all shadow-neo-out"
-              >
-                Load More
-              </button>
-            </div>
-          )}
-        </section>
+        <VideoRecommendation 
+          interests={interests}
+          videoGenres={videoGenres}
+          dailyCompleted={dailyCompleted}
+          updateStats={updateStats}
+        />
       </div>
-
-      {/* Video Player Modal */}
-      {playingVideo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="relative w-full max-w-4xl bg-black rounded-[2rem] overflow-hidden shadow-2xl animate-in zoom-in-95">
-            <button 
-              onClick={() => setPlayingVideo(null)}
-              className="absolute top-4 right-4 z-10 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors"
-            >
-              <X size={24} />
-            </button>
-            <div className="aspect-video w-full">
-              <iframe
-                className="w-full h-full"
-                src={`https://www.youtube.com/embed/${playingVideo}?autoplay=1`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
 
     </main>
   );
