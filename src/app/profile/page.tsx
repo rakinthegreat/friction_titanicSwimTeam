@@ -3,7 +3,7 @@
 import { useUserStore } from "@/store/userStore";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useFirebaseAuth } from "@/hooks/useFirebaseAuth";
-import { LogOut, ArrowLeft, CloudUpload, Settings2, Check, X, Laptop, History, Puzzle, Languages, FlaskConical, Brain, Leaf, Plane, Landmark, GraduationCap, Megaphone, Newspaper } from "lucide-react";
+import { LogOut, ArrowLeft, CloudUpload, Settings2, Check, X, Laptop, History, Puzzle, Languages, FlaskConical, Brain, Leaf, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -112,7 +112,7 @@ export default function Profile() {
         <p className="text-foreground/40 font-bold tracking-widest text-sm uppercase">Track your growth & progress</p>
       </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="bg-card rounded-[2.5rem] p-8 space-y-2 shadow-neo-out border border-white/5 relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
             <Leaf size={80} />
@@ -139,8 +139,10 @@ export default function Profile() {
           <p className="text-6xl font-black italic tracking-tighter text-accent">{stats.streakDays}</p>
           <p className="text-sm font-bold text-foreground/60">Days in a row</p>
         </div>
+      </div>
 
-        <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 md:col-span-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-2">
             <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Interests & Focus</p>
             <button 
@@ -195,7 +197,7 @@ export default function Profile() {
           )}
         </div>
 
-        <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 md:col-span-2">
+        <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-2">
             <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Video Interests</p>
             <button 
@@ -249,8 +251,10 @@ export default function Profile() {
             </div>
           )}
         </div>
+      </div>
 
-        <div className="bg-card rounded-[2.5rem] p-8 space-y-6 shadow-neo-out border border-white/5 md:col-span-3">
+      <div className="grid grid-cols-1 gap-8">
+        <div className="bg-card rounded-[2.5rem] p-8 space-y-6 shadow-neo-out border border-white/5">
           <div className="space-y-1">
             <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Performance Analysis</p>
             <h3 className="text-2xl font-black italic">GAME SESSION ANALYTICS</h3>
@@ -260,11 +264,11 @@ export default function Profile() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-foreground/5">
-                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest">Game</th>
-                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center">Plays</th>
-                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center">Wins</th>
-                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center">Loss/Quit</th>
-                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center">Avg Time</th>
+                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest w-[30%]">Game</th>
+                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center w-[15%]">Plays</th>
+                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center w-[15%]">Wins</th>
+                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center w-[20%]">Loss/Quit</th>
+                  <th className="py-4 px-2 text-[10px] font-black text-foreground/30 uppercase tracking-widest text-center w-[20%]">Avg Time</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-foreground/5">
@@ -304,8 +308,10 @@ export default function Profile() {
             </table>
           </div>
         </div>
+      </div>
 
-        <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 md:col-span-2 group">
+      <div className="flex justify-center">
+        <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 w-full max-w-2xl group">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
               <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Cloud Backup</p>
@@ -376,23 +382,3 @@ export default function Profile() {
   );
 }
 
-const Trophy = ({ size, className }: { size?: number, className?: string }) => (
-  <svg 
-    width={size || 24} 
-    height={size || 24} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-    <path d="M4 22h16" />
-    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-  </svg>
-);

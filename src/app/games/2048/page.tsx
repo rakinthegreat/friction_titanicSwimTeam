@@ -215,6 +215,9 @@ export default function Game2048Page() {
     };
 
     const handleTStart = (e: TouchEvent) => {
+      // Don't prevent default if we're clicking a button or link
+      if ((e.target as HTMLElement).closest('button, a')) return;
+      
       // Prevent scrolling/ghosting
       if (e.cancelable) e.preventDefault();
       touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
@@ -235,6 +238,8 @@ export default function Game2048Page() {
     };
 
     const handleMDown = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest('button, a')) return;
+
       // Prevent selection/ghosting
       e.preventDefault();
       touchStart.current = { x: e.clientX, y: e.clientY };
@@ -287,8 +292,8 @@ export default function Game2048Page() {
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-xl mx-auto touch-none">
-      <div className="flex items-center justify-between mb-8">
+    <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-xl mx-auto">
+      <div className="flex items-center justify-between mb-8 touch-auto relative z-50">
         <div className="flex items-center">
           <button
             onClick={() => router.push('/games')}

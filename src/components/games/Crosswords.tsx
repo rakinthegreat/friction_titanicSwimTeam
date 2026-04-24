@@ -285,9 +285,13 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
     <div className={`flex flex-col items-center space-y-8 animate-in zoom-in-95 duration-500 ${shake ? 'animate-shake' : ''}`}>
       <div className="grid grid-cols-9 gap-[1px] bg-foreground/20 p-[1px] rounded-sm overflow-hidden shadow-xl">
         {gridDefinition.map((row, r) => row.map((cell, c) => (
-          <div key={`${r}-${c}`} className="relative w-10 h-10">
+          <div key={`${r}-${c}`} className="relative w-8 h-8 sm:w-10 sm:h-10">
             {cell.isWall ? (
-              <div className="w-full h-full bg-foreground" />
+              <div 
+                className="w-full h-full text-foreground/10" 
+                style={{ backgroundColor: 'currentColor' }}
+                aria-hidden="true"
+              />
             ) : (
               <>
                 <input
@@ -304,7 +308,7 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
                     if (focused.r === r && focused.c === c) el?.focus();
                   }}
                   className={`w-full h-full text-center font-black text-lg transition-all outline-none border-none ${focused.r === r && focused.c === c
-                      ? 'bg-accent/20 text-accent'
+                      ? 'bg-accent/50 text-white shadow-[inset_0_0_0_2px_var(--accent)]'
                       : correctCells.has(`${r}-${c}`)
                         ? 'bg-accent/40 text-white'
                         : 'bg-card text-foreground'

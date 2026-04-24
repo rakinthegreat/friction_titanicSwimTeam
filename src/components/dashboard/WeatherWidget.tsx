@@ -162,11 +162,11 @@ export const WeatherWidget = () => {
   };
 
   return (
-    <Card className="flex flex-col sm:flex-row justify-between items-center p-6 bg-card border-none shadow-neo-out relative overflow-hidden group">
+    <Card className="flex flex-col sm:flex-row justify-between items-center p-6 bg-card border-none shadow-neo-out relative overflow-hidden group gap-6 sm:gap-0">
       <div className="absolute -right-10 -top-10 w-40 h-40 bg-accent/5 rounded-full blur-3xl group-hover:bg-accent/10 transition-colors" />
 
-      <div className="flex items-center space-x-6 z-10 w-full sm:w-auto">
-        <div className="text-5xl font-black tracking-tighter text-foreground">
+      <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 z-10 w-full sm:w-auto">
+        <div className="text-5xl sm:text-6xl font-black tracking-tighter text-foreground shrink-0">
           {time || '--:--'}
         </div>
 
@@ -176,14 +176,14 @@ export const WeatherWidget = () => {
             <span className="text-sm font-medium">Getting weather...</span>
           </div>
         ) : weather ? (
-          <div className="flex items-center space-x-4 border-l-2 border-foreground/10 pl-6">
-            <div className="bg-black/5 dark:bg-white/5 p-3 rounded-2xl shadow-neo-in">
+          <div className="flex items-center space-x-4 border-t-2 sm:border-t-0 sm:border-l-2 border-foreground/10 pt-4 sm:pt-0 sm:pl-6 w-full sm:w-auto justify-center sm:justify-start">
+            <div className="bg-black/5 dark:bg-white/5 p-3 rounded-2xl shadow-neo-in shrink-0">
               {getWeatherIcon(weather.code)}
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold flex items-center gap-1">
+              <span className="text-2xl font-bold flex flex-wrap items-center gap-x-2">
                 {weather.temp}°C
-                <span className="text-lg font-medium text-foreground/60 ml-2">
+                <span className="text-lg font-medium text-foreground/60">
                   {weather.condition}
                 </span>
               </span>
@@ -191,9 +191,9 @@ export const WeatherWidget = () => {
                 <MapPin className="w-3 h-3" />
                 {weather.city}
               </span>
-              <span className="text-xs font-medium italic text-foreground/50 mt-1">
+              <div className="text-xs font-medium italic text-foreground/50 mt-1">
                 {getWeatherComment(weather.code, weather.temp)}
-              </span>
+              </div>
             </div>
           </div>
         ) : (
