@@ -6,7 +6,7 @@ import { WordLess } from "@/components/games/WordLess";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
 import { useEffect, useState } from "react";
-import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight, PlayCircle, X } from "lucide-react";
+import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight, PlayCircle, X, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ACTIVITIES } from "@/lib/activities";
@@ -318,27 +318,38 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Link href="/learn" className="group">
-            <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-transparent group-hover:border-accent/20 transition-all group-hover:-translate-y-1">
+            <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-transparent group-hover:border-accent/20 transition-all group-hover:-translate-y-1 h-full">
               <div className="flex justify-between items-center">
                 <h3 className="text-2xl font-black">Learning</h3>
                 <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center text-accent group-hover:scale-110 transition-transform">
                   <ArrowRight className="w-6 h-6" />
                 </div>
               </div>
-              <p className="text-foreground/80 font-medium">Short Interactive lessons</p>
+              <p className="text-foreground/80 font-medium">Interactive lessons</p>
+            </div>
+          </Link>
+          <Link href="/activities" className="group">
+            <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-transparent group-hover:border-accent-secondary/20 transition-all group-hover:-translate-y-1 h-full">
+              <div className="flex justify-between items-center">
+                <h3 className="text-2xl font-black">Activities</h3>
+                <div className="w-12 h-12 bg-accent-secondary/10 rounded-full flex items-center justify-center text-accent-secondary group-hover:scale-110 transition-transform">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+              </div>
+              <p className="text-foreground/80 font-medium">Real-world practices</p>
             </div>
           </Link>
           <Link href="/games" className="group">
-            <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-transparent group-hover:border-accent-secondary/20 transition-all group-hover:-translate-y-1">
+            <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-transparent group-hover:border-accent/20 transition-all group-hover:-translate-y-1 h-full">
               <div className="flex justify-between items-center">
-                <h3 className="text-2xl font-black">Mini-Games</h3>
-                <div className="w-12 h-12 bg-accent-secondary/10 rounded-full flex items-center justify-center text-accent-secondary group-hover:scale-110 transition-transform">
+                <h3 className="text-2xl font-black">Games</h3>
+                <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center text-accent group-hover:scale-110 transition-transform">
                   <Gamepad2 className="w-6 h-6" />
                 </div>
               </div>
-              <p className="text-foreground/80 font-medium">Play offline puzzles</p>
+              <p className="text-foreground/80 font-medium">Offline puzzles</p>
             </div>
           </Link>
         </section>

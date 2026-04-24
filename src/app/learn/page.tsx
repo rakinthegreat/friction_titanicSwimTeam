@@ -41,20 +41,6 @@ export default function LearnDirectoryPage() {
       active: true,
       color: 'text-accent'
     },
-    {
-      title: 'Daily Meditation',
-      description: 'Reflect on your day and clear your mind.',
-      icon: <Leaf className="w-8 h-8" />,
-      href: '/learn/meditation',
-      color: 'text-accent'
-    },
-    {
-      title: 'Real-Life Challenges',
-      description: 'Break the digital wall and interact with the world.',
-      icon: <Sparkles className="w-8 h-8" />,
-      href: '/learn/challenges',
-      color: 'text-accent-secondary'
-    }
   ];
 
   return (

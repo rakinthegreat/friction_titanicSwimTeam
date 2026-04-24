@@ -88,9 +88,9 @@ export default function ChallengesPage() {
     <main className="min-h-screen p-8 max-w-4xl mx-auto space-y-12 animate-in fade-in duration-1000">
       <header className="flex justify-between items-start">
         <div className="space-y-2">
-          <Link href="/learn" className="inline-flex items-center text-accent hover:text-accent/80 font-medium uppercase tracking-widest text-sm transition-colors mb-2">
+          <Link href="/activities" className="inline-flex items-center text-accent hover:text-accent/80 font-medium uppercase tracking-widest text-sm transition-colors mb-2">
             <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Learn
+            Back to Activities
           </Link>
           <h1 className="text-5xl font-extrabold tracking-tight">Real-Life <span className="text-accent italic">Challenge</span></h1>
           <p className="text-foreground/60 font-medium">Break the digital wall and interact with the world.</p>
@@ -294,7 +294,7 @@ export default function ChallengesPage() {
                 ANOTHER ONE?
               </button>
               <Link
-                href="/learn"
+                href="/activities"
                 className="flex-1 py-5 bg-accent text-white rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center"
               >
                 FINISH SESSION

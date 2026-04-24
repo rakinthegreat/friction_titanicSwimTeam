@@ -117,10 +117,10 @@ export default function MeditationPage() {
             </p>
           </div>
           <button
-            onClick={() => router.push('/learn')}
+            onClick={() => router.push('/activities')}
             className="w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
-            CONTINUE LEARNING
+            CONTINUE
           </button>
         </div>
       </main>
@@ -134,9 +134,9 @@ export default function MeditationPage() {
       <div className="max-w-3xl mx-auto space-y-12">
         <header className="flex justify-between items-start">
           <div className="space-y-2">
-            <Link href="/learn" className="inline-flex items-center text-accent hover:text-accent/80 font-medium uppercase tracking-widest text-sm transition-colors mb-2">
+            <Link href="/activities" className="inline-flex items-center text-accent hover:text-accent/80 font-medium uppercase tracking-widest text-sm transition-colors mb-2">
               <ArrowLeft className="w-4 h-4 mr-1" />
-              Back to Learn
+              Back to Activities
             </Link>
             <h1 className="text-5xl font-extrabold tracking-tight">Meditation</h1>
           </div>
