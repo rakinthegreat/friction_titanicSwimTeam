@@ -6,6 +6,7 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { ArrowLeft, Globe, MapPin, CheckCircle2, XCircle, Trophy, Compass, Timer, Flame, Brain, HelpCircle, Star, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { LessonProgressBar } from '@/components/learn/LessonProgressBar';
+import { MCQInteraction } from '@/components/learn/MCQInteraction';
 import geographyData from '@/stored-data/geography.json';
 import bangladeshData from '@/stored-data/bangladesh.json';
 import internationalData from '@/stored-data/international.json';
@@ -31,29 +32,28 @@ export default function TriviaPage() {
   const updateStats = useUserStore((state) => state.updateStats);
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'results'>('menu');
   const [category, setCategory] = useState<Category>(null);
-  
+
   // Game state
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
   const [isShaking, setIsShaking] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'plus' | 'minus', value: number } | null>(null);
-  
-  // Interaction state
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
+
+  // Interaction state (Handled by MCQInteraction now)
+
 
   // Track remaining questions to prevent repeats
   const remainingDataRef = useRef<{ question: string, answer: string }[]>([]);
 
   // Helper: Smart distractor generator
   const generateQuestion = useCallback((item: { question: string, answer: string }, data: { question: string, answer: string }[]): Question => {
-    
+
     let distractors: string[] = [];
     const isYear = /^(17|18|19|20)\d{2}$/.test(item.answer);
     const isNumber = /^\d+$/.test(item.answer);
     const isDate = /^(January|February|March|April|May|June|July|August|September|October|November|December)\s\d{1,2}(,\s\d{4})?$/.test(item.answer);
-    
+
     const isSea = item.answer.includes('Sea') || item.answer.includes('Bay') || item.answer.includes('Gulf');
     const isOcean = item.answer.includes('Ocean');
     const isMountain = item.answer.includes('Mount') || item.answer.includes('Peak');
@@ -139,16 +139,14 @@ export default function TriviaPage() {
     let fullData = bangladeshData;
     if (cat === 'international') fullData = internationalData;
     if (cat === 'geography') fullData = geographyData;
-    
+
     if (remainingDataRef.current.length === 0) {
       remainingDataRef.current = [...fullData].sort(() => 0.5 - Math.random());
     }
-    
+
     const nextItem = remainingDataRef.current.pop() || fullData[0];
-    
+
     setCurrentQuestion(generateQuestion(nextItem, fullData));
-    setSelectedAnswer(null);
-    setIsAnswerRevealed(false);
   }, [generateQuestion]);
 
   const startGame = (selectedCategory: Category) => {
@@ -158,7 +156,7 @@ export default function TriviaPage() {
     setScore(0);
     const params = new URLSearchParams(window.location.search);
     const time = parseInt(params.get('time') || '1');
-    const scaledTime = Math.min(300, Math.max(60, time * 60)); 
+    const scaledTime = Math.min(300, Math.max(60, time * 60));
     setTimeLeft(scaledTime);
     setIsShaking(false);
     setFeedback(null);
@@ -191,29 +189,7 @@ export default function TriviaPage() {
     setTimeout(() => setFeedback(null), 800);
   };
 
-  const handleAnswerSelect = (optionIndex: number) => {
-    if (isAnswerRevealed || !currentQuestion) return;
 
-    setSelectedAnswer(optionIndex);
-    setIsAnswerRevealed(true);
-
-    const isCorrect = optionIndex === currentQuestion.correctAnswer;
-    if (isCorrect) {
-      setScore(prev => prev + 1);
-      setTimeLeft(prev => prev + 3);
-      triggerFeedback('plus', 3);
-    } else {
-      setTimeLeft(prev => Math.max(0, prev - 5));
-      triggerFeedback('minus', 5);
-    }
-
-    // Load next question quickly
-    setTimeout(() => {
-      if (timeLeft > 0 && gameState === 'playing') {
-        loadNextQuestion(category);
-      }
-    }, 600);
-  };
 
   const resetGame = () => {
     setGameState('menu');
@@ -226,21 +202,21 @@ export default function TriviaPage() {
     <main className="min-h-screen max-w-4xl mx-auto flex flex-col p-4 animate-in fade-in duration-700">
       {gameState === 'menu' ? (
         <div className="flex-1 flex flex-col items-center justify-center space-y-12 py-12">
-           <div className="text-center space-y-4">
-              <div className="inline-block p-4 rounded-3xl bg-accent-secondary/10 text-accent-secondary shadow-neo-out mb-2">
-                <Brain className="w-12 h-12" />
-              </div>
-              <h1 className="text-6xl font-black tracking-tighter text-foreground">Trivia</h1>
-              <p className="text-xl font-bold text-foreground/50 tracking-wide uppercase">Select Your Territory</p>
-           </div>
-          
+          <div className="text-center space-y-4">
+            <div className="inline-block p-4 rounded-3xl bg-accent-secondary/10 text-accent-secondary shadow-neo-out mb-2">
+              <Brain className="w-12 h-12" />
+            </div>
+            <h1 className="text-6xl font-black tracking-tighter text-foreground">Trivia</h1>
+            <p className="text-xl font-bold text-foreground/50 tracking-wide uppercase">Select Your Territory</p>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full">
             {[
               { id: 'bangladesh', title: 'Bangladesh', icon: MapPin, color: 'text-accent' },
               { id: 'international', title: 'International', icon: Globe, color: 'text-accent-secondary' },
-              { id: 'geography', title: 'Geography', icon: Compass, color: 'text-green-500' }
+              { id: 'geography', title: 'Geography', icon: Compass, color: 'text-blue-400' }
             ].map((cat) => (
-              <Card 
+              <Card
                 key={cat.id}
                 onClick={() => startGame(cat.id as Category)}
                 className="flex flex-col items-center justify-center p-10 hover:-translate-y-2 group cursor-pointer rounded-[3rem] border-none shadow-neo-out bg-card transition-all"
@@ -252,8 +228,8 @@ export default function TriviaPage() {
               </Card>
             ))}
           </div>
-          
-          <button 
+
+          <button
             onClick={() => router.push('/learn')}
             className="px-12 py-5 rounded-3xl font-black text-xl bg-card text-foreground/50 shadow-neo-out hover:scale-105 active:scale-95 transition-all"
           >
@@ -263,101 +239,77 @@ export default function TriviaPage() {
       ) : gameState === 'playing' && currentQuestion ? (
         <div className="flex-1 flex flex-col py-4">
           <LessonProgressBar current={60 - timeLeft} total={60} onClose={resetGame} />
-          
+
           <div className="flex-1 mt-4 space-y-8 max-w-2xl mx-auto w-full animate-in slide-in-from-bottom-8 duration-500">
             {/* Header Info */}
             <div className="flex justify-between items-center gap-4">
               <div className={`flex items-center gap-4 px-6 py-4 rounded-3xl shadow-neo-in bg-card transition-colors duration-300 ${timeLeft <= 10 ? 'border-2 border-red-500/50' : 'border-none'}`}>
-                 <div className={`p-2 rounded-xl ${timeLeft <= 10 ? 'bg-red-500 text-white animate-pulse' : 'bg-accent-secondary text-white'}`}>
-                   <Timer className="w-6 h-6" />
-                 </div>
-                 <div className="relative">
-                    <p className={`text-3xl font-black tabular-nums ${timeLeft <= 10 ? 'text-red-500' : 'text-foreground'}`}>
-                      {Math.max(0, timeLeft)}s
-                    </p>
-                    {feedback && (
-                      <span className={`absolute -right-12 top-0 font-black text-xl animate-in slide-in-from-bottom-2 fade-in ${feedback.type === 'plus' ? 'text-green-500' : 'text-red-500'}`}>
-                        {feedback.type === 'plus' ? '+' : '-'}{feedback.value}
-                      </span>
-                    )}
-                 </div>
+                <div className={`p-2 rounded-xl ${timeLeft <= 10 ? 'bg-[#DC2626] text-white animate-pulse' : 'bg-accent-secondary text-white'}`}>
+                  <Timer className="w-6 h-6" />
+                </div>
+                <div className="relative">
+                  <p className={`text-3xl font-black tabular-nums ${timeLeft <= 10 ? 'text-red-500' : 'text-foreground'}`}>
+                    {Math.max(0, timeLeft)}s
+                  </p>
+                  {feedback && (
+                    <span className={`absolute -right-12 top-0 font-black text-xl animate-in slide-in-from-bottom-2 fade-in ${feedback.type === 'plus' ? 'text-accent' : 'text-orange-600'}`}>
+                      {feedback.type === 'plus' ? '+' : '-'}{feedback.value}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center gap-4 px-6 py-4 rounded-3xl shadow-neo-in bg-card border-none">
-                 <p className="text-3xl font-black text-accent-secondary">{score}</p>
-                 <div className="p-2 rounded-xl bg-accent-secondary text-white">
-                   <Flame className="w-6 h-6" />
-                 </div>
+                <p className="text-3xl font-black text-accent-secondary">{score}</p>
+                <div className="p-2 rounded-xl bg-accent-secondary text-white">
+                  <Flame className="w-6 h-6" />
+                </div>
               </div>
             </div>
 
             {/* Question Card */}
             <div className={`relative p-10 rounded-[3rem] shadow-neo-out bg-card overflow-hidden transition-transform ${isShaking ? 'animate-shake' : ''}`}>
               <div className="absolute -top-12 -right-12 text-accent-secondary/5 rotate-12">
-                 {React.createElement(categoryIcon, { className: "w-64 h-64" })}
+                {React.createElement(categoryIcon, { className: "w-64 h-64" })}
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-center leading-tight relative z-10 tracking-tight">
                 {currentQuestion.text}
               </h2>
             </div>
 
-            {/* Options */}
-            <div className="grid grid-cols-1 gap-4">
-              {currentQuestion.options.map((option, index) => {
-                const isSelected = selectedAnswer === index;
-                const isCorrect = index === currentQuestion.correctAnswer;
-                
-                let variant: 'default' | 'selected' | 'correct' | 'incorrect' = 'default';
-                if (isAnswerRevealed) {
-                  if (isCorrect) variant = 'correct';
-                  else if (isSelected) variant = 'incorrect';
-                } else if (isSelected) {
-                  variant = 'selected';
+            {/* Options using MCQInteraction */}
+            <MCQInteraction
+              question={currentQuestion.text}
+              options={currentQuestion.options.map((option, index) => ({
+                optiontext: option,
+                is_correct: index === currentQuestion.correctAnswer
+              }))}
+              autoSubmit={true}
+              showQuestion={false}
+              onSubmit={(isCorrect) => {
+                if (isCorrect) {
+                  setScore(prev => prev + 1);
+                  setTimeLeft(prev => prev + 3);
+                  triggerFeedback('plus', 3);
+                } else {
+                  setTimeLeft(prev => Math.max(0, prev - 5));
+                  triggerFeedback('minus', 5);
                 }
 
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    disabled={isAnswerRevealed}
-                    className={`
-                      group relative p-6 rounded-[2rem] text-left transition-all duration-300 border-2
-                      ${variant === 'default' ? 'bg-card border-transparent shadow-neo-out hover:border-accent-secondary/30' : ''}
-                      ${variant === 'selected' ? 'bg-accent-secondary/10 border-accent-secondary shadow-neo-in scale-[0.98]' : ''}
-                      ${variant === 'correct' ? 'bg-green-500/20 border-green-500 shadow-neo-in scale-[0.98]' : ''}
-                      ${variant === 'incorrect' ? 'bg-red-500/20 border-red-500 shadow-neo-in scale-[0.98]' : ''}
-                      ${isAnswerRevealed && variant === 'default' ? 'opacity-40 grayscale-[0.5] scale-[0.95] shadow-none' : ''}
-                    `}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`
-                        w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all font-black
-                        ${variant === 'default' ? 'border-foreground/20 group-hover:border-accent-secondary/50' : ''}
-                        ${variant === 'selected' ? 'border-accent-secondary bg-accent-secondary text-white' : ''}
-                        ${variant === 'correct' ? 'border-green-500 bg-green-500 text-white' : ''}
-                        ${variant === 'incorrect' ? 'border-red-500 bg-red-500 text-white' : ''}
-                      `}>
-                        {isAnswerRevealed && isCorrect ? <CheckCircle2 className="w-6 h-6" /> : 
-                         isAnswerRevealed && isSelected && !isCorrect ? <XCircle className="w-6 h-6" /> : 
-                         <span>{String.fromCharCode(65 + index)}</span>}
-                      </div>
-                      <span className={`text-xl font-bold ${variant !== 'default' ? 'text-foreground' : 'text-foreground/80'}`}>
-                        {option}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+                if (timeLeft > 0 && gameState === 'playing') {
+                  loadNextQuestion(category);
+                }
+              }}
+            />
           </div>
         </div>
       ) : (
         <div className="flex-1 flex flex-col justify-center items-center space-y-12 py-12 animate-in zoom-in-95 duration-700">
           <div className="w-40 h-40 bg-accent-secondary/20 text-accent-secondary rounded-[3rem] flex items-center justify-center shadow-neo-out border-4 border-accent-secondary/10 relative overflow-hidden">
-             <Trophy className="w-20 h-20 animate-bounce" />
-             <Star className="absolute top-4 right-4 w-8 h-8 text-yellow-500/50 animate-pulse" />
+            <Trophy className="w-20 h-20 animate-bounce" />
+            <Star className="absolute top-4 right-4 w-8 h-8 text-yellow-500/50 animate-pulse" />
           </div>
-          
+
           <div className="text-center space-y-4">
             <h2 className="text-6xl font-black tracking-tighter">Time's Up!</h2>
             <p className="text-2xl font-bold text-foreground/50 tracking-tight">

@@ -91,9 +91,8 @@ export const FreeResponseInteraction = ({ prompt, context, conceptText, conceptN
         disabled={(response.trim().length <= 5) || isSubmitting}
         className={`w-full py-5 rounded-2xl font-black text-xl transition-all shadow-neo-out flex items-center justify-center gap-3 ${
           response.trim().length > 5 
-            ? showFeedback 
-              ? 'bg-accent-secondary text-white hover:scale-[1.02] active:scale-95'
-              : 'bg-green-500 text-white hover:scale-[1.02] active:scale-95' 
+            ? showFeedback                ? 'bg-[#7EA68B] text-white shadow-neo-in scale-[0.98]' 
+                : 'bg-[#7EA68B] text-white hover:scale-[1.02] active:scale-95' 
             : 'bg-black/10 dark:bg-white/10 text-foreground/40 cursor-not-allowed shadow-none'
         }`}
       >

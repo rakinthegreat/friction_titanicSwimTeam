@@ -206,6 +206,7 @@ export default function PhilosophyModule() {
                 <div className="space-y-4">
                   <div className="space-y-1">
                     <h3 className="text-xs font-black text-accent-secondary uppercase tracking-widest">{ref.conceptName}</h3>
+                    <h3 className="text-xs font-black text-[#7EA68B] uppercase tracking-widest">{ref.conceptName}</h3>
                     <div className="p-4 bg-card rounded-2xl shadow-neo-in opacity-60">
                       <p className="text-sm font-medium leading-relaxed text-foreground/70">{ref.conceptText}</p>
                     </div>
@@ -214,16 +215,16 @@ export default function PhilosophyModule() {
                   {/* MCQ Results */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {ref.mcqs.map((mcq, mIdx) => (
-                      <Card key={mIdx} className={`p-4 border-none shadow-neo-out rounded-2xl ${mcq.isCorrect ? 'bg-green-500/5' : 'bg-red-500/5'}`}>
+                      <Card key={mIdx} className={`p-4 border-none shadow-neo-out rounded-2xl ${mcq.isCorrect ? 'bg-[#7EA68B]/10' : 'bg-[#DC2626]/10'}`}>
                         <p className="text-[10px] font-black uppercase tracking-widest text-foreground/30 mb-2">Question {mIdx + 1}</p>
                         <p className="text-sm font-bold mb-3 line-clamp-2">{mcq.question}</p>
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
-                            <div className={`w-2 h-2 rounded-full ${mcq.isCorrect ? 'bg-green-500' : 'bg-red-500'}`} />
+                            <div className={`w-2 h-2 rounded-full ${mcq.isCorrect ? 'bg-[#7EA68B]' : 'bg-[#DC2626]'}`} />
                             <p className="text-xs font-bold truncate">You: {mcq.userAnswer}</p>
                           </div>
                           {!mcq.isCorrect && (
-                            <p className="text-[10px] font-black text-green-500 uppercase ml-4">Correct: {mcq.correctAnswer}</p>
+                            <p className="text-[10px] font-black text-[#7EA68B] uppercase ml-4">Correct: {mcq.correctAnswer}</p>
                           )}
                         </div>
                       </Card>
@@ -307,7 +308,7 @@ export default function PhilosophyModule() {
   if (currentIndex >= lessonData.length) {
     return (
       <main className="min-h-screen max-w-2xl mx-auto p-6 flex flex-col justify-center items-center space-y-8 animate-in zoom-in-95 duration-700">
-        <div className="w-32 h-32 bg-green-500/20 text-green-500 rounded-[2.5rem] flex items-center justify-center shadow-neo-out border-2 border-green-500/20">
+        <div className="w-32 h-32 bg-accent/20 text-accent rounded-[2.5rem] flex items-center justify-center shadow-neo-out border-2 border-accent/20">
           <Trophy className="w-16 h-16" />
         </div>
         <div className="text-center space-y-2">
