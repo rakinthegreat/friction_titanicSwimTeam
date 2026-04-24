@@ -164,7 +164,7 @@ export default function TicTacToePage() {
         <div className="flex items-center">
           <button 
             onClick={() => router.push('/games')}
-            className="p-3 rounded-2xl bg-card shadow-neo-out text-accent transition-all active:scale-95"
+            className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent transition-all active:scale-95"
             aria-label="Back to games"
           >
             <ArrowLeft className="w-6 h-6" />
@@ -173,7 +173,7 @@ export default function TicTacToePage() {
         </div>
         <button 
           onClick={() => setIsTutorialOpen(true)}
-          className="p-3 rounded-2xl bg-card shadow-neo-out text-accent transition-all active:scale-95"
+          className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent transition-all active:scale-95"
         >
           <HelpCircle className="w-6 h-6" />
         </button>

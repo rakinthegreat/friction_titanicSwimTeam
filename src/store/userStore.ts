@@ -34,6 +34,7 @@ interface UserState {
   uid: string | null;
   interests: string[];
   videoGenres: string[];
+  preferredLanguages: string[];
   stats: {
     totalMinutesSaved: number;
     activitiesCompleted: number;
@@ -88,6 +89,7 @@ interface UserState {
 
   setInterests: (interests: string[]) => void;
   setVideoGenres: (genres: string[]) => void;
+  setPreferredLanguages: (languages: string[]) => void;
   updateStats: (minutes: number, gameId?: string, score?: number) => void;
   recordGameStart: (gameId: string) => void;
   recordGameResult: (gameId: string, result: 'win' | 'loss' | 'quit', timeSpentSeconds: number) => void;
@@ -134,6 +136,7 @@ export const useUserStore = create<UserState>()(
       uid: null,
       interests: [],
       videoGenres: [],
+      preferredLanguages: [],
       _hasHydrated: false,
       setHasHydrated: (state) => set({ _hasHydrated: state }),
       stats: {
@@ -171,6 +174,7 @@ export const useUserStore = create<UserState>()(
 
       setInterests: (interests) => set({ interests }),
       setVideoGenres: (genres) => set({ videoGenres: genres }),
+      setPreferredLanguages: (languages) => set({ preferredLanguages: languages }),
       updateStats: (minutes, gameId, score) =>
         set((state) => {
           const newHighScores = { ...state.stats.highScores };
@@ -408,6 +412,7 @@ export const useUserStore = create<UserState>()(
         // Simple Union/Max Fields
         const mergedInterests = Array.from(new Set([...state.interests, ...(remoteData.interests || [])]));
         const mergedVideoGenres = Array.from(new Set([...state.videoGenres, ...(remoteData.videoGenres || [])]));
+        const mergedLanguages = Array.from(new Set([...state.preferredLanguages, ...(remoteData.preferredLanguages || [])]));
 
         const mergedStats = {
           totalMinutesSaved: Math.max(state.stats.totalMinutesSaved, remoteData.stats?.totalMinutesSaved || 0),
@@ -484,6 +489,7 @@ export const useUserStore = create<UserState>()(
         set({
           interests: mergedInterests,
           videoGenres: mergedVideoGenres,
+          preferredLanguages: mergedLanguages,
           stats: mergedStats,
           gameStats: mergedGameStats,
           philosophyReflections: mergedPhil,
@@ -506,6 +512,7 @@ export const useUserStore = create<UserState>()(
         const profileToPush = {
           interests: mergedInterests,
           videoGenres: mergedVideoGenres,
+          preferredLanguages: mergedLanguages,
           stats: mergedStats,
           gameStats: mergedGameStats,
           preferences: state.preferences,

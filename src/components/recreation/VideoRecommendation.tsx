@@ -7,11 +7,12 @@ import { getRecommendedVideos } from '@/app/recreation/actions';
 interface VideoRecommendationProps {
   interests: string[];
   videoGenres: string[];
+  preferredLanguages: string[];
   dailyCompleted: string[];
   updateStats: (minutes: number) => void;
 }
 
-export const VideoRecommendation = ({ interests, videoGenres, dailyCompleted, updateStats }: VideoRecommendationProps) => {
+export const VideoRecommendation = ({ interests, videoGenres, preferredLanguages, dailyCompleted, updateStats }: VideoRecommendationProps) => {
   const [videoDurationFilter, setVideoDurationFilter] = useState<string>("all");
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [dynamicVideos, setDynamicVideos] = useState<any[]>([]);
@@ -67,7 +68,8 @@ export const VideoRecommendation = ({ interests, videoGenres, dailyCompleted, up
     setIsVideosLoading(true);
     try {
       const context = getEnvironmentalContext();
-      const videos = await getRecommendedVideos(interests, videoGenres, context);
+      const history = dynamicVideos.map(v => v.id);
+      const videos = await getRecommendedVideos(interests, videoGenres, context, history, preferredLanguages);
       
       if (videos && videos.length > 0) {
         setDynamicVideos(videos);
@@ -84,7 +86,7 @@ export const VideoRecommendation = ({ interests, videoGenres, dailyCompleted, up
 
   useEffect(() => {
     handleFetchDynamicVideos(false); // Check cache first on mount
-  }, [interests, videoGenres]);
+  }, [interests, videoGenres, preferredLanguages]);
 
   const filteredVideos = dynamicVideos.filter(v => {
     if (v.duration < 60) return false;

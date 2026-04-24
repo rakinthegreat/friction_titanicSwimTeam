@@ -1,7 +1,8 @@
-import { Laptop, History, Puzzle, Languages, FlaskConical, Palette, Brain, Leaf, Plane, Landmark, GraduationCap, Megaphone, Newspaper } from 'lucide-react';
+import { Laptop, History, Puzzle, Languages, FlaskConical, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Search, X as XIcon, Brain } from 'lucide-react';
 import { useState } from 'react';
 import { useUserStore } from '@/store/userStore';
 import { Button } from './ui/Button';
+import { ALL_LANGUAGES } from '@/lib/languages';
 
 const INTEREST_OPTIONS = [
   { id: 'tech', label: 'Technology', icon: Laptop },
@@ -24,8 +25,12 @@ export default function Onboarding() {
   const [step, setStep] = useState(1);
   const [selected, setSelected] = useState<string[]>([]);
   const [videoSelected, setVideoSelected] = useState<string[]>([]);
+  const [languagesSelected, setLanguagesSelected] = useState<string[]>([]);
+  const [languageSearch, setLanguageSearch] = useState('');
+  
   const setInterests = useUserStore((state) => state.setInterests);
   const setVideoGenres = useUserStore((state) => state.setVideoGenres);
+  const setPreferredLanguages = useUserStore((state) => state.setPreferredLanguages);
 
   const toggleInterest = (id: string) => {
     if (selected.includes(id)) {
@@ -43,22 +48,37 @@ export default function Onboarding() {
     }
   };
 
+  const toggleLanguage = (id: string) => {
+    if (languagesSelected.includes(id)) {
+      setLanguagesSelected(languagesSelected.filter((l) => l !== id));
+    } else {
+      setLanguagesSelected([...languagesSelected, id]);
+    }
+  };
+
   const handleNext = () => {
-    if (selected.length >= 3) {
+    if (step === 1 && selected.length >= 3) {
       setStep(2);
+    } else if (step === 2 && videoSelected.length >= 1) {
+      setStep(3);
     }
   };
 
   const handleFinish = () => {
-    if (videoSelected.length >= 1) {
+    if (languagesSelected.length >= 1) {
       setInterests(selected);
       setVideoGenres(videoSelected);
+      setPreferredLanguages(languagesSelected);
     }
   };
 
+  const filteredLanguages = ALL_LANGUAGES.filter(lang => 
+    lang.label.toLowerCase().includes(languageSearch.toLowerCase())
+  );
+
   return (
     <div className="flex flex-col min-h-screen items-center justify-center p-6 animate-in fade-in slide-in-from-bottom-4 duration-700 bg-background text-foreground">
-      {step === 1 ? (
+      {step === 1 && (
         <div className="max-w-md w-full text-center space-y-12">
           <div className="space-y-4">
             <h1 className="text-4xl font-black tracking-tight">Pick your fuel.</h1>
@@ -99,7 +119,9 @@ export default function Onboarding() {
             </Button>
           </div>
         </div>
-      ) : (
+      )}
+
+      {step === 2 && (
         <div className="max-w-md w-full text-center space-y-12 animate-in slide-in-from-right-8 duration-500">
           <div className="space-y-4">
             <h1 className="text-4xl font-black tracking-tight">Watch & Learn.</h1>
@@ -136,11 +158,86 @@ export default function Onboarding() {
               Back
             </Button>
             <Button
-              onClick={handleFinish}
+              onClick={handleNext}
               disabled={videoSelected.length < 1}
               className={`flex-1 py-5 text-xl font-black shadow-neo-out ${videoSelected.length < 1 ? 'opacity-50' : 'active:shadow-neo-in active:scale-95'}`}
             >
-              {videoSelected.length < 1 ? "Select at least 1" : "Let's Go"}
+              Next Step
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {step === 3 && (
+        <div className="max-w-md w-full text-center space-y-8 animate-in slide-in-from-right-8 duration-500">
+          <div className="space-y-4">
+            <h1 className="text-4xl font-black tracking-tight">Your Language.</h1>
+            <p className="text-foreground/50 text-lg font-medium">
+              Choose the languages you prefer for your video content.
+            </p>
+          </div>
+
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-accent transition-colors" size={20} />
+            <input 
+              type="text" 
+              placeholder="Search languages..."
+              value={languageSearch}
+              onChange={(e) => setLanguageSearch(e.target.value)}
+              className="w-full bg-card py-4 pl-12 pr-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-bold"
+            />
+          </div>
+
+          {languagesSelected.length > 0 && (
+            <div className="flex flex-wrap gap-2 justify-center">
+              {languagesSelected.map(id => {
+                const lang = ALL_LANGUAGES.find(l => l.id === id);
+                return (
+                  <div key={id} className="px-4 py-2 bg-accent/10 text-accent rounded-full text-xs font-black flex items-center gap-2 animate-in zoom-in duration-300">
+                    {lang?.label}
+                    <XIcon size={14} className="cursor-pointer" onClick={() => toggleLanguage(id)} />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="max-h-[300px] overflow-y-auto pr-2 space-y-3 custom-scrollbar shadow-neo-in rounded-3xl p-4">
+            {filteredLanguages.length > 0 ? (
+              filteredLanguages.map((lang) => {
+                const isSelected = languagesSelected.includes(lang.id);
+                return (
+                  <div
+                    key={lang.id}
+                    onClick={() => toggleLanguage(lang.id)}
+                    className={`flex items-center justify-between p-4 rounded-2xl transition-all cursor-pointer ${isSelected
+                      ? 'bg-accent text-white scale-[0.98]'
+                      : 'hover:bg-foreground/5 text-foreground/60'
+                      }`}
+                  >
+                    <span className="font-bold text-sm uppercase tracking-wider">{lang.label}</span>
+                    {isSelected && <div className="w-2 h-2 bg-white rounded-full animate-pulse" />}
+                  </div>
+                );
+              })
+            ) : (
+              <p className="py-8 text-foreground/30 font-bold">No languages found.</p>
+            )}
+          </div>
+
+          <div className="pt-4 flex gap-4">
+            <Button
+              onClick={() => setStep(2)}
+              className="py-5 px-6 font-black shadow-neo-out bg-background text-foreground hover:bg-foreground/5"
+            >
+              Back
+            </Button>
+            <Button
+              onClick={handleFinish}
+              disabled={languagesSelected.length < 1}
+              className={`flex-1 py-5 text-xl font-black shadow-neo-out ${languagesSelected.length < 1 ? 'opacity-50' : 'active:shadow-neo-in active:scale-95'}`}
+            >
+              {languagesSelected.length < 1 ? "Select at least 1" : "Let's Go"}
             </Button>
           </div>
         </div>
@@ -148,4 +245,3 @@ export default function Onboarding() {
     </div>
   );
 }
-
