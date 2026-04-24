@@ -26,6 +26,11 @@ export default function Profile() {
   const [isEditingInterests, setIsEditingInterests] = useState(false);
   const [tempInterests, setTempInterests] = useState<string[]>(interests);
 
+  const lastBackupDate = useUserStore((state) => state.lastBackupDate);
+  const syncWithFirebase = useUserStore((state) => state.syncWithFirebase);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncSuccess, setSyncSuccess] = useState(false);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -41,6 +46,21 @@ export default function Profile() {
   const handleSaveInterests = () => {
     setInterests(tempInterests);
     setIsEditingInterests(false);
+  };
+
+  const handleSync = async () => {
+    setIsSyncing(true);
+    setSyncSuccess(false);
+    try {
+      await syncWithFirebase();
+      setSyncSuccess(true);
+      setTimeout(() => setSyncSuccess(false), 3000);
+    } catch (err) {
+      console.error("Sync failed:", err);
+      alert("Sync failed. Please try again.");
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   if (!mounted) return null;
@@ -130,26 +150,54 @@ export default function Profile() {
           <div className="flex justify-between items-start">
             <div className="space-y-1">
               <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Data Sync</p>
-              <h3 className="text-xl font-black">{uid ? 'Cloud Synced' : 'Cloud Backup'}</h3>
+              <h3 className="text-xl font-black">{uid ? 'Cloud Connected' : 'Cloud Backup'}</h3>
               <p className="text-sm text-foreground/60 font-medium">
-                {uid ? 'Your data is being backed up to Firebase.' : 'Keep your progress safe across devices.'}
+                {uid 
+                  ? (lastBackupDate ? `Last synced: ${new Date(lastBackupDate).toLocaleString()}` : 'Ready to sync your progress.') 
+                  : 'Keep your progress safe across devices.'}
               </p>
             </div>
             <div className={`p-3 rounded-2xl ${uid ? 'bg-accent/20 text-accent' : 'bg-accent/10 text-accent'} group-hover:scale-110 transition-transform`}>
               <CloudUpload size={24} />
             </div>
           </div>
-          <button 
-            onClick={uid ? undefined : signInWithGoogle}
-            disabled={isLoading}
-            className={`w-full py-4 rounded-2xl font-black shadow-neo-out transition-all ${
-              uid 
-                ? 'bg-card text-accent opacity-50 cursor-default' 
-                : 'bg-accent text-white hover:scale-[1.02] active:scale-[0.98]'
-            }`}
-          >
-            {isLoading ? 'Connecting...' : uid ? 'Backup Active' : 'Sign in to Backup'}
-          </button>
+          
+          {!uid ? (
+            <button 
+              onClick={signInWithGoogle}
+              disabled={isLoading}
+              className="w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all"
+            >
+              {isLoading ? 'Connecting...' : 'Sign in to Backup'}
+            </button>
+          ) : (
+            <button 
+              onClick={handleSync}
+              disabled={isSyncing}
+              className={`w-full py-4 rounded-2xl font-black shadow-neo-out transition-all flex items-center justify-center gap-2 ${
+                syncSuccess 
+                  ? 'bg-green-500 text-white shadow-none' 
+                  : 'bg-card text-accent hover:scale-[1.02] active:scale-[0.98]'
+              }`}
+            >
+              {isSyncing ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+                  Syncing...
+                </>
+              ) : syncSuccess ? (
+                <>
+                  <Check size={20} />
+                  Sync Successful!
+                </>
+              ) : (
+                <>
+                  <CloudUpload size={20} />
+                  Sync Now
+                </>
+              )}
+            </button>
+          )}
         </div>
       </section>
 
