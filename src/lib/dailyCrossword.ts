@@ -3,9 +3,11 @@ import { WORD_LIST } from './wordlist';
 const getEffectiveDate = () => {
   if (typeof window !== 'undefined') {
     const override = localStorage.getItem('dev_date_override');
-    if (override) return override;
+    const enabled = localStorage.getItem('dev_date_enabled') === 'true';
+    if (override && enabled) return override;
   }
-  return new Date().toISOString().split('T')[0];
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 };
 
 const hashString = (str: string) => {

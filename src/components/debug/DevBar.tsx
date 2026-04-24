@@ -6,6 +6,7 @@ import { useUserStore } from '@/store/userStore';
 
 export const DevBar = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
   const [overrideDate, setOverrideDate] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const { showDevTiles } = useUserStore((state) => state.preferences);
@@ -13,25 +14,38 @@ export const DevBar = () => {
 
   useEffect(() => {
     const saved = localStorage.getItem('dev_date_override');
+    const enabled = localStorage.getItem('dev_date_enabled') === 'true';
     if (saved) {
       setOverrideDate(saved);
-      setIsVisible(true);
+      setIsEnabled(enabled);
+      if (enabled) setIsVisible(true);
     }
-    setCurrentDate(new Date().toISOString().split('T')[0]);
+    const now = new Date();
+    setCurrentDate(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`);
   }, []);
 
   const handleApply = () => {
-    if (overrideDate) {
+    if (isEnabled && overrideDate) {
       localStorage.setItem('dev_date_override', overrideDate);
+      localStorage.setItem('dev_date_enabled', 'true');
     } else {
-      localStorage.removeItem('dev_date_override');
+      localStorage.removeItem('dev_date_enabled');
     }
     window.location.reload();
   };
 
   const handleClear = () => {
     localStorage.removeItem('dev_date_override');
+    localStorage.removeItem('dev_date_enabled');
     window.location.reload();
+  };
+
+  const handleToggleEnabled = () => {
+    const newEnabled = !isEnabled;
+    setIsEnabled(newEnabled);
+    if (!newEnabled) {
+      setOverrideDate(currentDate);
+    }
   };
 
   return (
@@ -39,7 +53,7 @@ export const DevBar = () => {
       {/* Toggle Button */}
       <button
         onClick={() => setIsVisible(!isVisible)}
-        className="fixed bottom-4 right-4 z-[9999] p-3 bg-accent text-white rounded-full shadow-lg hover:scale-110 transition-transform"
+        className={`fixed bottom-4 right-4 z-[9999] p-3 rounded-full shadow-lg hover:scale-110 transition-all ${isEnabled ? 'bg-accent text-white animate-pulse' : 'bg-card border border-border text-foreground/40'}`}
         title="Dev Tools"
       >
         <Bug className="w-5 h-5" />
@@ -59,7 +73,20 @@ export const DevBar = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="space-y-1">
+            <div className="flex items-center justify-between p-3 bg-foreground/5 rounded-xl border border-border/50">
+              <div className="flex items-center gap-2">
+                <Calendar className={`w-4 h-4 ${isEnabled ? 'text-accent' : 'text-foreground/20'}`} />
+                <span className={`text-xs font-bold ${isEnabled ? 'text-foreground' : 'text-foreground/40'}`}>Enable Override</span>
+              </div>
+              <button
+                onClick={handleToggleEnabled}
+                className={`w-10 h-5 rounded-full transition-colors relative ${isEnabled ? 'bg-accent' : 'bg-foreground/20'}`}
+              >
+                <div className={`absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform ${isEnabled ? 'translate-x-5' : ''}`} />
+              </button>
+            </div>
+
+            <div className={`space-y-1 transition-opacity ${isEnabled ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
               <label className="text-[10px] font-bold text-foreground/40 uppercase tracking-tighter">Target Date</label>
               <input
                 type="date"
@@ -88,20 +115,23 @@ export const DevBar = () => {
                 className="flex-1 bg-accent text-white font-bold text-xs py-2 rounded-lg hover:bg-accent/90 flex items-center justify-center gap-2"
               >
                 <RefreshCw className="w-3 h-3" />
-                Apply
+                Apply Changes
               </button>
-              {overrideDate && (
+              {(overrideDate || isEnabled) && (
                 <button
                   onClick={handleClear}
                   className="px-3 bg-foreground/5 text-foreground/50 hover:bg-foreground/10 py-2 rounded-lg"
+                  title="Reset to Real Time"
                 >
-                  <X className="w-3 h-3" />
+                  <RefreshCw className="w-3 h-3 rotate-180" />
                 </button>
               )}
             </div>
 
             <p className="text-[9px] text-center text-foreground/30 leading-tight italic">
-              Overriding date will force local hashing to sync all daily challenges to that specific day.
+              {isEnabled 
+                ? "Overriding date will sync all daily challenges to that specific day."
+                : "Time Travel is disabled. Using real-world clock."}
             </p>
           </div>
         </div>
