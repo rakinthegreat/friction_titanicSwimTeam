@@ -39,39 +39,49 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
   const MAX_GUESSES = 6;
   const WORD_LENGTH = targetWord.length;
 
+  const submitGuess = useCallback((guess: string) => {
+    if (guess.length !== WORD_LENGTH) return;
+
+    const newGuesses = [...guesses, guess.toUpperCase()];
+    setGuesses(newGuesses);
+    setCurrentGuess("");
+
+    if (guess.toUpperCase() === targetWord.toUpperCase()) {
+      setStatus('won');
+      if (!gameEnded.current) {
+        gameEnded.current = true;
+        const timeSpent = (Date.now() - startTime.current) / 1000;
+        recordGameResult('wordless', 'win', timeSpent);
+      }
+      setTimeout(() => onComplete(50), 1500);
+    } else if (newGuesses.length >= MAX_GUESSES) {
+      setStatus('lost');
+      if (!gameEnded.current) {
+        gameEnded.current = true;
+        const timeSpent = (Date.now() - startTime.current) / 1000;
+        recordGameResult('wordless', 'loss', timeSpent);
+      }
+      setTimeout(() => onComplete(10), 1500);
+    }
+  }, [guesses, WORD_LENGTH, targetWord, onComplete, recordGameResult, MAX_GUESSES]);
+
   const onKeyPress = useCallback((e: KeyboardEvent) => {
     if (status !== 'playing') return;
 
     if (e.key === 'Enter') {
-      if (currentGuess.length === WORD_LENGTH) {
-        const newGuesses = [...guesses, currentGuess.toUpperCase()];
-        setGuesses(newGuesses);
-        setCurrentGuess("");
-
-        if (currentGuess.toUpperCase() === targetWord.toUpperCase()) {
-          setStatus('won');
-          if (!gameEnded.current) {
-            gameEnded.current = true;
-            const timeSpent = (Date.now() - startTime.current) / 1000;
-            recordGameResult('wordless', 'win', timeSpent);
-          }
-          setTimeout(() => onComplete(50), 1500);
-        } else if (newGuesses.length >= MAX_GUESSES) {
-          setStatus('lost');
-          if (!gameEnded.current) {
-            gameEnded.current = true;
-            const timeSpent = (Date.now() - startTime.current) / 1000;
-            recordGameResult('wordless', 'loss', timeSpent);
-          }
-          setTimeout(() => onComplete(10), 1500);
-        }
-      }
+      submitGuess(currentGuess);
     } else if (e.key === 'Backspace') {
       setCurrentGuess(prev => prev.slice(0, -1));
     } else if (/^[a-zA-Z]$/.test(e.key) && currentGuess.length < WORD_LENGTH) {
-      setCurrentGuess(prev => prev + e.key.toUpperCase());
+      const nextLetter = e.key.toUpperCase();
+      const nextGuess = currentGuess + nextLetter;
+      setCurrentGuess(nextGuess);
+      
+      if (nextGuess.length === WORD_LENGTH) {
+        submitGuess(nextGuess);
+      }
     }
-  }, [currentGuess, guesses, status, targetWord, WORD_LENGTH, onComplete, recordGameResult]);
+  }, [currentGuess, status, WORD_LENGTH, submitGuess]);
 
   useEffect(() => {
     window.addEventListener('keydown', onKeyPress);

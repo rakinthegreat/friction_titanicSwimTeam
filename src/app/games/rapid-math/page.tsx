@@ -28,7 +28,7 @@ export default function RapidMathPage() {
   const recordGameResult = useUserStore((state) => state.recordGameResult);
   const startTime = React.useRef<number>(Date.now());
   const gameEnded = React.useRef<boolean>(false);
-  
+
   const [gameState, setGameState] = useState<'idle' | 'playing' | 'finished'>('idle');
   const [score, setScore] = useState(0);
   const [totalTime, setTotalTime] = useState(30);
@@ -183,9 +183,8 @@ export default function RapidMathPage() {
       <div className="w-full max-w-md space-y-8 relative">
         {/* Floating Feedback */}
         {feedback && (
-          <div className={`absolute -top-12 left-1/2 -translate-x-1/2 flex items-center gap-1 font-black text-2xl animate-in slide-in-from-bottom-4 fade-in duration-300 ${
-            feedback.type === 'plus' ? 'text-green-500' : 'text-red-500'
-          }`}>
+          <div className={`absolute -top-12 left-1/2 -translate-x-1/2 flex items-center gap-1 font-black text-2xl animate-in slide-in-from-bottom-4 fade-in duration-300 ${feedback.type === 'plus' ? 'text-green-500' : 'text-red-500'
+            }`}>
             {feedback.type === 'plus' ? <Plus size={24} /> : <Minus size={24} />}
             {feedback.text}
           </div>
@@ -213,8 +212,8 @@ export default function RapidMathPage() {
               <Card className="flex-1 p-4 flex items-center justify-center gap-2 shadow-neo-in bg-accent/5 relative overflow-hidden">
                 <Timer className="text-accent" size={20} />
                 <span className="text-2xl font-black text-accent">{Math.ceil(totalTime)}s</span>
-                <div 
-                  className="absolute bottom-0 left-0 h-1 bg-accent transition-all duration-1000 ease-linear" 
+                <div
+                  className="absolute bottom-0 left-0 h-1 bg-accent transition-all duration-1000 ease-linear"
                   style={{ width: `${(totalTime / 30) * 100}%` }}
                 />
               </Card>
@@ -225,10 +224,10 @@ export default function RapidMathPage() {
             </div>
 
             <Card className={`p-12 text-center shadow-neo-out border-2 border-accent/10 relative overflow-hidden transition-all duration-200 ${isShaking ? 'animate-shake' : ''} ${feedback?.type === 'minus' ? 'border-red-500/50 bg-red-500/5' : ''}`}>
-               <div 
-                  className="absolute top-0 left-0 h-2 bg-accent-secondary transition-all duration-75 ease-linear" 
-                  style={{ width: `${(questionTimeLeft / 5) * 100}%` }}
-                />
+              <div
+                className="absolute top-0 left-0 h-2 bg-accent-secondary transition-all duration-75 ease-linear"
+                style={{ width: `${(questionTimeLeft / 5) * 100}%` }}
+              />
               <p className="text-6xl font-black tracking-tighter text-foreground/90">{equation.text}</p>
               <p className="absolute top-4 right-4 text-xs font-black text-accent-secondary/40 uppercase tracking-widest">{Math.ceil(questionTimeLeft)}s</p>
             </Card>
@@ -248,31 +247,35 @@ export default function RapidMathPage() {
         )}
 
         {gameState === 'finished' && (
-          <Card className="p-12 text-center space-y-8 shadow-neo-out animate-in zoom-in duration-500">
+          <Card className="p-12 text-center space-y-8 shadow-neo-out animate-in zoom-in duration-500 rounded-[3rem] border border-white/10 backdrop-blur-md">
+            <div className="w-24 h-24 bg-accent/20 rounded-full flex items-center justify-center mx-auto shadow-neo-in">
+              <Trophy size={48} className="text-accent" />
+            </div>
+
             <div className="space-y-2">
-              <p className="text-accent font-black uppercase tracking-widest text-sm">Game Over</p>
-              <h2 className="text-6xl font-black">{score}</h2>
-              <p className="text-foreground/40 font-bold italic">equations solved</p>
+              <p className="text-accent font-black uppercase tracking-widest text-sm italic">Blitz Finished</p>
+              <h2 className="text-7xl font-black italic tracking-tighter text-foreground/90">{score}</h2>
+              <p className="text-foreground/40 font-bold uppercase tracking-widest text-[10px]">equations solved</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-accent/5 p-6 rounded-3xl border border-accent/10">
-                <p className="text-xs font-bold text-accent/60 uppercase tracking-widest mb-1">Session</p>
-                <p className="text-2xl font-black text-accent">{score}</p>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-card p-6 rounded-[2rem] shadow-neo-in border border-accent/5">
+                <p className="text-[10px] font-black text-accent/40 uppercase tracking-widest mb-1">Session</p>
+                <p className="text-3xl font-black text-accent">{score}</p>
               </div>
-              <div className="bg-accent-secondary/5 p-6 rounded-3xl border border-accent-secondary/10">
-                <p className="text-xs font-bold text-accent-secondary/60 uppercase tracking-widest mb-1">Record</p>
-                <p className="text-2xl font-black text-accent-secondary">{score > persistentHighScore ? score : persistentHighScore}</p>
+              <div className="bg-card p-6 rounded-[2rem] shadow-neo-in border border-accent-secondary/5">
+                <p className="text-[10px] font-black text-accent-secondary/40 uppercase tracking-widest mb-1">Record</p>
+                <p className="text-3xl font-black text-accent-secondary">{score > persistentHighScore ? score : persistentHighScore}</p>
               </div>
             </div>
 
-            <div className="flex gap-4">
-              <Button onClick={startGame} className="flex-1 py-4 flex items-center justify-center gap-2">
-                <RefreshCw size={20} />
-                Try Again
+            <div className="flex gap-4 pt-4">
+              <Button onClick={startGame} className="flex-1 py-5 text-lg font-black italic tracking-widest shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all">
+                <RefreshCw size={24} className="mr-2" />
+                Retry
               </Button>
-              <Button onClick={() => router.push('/games')} variant="secondary" className="flex-1 py-4">
-                Done
+              <Button onClick={() => router.push('/games')} className="font-black shadow-neo-out flex-1 py-5 text-lg font-black italic tracking-widest shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all bg-card border border-foreground/5 text-foreground/80">
+                <span className='text-gray-600 font-black text-[20px]'>Done</span>
               </Button>
             </div>
           </Card>

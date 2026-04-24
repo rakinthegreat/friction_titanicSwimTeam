@@ -124,9 +124,41 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
 
     if (upperVal !== "") {
       if (lastDir === 'across' && c < GRID_SIZE - 1) {
-        for (let i = c + 1; i < GRID_SIZE; i++) if (!gridDefinition[r][i].isWall) { setFocused({ r, c: i }); break; }
+        // Skip filled cells
+        let foundEmpty = false;
+        for (let i = c + 1; i < GRID_SIZE; i++) {
+          if (!gridDefinition[r][i].isWall && grid[r][i] === "") {
+            setFocused({ r, c: i });
+            foundEmpty = true;
+            break;
+          }
+        }
+        // If no empty cell ahead, move to the very next non-wall cell if any
+        if (!foundEmpty) {
+          for (let i = c + 1; i < GRID_SIZE; i++) {
+            if (!gridDefinition[r][i].isWall) {
+              setFocused({ r, c: i });
+              break;
+            }
+          }
+        }
       } else if (lastDir === 'down' && r < GRID_SIZE - 1) {
-        for (let i = r + 1; i < GRID_SIZE; i++) if (!gridDefinition[i][c].isWall) { setFocused({ r: i, c }); break; }
+        let foundEmpty = false;
+        for (let i = r + 1; i < GRID_SIZE; i++) {
+          if (!gridDefinition[i][c].isWall && grid[i][c] === "") {
+            setFocused({ r: i, c });
+            foundEmpty = true;
+            break;
+          }
+        }
+        if (!foundEmpty) {
+          for (let i = r + 1; i < GRID_SIZE; i++) {
+            if (!gridDefinition[i][c].isWall) {
+              setFocused({ r: i, c });
+              break;
+            }
+          }
+        }
       }
     }
   };
@@ -136,16 +168,76 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
     const { r, c } = focused;
     if (e.key === 'ArrowRight' && c < GRID_SIZE - 1) {
       setLastDir('across');
-      for (let i = c + 1; i < GRID_SIZE; i++) if (!gridDefinition[r][i].isWall) { setFocused({ r, c: i }); break; }
+      let foundEmpty = false;
+      for (let i = c + 1; i < GRID_SIZE; i++) {
+        if (!gridDefinition[r][i].isWall && grid[r][i] === "") {
+          setFocused({ r, c: i });
+          foundEmpty = true;
+          break;
+        }
+      }
+      if (!foundEmpty) {
+        for (let i = c + 1; i < GRID_SIZE; i++) {
+          if (!gridDefinition[r][i].isWall) {
+            setFocused({ r, c: i });
+            break;
+          }
+        }
+      }
     } else if (e.key === 'ArrowLeft' && c > 0) {
       setLastDir('across');
-      for (let i = c - 1; i >= 0; i--) if (!gridDefinition[r][i].isWall) { setFocused({ r, c: i }); break; }
+      let foundEmpty = false;
+      for (let i = c - 1; i >= 0; i--) {
+        if (!gridDefinition[r][i].isWall && grid[r][i] === "") {
+          setFocused({ r, c: i });
+          foundEmpty = true;
+          break;
+        }
+      }
+      if (!foundEmpty) {
+        for (let i = c - 1; i >= 0; i--) {
+          if (!gridDefinition[r][i].isWall) {
+            setFocused({ r, c: i });
+            break;
+          }
+        }
+      }
     } else if (e.key === 'ArrowDown' && r < GRID_SIZE - 1) {
       setLastDir('down');
-      for (let i = r + 1; i < GRID_SIZE; i++) if (!gridDefinition[i][c].isWall) { setFocused({ r: i, c }); break; }
+      let foundEmpty = false;
+      for (let i = r + 1; i < GRID_SIZE; i++) {
+        if (!gridDefinition[i][c].isWall && grid[i][c] === "") {
+          setFocused({ r: i, c });
+          foundEmpty = true;
+          break;
+        }
+      }
+      if (!foundEmpty) {
+        for (let i = r + 1; i < GRID_SIZE; i++) {
+          if (!gridDefinition[i][c].isWall) {
+            setFocused({ r: i, c });
+            break;
+          }
+        }
+      }
     } else if (e.key === 'ArrowUp' && r > 0) {
       setLastDir('down');
-      for (let i = r - 1; i >= 0; i--) if (!gridDefinition[i][c].isWall) { setFocused({ r: i, c }); break; }
+      let foundEmpty = false;
+      for (let i = r - 1; i >= 0; i--) {
+        if (!gridDefinition[i][c].isWall && grid[i][c] === "") {
+          setFocused({ r: i, c });
+          foundEmpty = true;
+          break;
+        }
+      }
+      if (!foundEmpty) {
+        for (let i = r - 1; i >= 0; i--) {
+          if (!gridDefinition[i][c].isWall) {
+            setFocused({ r: i, c });
+            break;
+          }
+        }
+      }
     }
   };
 
