@@ -1,82 +1,102 @@
 [
     {
         "Genre": "Travel",
+        "Language": "bengali",
         "CreatorLink": "https://www.youtube.com/@NadirOnTheGoBangla"
     },
     {
         "Genre": "Travel",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@drewbinsky"
     },
     {
         "Genre": "Travel",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@karaandnate"
     },
     {
         "Genre": "Travel",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@IndigoTraveller"
     },
     {
         "Genre": "Travel",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@YesTheory"
     },
     {
         "Genre": "History",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@OverSimplified"
     },
     {
         "Genre": "History",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@KingsandGenerals"
     },
     {
         "Genre": "History",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@TimelineChannel"
     },
     {
         "Genre": "History",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@TheArmchairHistorian"
     },
     {
         "Genre": "History",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@EpicHistoryTV"
     },
     {
         "Genre": "Educational",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@veritasium"
     },
     {
         "Genre": "Educational",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@kurzgesagt"
     },
     {
         "Genre": "Educational",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@TEDEd"
     },
     {
         "Genre": "Educational",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@SmarterEveryDay"
     },
     {
         "Genre": "Educational",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@MarkRober"
     },
     {
         "Genre": "News",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@aljazeeraenglish"
     },
     {
         "Genre": "News",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@bbcnews"
     },
     {
         "Genre": "News",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@abcnews"
     },
     {
         "Genre": "News",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@DWNews"
     },
     {
         "Genre": "News",
+        "Language": "english",
         "CreatorLink": "https://www.youtube.com/@vice"
     }
 ]

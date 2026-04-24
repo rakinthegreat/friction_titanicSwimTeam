@@ -10,24 +10,35 @@ const client = new OpenAI({
 });
 
 const SELECTION_PROMPT = `You are a video curator for WaitLess.
-Your goal is to pick the BEST 6 videos from a provided list for a user's current context.
+Your goal is to pick the BEST 6 videos from the provided list for a user's current context and language preferences.
+
+IMPORTANT CONSTRAINTS:
+1. MANDATORY: You must select exactly 2 videos from the "Discovery" source (indices marked as [Discovery]).
+2. MANDATORY: Each of the 6 videos must be from a unique creator.
+3. LANGUAGE BALANCE: You must only select videos in the user's preferred languages. If multiple languages are selected, try to maintain a balance (e.g., 3 in English, 3 in Bengali).
+4. DURATION DISTRIBUTION (Strict):
+   - Exactly 1 "Short" video (2-5 mins)
+   - Exactly 1 "Long" video (10-15 mins)
+   - Exactly 1 "Epic" video (15+ mins)
+   - The remaining 3 videos MUST be in the "Medium" range (5-10 mins).
+5. GENRE DIVERSITY: Provide a balanced mix of genres.
 
 SELECTION CRITERIA:
-1. Match the Time of Day (e.g., Morning = energizing, Night = relaxing).
-2. Match the Weather/Location context.
-3. Align with User Interests.
-4. Prioritize diversity in creators.
+1. Match the Time of Day and Weather context.
+2. Align with User Interests and Location.
 
 Return ONLY a JSON array of the indices of the selected videos (e.g., [0, 2, 5, ...]).
 `;
 
 export async function getDynamicSearchQueries(
   interests: string[],
-  context: { location?: string; timeOfDay?: string; weather?: string }
+  context: { location?: string; timeOfDay?: string; weather?: string },
+  languages: string[]
 ) {
   try {
     const userContext = `
       Interests: ${interests.join(', ')}.
+      Preferred Languages: ${languages.join(', ')}.
       Current Context: ${context.timeOfDay || 'Unknown time'} in ${context.location || 'Unknown location'}.
       Weather: ${context.weather || 'Unknown weather'}.
     `;
@@ -35,7 +46,16 @@ export async function getDynamicSearchQueries(
     const completion = await client.chat.completions.create({
       model: "moonshotai/kimi-k2-instruct-0905",
       messages: [
-        { role: "system", content: "Generate 3 broad, high-quality YouTube search queries for discovery based on this context. Return ONLY a JSON array of strings." },
+        { 
+          role: "system", 
+          content: `Generate 4 broad, high-quality YouTube search queries for discovery. 
+          REQUIREMENTS:
+          1. ALL queries MUST target content in the following languages: ${languages.join(', ')}.
+          2. One query MUST be localized: identify the country from the location "${context.location}" and combine it with the user's interests in the preferred languages.
+          3. One query should focus on the current vibe (${context.timeOfDay}, ${context.weather}).
+          4. Two queries should be general high-interest topics matching interests.
+          Return ONLY a JSON array of strings.` 
+        },
         { role: "user", content: userContext }
       ],
       temperature: 0.7,
@@ -163,7 +183,7 @@ async function fetchChannelVideosScraping(handle: string) {
           else if (parts.length === 3) durationSeconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
         }
 
-        if (durationSeconds >= 60) { // No shorts
+        if (durationSeconds >= 120) { // Minimum 2 minutes
           videos.push({
             id: v.videoId,
             ytId: v.videoId,
@@ -185,36 +205,128 @@ async function fetchChannelVideosScraping(handle: string) {
   }
 }
 
+async function fetchYouTubeSearchScraping(query: string) {
+  try {
+    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+    console.log(`[Scraper] Searching for "${query}" at ${url}`);
+    
+    const res = await fetch(url, { 
+      headers: { 'Accept-Language': 'en-US,en;q=0.9', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36' },
+      next: { revalidate: 3600 }
+    });
+    const html = await res.text();
+    
+    const dataMatch = html.match(/var ytInitialData = (\{.*?\});<\/script>/);
+    if (!dataMatch) return [];
+    
+    const data = JSON.parse(dataMatch[1]);
+    const videos: any[] = [];
+    
+    const contents = data.contents?.twoColumnSearchResultsRenderer?.primaryContents?.sectionListRenderer?.contents || [];
+    const itemSection = contents.find((c: any) => c.itemSectionRenderer)?.itemSectionRenderer.contents || [];
+    
+    for (const item of itemSection) {
+      if (item.videoRenderer) {
+        const v = item.videoRenderer;
+        
+        let durationSeconds = 0;
+        if (v.lengthText && v.lengthText.simpleText) {
+          const parts = v.lengthText.simpleText.split(':').map(Number);
+          if (parts.length === 2) durationSeconds = parts[0] * 60 + parts[1];
+          else if (parts.length === 3) durationSeconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+        }
+
+        if (durationSeconds >= 120) { // Minimum 2 minutes
+          videos.push({
+            id: v.videoId,
+            ytId: v.videoId,
+            title: v.title.runs[0].text,
+            duration: durationSeconds,
+            thumbnail: `https://i.ytimg.com/vi/${v.videoId}/maxresdefault.jpg`,
+            creator: v.ownerText?.runs[0]?.text || "Unknown",
+            url: `https://www.youtube.com/watch?v=${v.videoId}`,
+            source: 'Discovery'
+          });
+        }
+        if (videos.length >= 5) break;
+      }
+    }
+    return videos;
+  } catch (e: any) {
+    console.error(`[Search Scraper] Error for "${query}":`, e.message);
+    return [];
+  }
+}
+
 export async function getRecommendedVideos(
   interests: string[],
   videoGenres: string[],
-  context: { location?: string; timeOfDay?: string; weather?: string }
+  context: { location?: string; timeOfDay?: string; weather?: string },
+  history: string[] = [],
+  languages: string[] = ['english']
 ) {
   try {
-    // 1. Get Curated Handles from JSON
+    // 1. Fetch from Curated Handles (Scraped)
     const channelsPath = path.join(process.cwd(), 'src/app/recreation/channels.json');
     const allChannels = JSON.parse(fs.readFileSync(channelsPath, 'utf-8'));
     
-    // Filter by user selected genres
+    // Create a map for quick metadata lookup
+    const channelMap = new Map<string, { genre: string; language: string }>(
+      allChannels.map((c: any) => {
+        const handle = c.CreatorLink.split('@')[1];
+        return [`@${handle}`, { genre: c.Genre, language: c.Language }];
+      })
+    );
+
+    // Filter by user selected genres AND languages
     const matchedHandles = allChannels
-      .filter((c: any) => videoGenres.includes(c.Genre) || videoGenres.length === 0)
+      .filter((c: any) => (videoGenres.includes(c.Genre) || videoGenres.length === 0) && (languages.includes(c.Language) || languages.length === 0))
       .map((c: any) => {
         const parts = c.CreatorLink.split('@');
         return parts.length > 1 ? `@${parts[1]}` : null;
       })
-      .filter(Boolean);
+      .filter(Boolean)
+      .slice(0, 15);
 
-    // 2. Fetch via Scraper (0 Quota, 0 YT API usage)
-    // We fetch a bit more to give AI a good pool to select from
     const curatedPoolResults = await Promise.all(
-      matchedHandles.slice(0, 15).map((h: string) => fetchChannelVideosScraping(h))
+      matchedHandles.map((h: string) => fetchChannelVideosScraping(h))
     );
-    const fullPool = curatedPoolResults.flat();
+    const curatedPool = curatedPoolResults.flat().map(v => {
+      const meta = channelMap.get(`@${v.creator}`);
+      return { 
+        ...v, 
+        source: 'Curated',
+        genre: meta?.genre || 'Curated',
+        language: meta?.language || 'english'
+      };
+    });
+
+    // 2. Fetch from Discovery (Scraped)
+    const discoveryQueries = await getDynamicSearchQueries(interests, context, languages);
+    const discoveryPoolResults = await Promise.all(
+      discoveryQueries.map((q: string) => fetchYouTubeSearchScraping(q))
+    );
+    const discoveryPool = discoveryPoolResults.flat().map(v => ({
+      ...v,
+      genre: 'Discovery',
+      language: 'Discovery' // AI will infer actual language from title
+    }));
+
+    // 3. Combine and Filter History
+    let fullPool = [...curatedPool, ...discoveryPool];
+    
+    // Remove videos the user just saw
+    if (history.length > 0) {
+      fullPool = fullPool.filter(v => !history.includes(v.id));
+    }
 
     if (fullPool.length === 0) return [];
 
-    // 3. AI Selection from Curated Pool
-    const poolMetadata = fullPool.map((v, i) => `${i}: ${v.title} by ${v.creator}`).join('\n');
+    // 4. AI Selection
+    const poolMetadata = fullPool.map((v, i) => {
+      const mins = Math.floor(v.duration / 60);
+      return `${i} [${v.source} | ${v.genre} | ${v.language} | ${mins} mins]: ${v.title} by ${v.creator}`;
+    }).join('\n');
     const userVibe = `${context.timeOfDay} in ${context.location}, Weather: ${context.weather}. Interests: ${interests.join(', ')}`;
     
     const selection = await client.chat.completions.create({
@@ -231,7 +343,6 @@ export async function getRecommendedVideos(
     const endIdx = content.lastIndexOf(']') + 1;
     const selectedIndices = JSON.parse(content.substring(startIdx, endIdx));
 
-    // Return the AI-selected videos
     return selectedIndices
       .map((idx: number) => fullPool[idx])
       .filter(Boolean)
@@ -241,4 +352,10 @@ export async function getRecommendedVideos(
     console.error("Recreation selection failed:", error);
     return [];
   }
+}
+
+function parseISO8601Duration(duration: string): number {
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+  return (parseInt(match[1] || '0') * 3600) + (parseInt(match[2] || '0') * 60) + parseInt(match[3] || '0');
 }
