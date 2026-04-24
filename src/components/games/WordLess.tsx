@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/Button';
-import { PartyPopper } from 'lucide-react';
+import { PartyPopper, Heart } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 
 interface WordLessProps {
@@ -14,6 +14,8 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
   const [guesses, setGuesses] = useState<string[]>([]);
   const [currentGuess, setCurrentGuess] = useState("");
   const [status, setStatus] = useState<'playing' | 'won' | 'lost'>('playing');
+  const [ee, setEe] = useState(false);
+  const [kb, setKb] = useState("");
 
   const startTime = React.useRef<number>(Date.now());
   const gameEnded = React.useRef<boolean>(false);
@@ -66,6 +68,14 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
   }, [guesses, WORD_LENGTH, targetWord, onComplete, recordGameResult, MAX_GUESSES]);
 
   const onKeyPress = useCallback((e: KeyboardEvent) => {
+    // Easter egg detection
+    const t = atob("QXJzaGk=").toLowerCase();
+    setKb(p => {
+      const n = (p + e.key.toLowerCase()).slice(-t.length);
+      if (n === t) setEe(true);
+      return n;
+    });
+
     if (status !== 'playing') return;
 
     if (e.key === 'Enter') {
@@ -165,6 +175,22 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
           <p className="text-2xl font-bold flex items-center justify-center gap-2">
             {status === 'won' ? <><PartyPopper className="w-6 h-6 text-accent drop-shadow-sm" /> Brilliant!</> : `Target: ${targetWord}`}
           </p>
+        </div>
+      )}
+
+      {ee && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-card p-8 rounded-3xl shadow-neo-out border border-accent/20 max-w-sm w-full text-center space-y-6 animate-in zoom-in duration-300">
+            <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto">
+              <Heart className="w-8 h-8 text-red-500 fill-red-500/20" />
+            </div>
+            <p className="text-xl font-bold leading-relaxed">
+              {atob("WW91IG11c3QgYmUgdGFsa2luZyBhYm91dCBBcnNoaWEsIHRoZSBicmlsbGlhbnQgbWluZCBhbmQgYWJzb2x1dGUgZGl2YSB3aG8gZmlyc3QgY29uY2VwdHVhbGl6ZWQgdGhpcyBlbnRpcmUgcHJvamVjdC4gSSdtIHNvIHByb3VkIG9mIHRoZSBsb3ZlIG9mIG15IGxpZmUhIC0gUmFraW4=")}
+            </p>
+            <Button onClick={() => setEe(false)} className="w-full">
+              Close
+            </Button>
+          </div>
         </div>
       )}
     </div>
