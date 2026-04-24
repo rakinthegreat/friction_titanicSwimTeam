@@ -60,6 +60,20 @@ interface UserState {
   dailyCompletedActivities: string[];
   lastCompletedDate: string | null;
   lastBackupDate: string | null;
+  realLifeChallenges: Array<{
+    id: string;
+    challenge: string;
+    context: {
+      location: string;
+      posture: string;
+      vibe: string;
+      energy: string;
+    };
+    estimatedTime: number; // in seconds
+    experience?: string;
+    timestamp: number;
+    status: 'pending' | 'completed';
+  }>;
 
   setInterests: (interests: string[]) => void;
   setVideoGenres: (genres: string[]) => void;
@@ -82,6 +96,15 @@ interface UserState {
 
   // Meditation Actions
   addMeditationLog: (log: { prompt: string; reflection: string }) => void;
+
+  // Challenge Actions
+  addRealLifeChallenge: (challenge: { challenge: string; context: {
+    location: string;
+    posture: string;
+    vibe: string;
+    energy: string;
+  }; estimatedTime: number }) => string;
+  completeRealLifeChallenge: (id: string, experience?: string) => void;
 
   completeActivity: (id: string) => void;
   syncWithFirebase: () => Promise<void>;
@@ -122,6 +145,7 @@ export const useUserStore = create<UserState>()(
       dailyCompletedActivities: [],
       lastCompletedDate: null,
       lastBackupDate: null,
+      realLifeChallenges: [],
 
       setInterests: (interests) => set({ interests }),
       setVideoGenres: (genres) => set({ videoGenres: genres }),
@@ -246,6 +270,24 @@ export const useUserStore = create<UserState>()(
           ],
         })),
 
+      // Challenge Actions
+      addRealLifeChallenge: (challenge) => {
+        const id = Math.random().toString(36).substring(7);
+        set((state) => ({
+          realLifeChallenges: [
+            { ...challenge, id, timestamp: Date.now(), status: 'pending' },
+            ...state.realLifeChallenges,
+          ],
+        }));
+        return id;
+      },
+      completeRealLifeChallenge: (id, experience) =>
+        set((state) => ({
+          realLifeChallenges: state.realLifeChallenges.map((c) =>
+            c.id === id ? { ...c, status: 'completed', experience } : c
+          ),
+        })),
+
       completeActivity: (id) =>
         set((state) => {
           const today = new Date().toISOString().split('T')[0];
@@ -292,16 +334,31 @@ export const useUserStore = create<UserState>()(
           highScores: { ...(remoteData.stats?.highScores || {}), ...state.stats.highScores }
         };
 
-        // Reflections: Merge by timestamp to prevent duplicates
-        const mergeReflections = (local: LearningSession[], remote: LearningSession[]) => {
-          const map = new Map<number, LearningSession>();
+        // Helper for timestamp-based merging (Reflections & Meditation)
+        const mergeByTimestamp = (local: any[], remote: any[]) => {
+          const map = new Map<number, any>();
           remote.forEach(item => map.set(item.timestamp, item));
           local.forEach(item => map.set(item.timestamp, item));
           return Array.from(map.values()).sort((a, b) => b.timestamp - a.timestamp);
         };
 
-        const mergedPhil = mergeReflections(state.philosophyReflections, remotePhil);
-        const mergedSci = mergeReflections(state.scienceReflections, remoteSci);
+        const mergedPhil = mergeByTimestamp(state.philosophyReflections, remotePhil);
+        const mergedSci = mergeByTimestamp(state.scienceReflections, remoteSci);
+        const mergedMeditation = mergeByTimestamp(state.meditationLogs, remoteData.meditationLogs || []);
+
+        // Concepts Merge
+        const mergedCompletedPhil = Array.from(new Set([...state.completedPhilosophyConcepts, ...(remoteData.completedPhilosophyConcepts || [])]));
+        const mergedCompletedSci = Array.from(new Set([...state.completedScienceConcepts, ...(remoteData.completedScienceConcepts || [])]));
+        
+        const mergeCustom = (local: any[], remote: any[]) => {
+          const map = new Map<string, any>();
+          remote.forEach(c => map.set(c.name || c.title, c));
+          local.forEach(c => map.set(c.name || c.title, c));
+          return Array.from(map.values());
+        };
+
+        const mergedCustomPhil = mergeCustom(state.customPhilosophyConcepts, remoteData.customPhilosophyConcepts || []);
+        const mergedCustomSci = mergeCustom(state.customScienceConcepts, remoteData.customScienceConcepts || []);
 
         // 3. UPDATE LOCAL STORE
         const now = new Date().toISOString();
@@ -310,6 +367,12 @@ export const useUserStore = create<UserState>()(
           stats: mergedStats,
           philosophyReflections: mergedPhil,
           scienceReflections: mergedSci,
+          meditationLogs: mergedMeditation,
+          completedPhilosophyConcepts: mergedCompletedPhil,
+          completedScienceConcepts: mergedCompletedSci,
+          customPhilosophyConcepts: mergedCustomPhil,
+          customScienceConcepts: mergedCustomSci,
+          realLifeChallenges: mergeByTimestamp(state.realLifeChallenges, remoteData.realLifeChallenges || []),
           lastBackupDate: now
         });
 
@@ -320,8 +383,12 @@ export const useUserStore = create<UserState>()(
           interests: mergedInterests,
           stats: mergedStats,
           preferences: state.preferences,
-          completedPhilosophyConcepts: Array.from(new Set([...state.completedPhilosophyConcepts, ...(remoteData.completedPhilosophyConcepts || [])])),
-          completedScienceConcepts: Array.from(new Set([...state.completedScienceConcepts, ...(remoteData.completedScienceConcepts || [])])),
+          completedPhilosophyConcepts: mergedCompletedPhil,
+          completedScienceConcepts: mergedCompletedSci,
+          customPhilosophyConcepts: mergedCustomPhil,
+          customScienceConcepts: mergedCustomSci,
+          meditationLogs: mergedMeditation,
+          realLifeChallenges: mergeByTimestamp(state.realLifeChallenges, remoteData.realLifeChallenges || []),
           englishReviewWords: { ...(remoteData.englishReviewWords || {}), ...state.englishReviewWords },
           dailyCompletedActivities: state.dailyCompletedActivities,
           lastCompletedDate: state.lastCompletedDate,

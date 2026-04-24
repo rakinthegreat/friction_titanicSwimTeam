@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/Card';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { ArrowLeft, BookOpen, Brain, FlaskConical, HelpCircle, Leaf } from 'lucide-react';
+import { ArrowLeft, BookOpen, Brain, FlaskConical, HelpCircle, Leaf, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { WordOfTheDayWidget } from '@/components/learn/WordOfTheDayWidget';
@@ -47,6 +47,13 @@ export default function LearnDirectoryPage() {
       icon: <Leaf className="w-8 h-8" />,
       href: '/learn/meditation',
       color: 'text-accent'
+    },
+    {
+      title: 'Real-Life Challenges',
+      description: 'Break the digital wall and interact with the world.',
+      icon: <Sparkles className="w-8 h-8" />,
+      href: '/learn/challenges',
+      color: 'text-accent-secondary'
     }
   ];
 
