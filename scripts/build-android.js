@@ -21,7 +21,7 @@ try {
 
   // 2. Next.js Build
   console.log('Building Next.js static export...');
-  run('npx next build', {
+  run('npx next build --webpack', {
     NEXT_PUBLIC_IS_CAPACITOR: 'true',
     NEXT_PUBLIC_API_BASE_URL: PRODUCTION_URL,
     CAPACITOR_BUILD: 'true'
