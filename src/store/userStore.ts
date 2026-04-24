@@ -9,8 +9,8 @@ interface LearningSession {
   conceptText: string;
   mcqs: {
     question: string;
-    selectedOption: string;
-    correctOption: string;
+    userAnswer: string;
+    correctAnswer: string;
     isCorrect: boolean;
   }[];
   reflection: {

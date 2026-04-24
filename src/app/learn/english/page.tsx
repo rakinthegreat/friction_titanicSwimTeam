@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { LessonProgressBar } from '@/components/learn/LessonProgressBar';
-import { MCQInteraction } from '@/components/learn/MCQInteraction';
+import { EnglishFITBInteraction } from '@/components/learn/EnglishFITBInteraction';
 import { Card } from '@/components/ui/Card';
 import { CheckCircle2, XCircle, BookOpen, ChevronLeft, Loader2, Play, Combine, RefreshCcw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -45,6 +45,7 @@ export default function EnglishModule() {
   const [selectedMeaningIdx, setSelectedMeaningIdx] = useState<number | null>(null);
   const [matchedPairs, setMatchedPairs] = useState<string[]>([]);
   const [errorPair, setErrorPair] = useState<{ word: number, meaning: number } | null>(null);
+  const [isRoundComplete, setIsRoundComplete] = useState(false);
 
   const startFillMode = () => {
     setLoading(true);
@@ -105,8 +106,19 @@ export default function EnglishModule() {
   };
 
 
-
-  const handleNextFill = () => {
+  const handleFITBSubmit = (isCorrect: boolean, selectedWord: string) => {
+    const currentQ = fillQuestions[currentIndex];
+    
+    if (isCorrect) {
+      setScore(prev => prev + 5);
+      if (viewMode === 'review') {
+        recordEnglishReviewSuccess(currentQ.answer);
+      }
+    } else {
+      setScore(prev => prev - 3);
+      addEnglishReviewWord(currentQ.answer);
+    }
+    
     setCurrentIndex(prev => prev + 1);
   };
 
@@ -138,12 +150,15 @@ export default function EnglishModule() {
 
   useEffect(() => {
     if (viewMode === 'match' && matchRounds.length > 0 && matchedPairs.length === 5) {
-      setTimeout(() => {
-        setMatchedPairs([]);
-        setCurrentIndex(prev => prev + 1);
-      }, 1000);
+      setIsRoundComplete(true);
     }
   }, [matchedPairs.length, viewMode, matchRounds.length]);
+
+  const handleNextRound = () => {
+    setMatchedPairs([]);
+    setIsRoundComplete(false);
+    setCurrentIndex(prev => prev + 1);
+  };
 
   const finishSession = () => {
     const minutes = Math.max(1, Math.floor(currentIndex / 2));
@@ -289,70 +304,23 @@ export default function EnglishModule() {
   // ==== ACTIVE SESSION UI ====
   return (
     <main className="min-h-screen max-w-4xl mx-auto p-4 flex flex-col">
-      <div className="pt-4 px-2 flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4 flex-1">
-          <button onClick={finishSession} className="p-3 hover:bg-card rounded-2xl transition-all shadow-sm">
-            <ChevronLeft size={24} />
-          </button>
-          <div className="flex-1 max-w-2xl">
-            <LessonProgressBar current={currentIndex} total={currentTotal} />
-          </div>
+      <div className="pt-4 px-2 mb-8 flex items-center justify-between">
+        <div className="flex-1 max-w-2xl mx-auto">
+          <LessonProgressBar current={currentIndex} total={currentTotal} onClose={finishSession} />
         </div>
         <div className="ml-4 px-4 py-2 bg-blue-400/10 rounded-xl shadow-neo-in">
           <span className="font-black text-blue-400">{score} pts</span>
         </div>
       </div>
-
       <div className="flex-1 pb-12 px-2 flex flex-col">
-        {/* FILL OR REVIEW MODE */}
-        {(viewMode === 'fill' || viewMode === 'review') && (
-          <div className="space-y-8 animate-in slide-in-from-bottom-8 duration-500 max-w-2xl mx-auto w-full">
-            <div className="space-y-2 text-center">
-              <h2 className="text-sm font-black text-blue-400 uppercase tracking-[0.2em]">
-                {viewMode === 'review' ? 'Review Word' : 'Fill in the blank'}
-              </h2>
-            </div>
-
-            <Card className="p-8 sm:p-10 bg-card rounded-[3rem] shadow-neo-out relative overflow-hidden">
-              <BookOpen className="absolute -top-12 -right-12 w-48 h-48 text-blue-400/5 rotate-12" />
-              <div className="text-2xl sm:text-3xl font-black leading-tight relative z-10">
-                {fillQuestions[currentIndex].text.split('___').map((part, i, arr) => (
-                  <React.Fragment key={i}>
-                    {part}
-                    {i < arr.length - 1 && (
-                      <span className={`inline-block px-4 py-1 mx-2 border-b-4 font-black border-foreground/20 text-foreground/40`}>
-                        {'______'}
-                      </span>
-                    )}
-                  </React.Fragment>
-                ))}
-              </div>
-            </Card>
-
-            <MCQInteraction
-              question={fillQuestions[currentIndex].text}
-              options={fillQuestions[currentIndex].options.map(opt => ({
-                optiontext: opt.word,
-                is_correct: opt.word === fillQuestions[currentIndex].answer,
-                description: opt.meaning
-              }))}
-              colorScheme="modern"
-              showQuestion={false}
-              onSubmit={(isCorrect) => {
-                if (isCorrect) {
-                  setScore(prev => prev + 5);
-                  if (viewMode === 'review') {
-                    recordEnglishReviewSuccess(fillQuestions[currentIndex].answer);
-                  }
-                } else {
-                  setScore(prev => prev - 3);
-                  addEnglishReviewWord(fillQuestions[currentIndex].answer);
-                }
-                // The continue button in MCQInteraction will handle moving to next
-                handleNextFill();
-              }}
-            />
-          </div>
+        {(viewMode === 'fill' || viewMode === 'review') && fillQuestions[currentIndex] && (
+          <EnglishFITBInteraction
+            key={currentIndex}
+            question={fillQuestions[currentIndex].text}
+            options={fillQuestions[currentIndex].options}
+            answer={fillQuestions[currentIndex].answer}
+            onSubmit={handleFITBSubmit}
+          />
         )}
 
         {/* MATCH MODE */}
@@ -415,10 +383,22 @@ export default function EnglishModule() {
             </div>
           </div>
         )}
+
+        {viewMode === 'match' && isRoundComplete && (
+          <div className="mt-8 animate-in zoom-in-95 duration-500">
+            <button
+              onClick={handleNextRound}
+              className="w-full py-6 rounded-[2.5rem] bg-[#7EA68B] text-white font-black text-2xl shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 group ring-4 ring-[#7EA68B]/20"
+            >
+              Next Round
+              <CheckCircle2 className="w-8 h-8 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Universal Finish Early Button */}
-      {viewMode !== 'menu' && (viewMode !== 'match') && (
+      {viewMode !== 'match' && (
         <div className="pt-4 pb-8 px-2">
           <button onClick={finishSession} className="w-full py-4 rounded-3xl font-bold text-sm transition-all uppercase tracking-widest text-foreground/30 hover:text-foreground/80 active:scale-95 bg-transparent">
             Finish Learning Early
