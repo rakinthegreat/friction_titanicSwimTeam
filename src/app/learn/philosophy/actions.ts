@@ -75,15 +75,19 @@ export async function generateConcepts(interests: string[] = []) {
       }
     }
 
-    // Attempt to parse the JSON
     try {
-      // Find the first [ and last ] to extract the array if there's any preamble
       const startIdx = fullContent.indexOf('[');
       const endIdx = fullContent.lastIndexOf(']') + 1;
       const jsonStr = startIdx !== -1 && endIdx !== -1 ? fullContent.substring(startIdx, endIdx) : fullContent;
+      
+      const parsed = JSON.parse(jsonStr);
+      const concepts = Array.isArray(parsed) ? parsed : (parsed.concepts || parsed.data || Object.values(parsed)[0]);
 
-      const parsedConcepts = JSON.parse(jsonStr);
-      return { success: true, concepts: Array.isArray(parsedConcepts) ? parsedConcepts : [parsedConcepts] };
+      if (!Array.isArray(concepts)) {
+        throw new Error('Parsed data is not an array.');
+      }
+
+      return { success: true, concepts: concepts.slice(0, 5) };
     } catch (parseError) {
       console.error("JSON Parse Error:", fullContent);
       throw new Error("Failed to parse AI response as valid JSON.");

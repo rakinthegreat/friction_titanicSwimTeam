@@ -320,10 +320,10 @@ export const useUserStore = create<UserState>()(
 
         // 2. MERGE: Intelligent merging logic
         
-        // Interests: Union of both sets
+        // Simple Union/Max Fields
         const mergedInterests = Array.from(new Set([...state.interests, ...(remoteData.interests || [])]));
-
-        // Stats: Max of both values
+        const mergedVideoGenres = Array.from(new Set([...state.videoGenres, ...(remoteData.videoGenres || [])]));
+        
         const mergedStats = {
           totalMinutesSaved: Math.max(state.stats.totalMinutesSaved, remoteData.stats?.totalMinutesSaved || 0),
           activitiesCompleted: Math.max(state.stats.activitiesCompleted, remoteData.stats?.activitiesCompleted || 0),
@@ -334,45 +334,60 @@ export const useUserStore = create<UserState>()(
           highScores: { ...(remoteData.stats?.highScores || {}), ...state.stats.highScores }
         };
 
-        // Helper for timestamp-based merging (Reflections & Meditation)
+        // Helper for timestamp-based merging (Reflections, Meditation, Challenges)
         const mergeByTimestamp = (local: any[], remote: any[]) => {
-          const map = new Map<number, any>();
-          remote.forEach(item => map.set(item.timestamp, item));
-          local.forEach(item => map.set(item.timestamp, item));
-          return Array.from(map.values()).sort((a, b) => b.timestamp - a.timestamp);
+          const map = new Map();
+          remote.forEach(item => map.set(item.timestamp || item.id, item));
+          local.forEach(item => map.set(item.timestamp || item.id, item));
+          return Array.from(map.values()).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
         };
 
         const mergedPhil = mergeByTimestamp(state.philosophyReflections, remotePhil);
         const mergedSci = mergeByTimestamp(state.scienceReflections, remoteSci);
         const mergedMeditation = mergeByTimestamp(state.meditationLogs, remoteData.meditationLogs || []);
+        const mergedChallenges = mergeByTimestamp(state.realLifeChallenges, remoteData.realLifeChallenges || []);
 
-        // Concepts Merge
+        // Concepts & Words
         const mergedCompletedPhil = Array.from(new Set([...state.completedPhilosophyConcepts, ...(remoteData.completedPhilosophyConcepts || [])]));
         const mergedCompletedSci = Array.from(new Set([...state.completedScienceConcepts, ...(remoteData.completedScienceConcepts || [])]));
         
         const mergeCustom = (local: any[], remote: any[]) => {
           const map = new Map<string, any>();
-          remote.forEach(c => map.set(c.name || c.title, c));
-          local.forEach(c => map.set(c.name || c.title, c));
+          remote.forEach(c => map.set(c.name || c.title || c.concept_name, c));
+          local.forEach(c => map.set(c.name || c.title || c.concept_name, c));
           return Array.from(map.values());
         };
 
         const mergedCustomPhil = mergeCustom(state.customPhilosophyConcepts, remoteData.customPhilosophyConcepts || []);
         const mergedCustomSci = mergeCustom(state.customScienceConcepts, remoteData.customScienceConcepts || []);
+        const mergedEnglish = { ...(remoteData.englishReviewWords || {}), ...state.englishReviewWords };
+
+        // Daily Progress (Keep newest)
+        const mergedLastCompletedDate = (state.lastCompletedDate || '') > (remoteData.lastCompletedDate || '')
+          ? state.lastCompletedDate
+          : (remoteData.lastCompletedDate || null);
+        
+        const mergedDailyActivities = state.lastCompletedDate === mergedLastCompletedDate
+          ? state.dailyCompletedActivities
+          : (remoteData.dailyCompletedActivities || []);
 
         // 3. UPDATE LOCAL STORE
         const now = new Date().toISOString();
         set({
           interests: mergedInterests,
+          videoGenres: mergedVideoGenres,
           stats: mergedStats,
           philosophyReflections: mergedPhil,
           scienceReflections: mergedSci,
           meditationLogs: mergedMeditation,
+          realLifeChallenges: mergedChallenges,
           completedPhilosophyConcepts: mergedCompletedPhil,
           completedScienceConcepts: mergedCompletedSci,
           customPhilosophyConcepts: mergedCustomPhil,
           customScienceConcepts: mergedCustomSci,
-          realLifeChallenges: mergeByTimestamp(state.realLifeChallenges, remoteData.realLifeChallenges || []),
+          englishReviewWords: mergedEnglish,
+          dailyCompletedActivities: mergedDailyActivities,
+          lastCompletedDate: mergedLastCompletedDate,
           lastBackupDate: now
         });
 
@@ -381,6 +396,7 @@ export const useUserStore = create<UserState>()(
         
         const profileToPush = {
           interests: mergedInterests,
+          videoGenres: mergedVideoGenres,
           stats: mergedStats,
           preferences: state.preferences,
           completedPhilosophyConcepts: mergedCompletedPhil,
@@ -388,16 +404,16 @@ export const useUserStore = create<UserState>()(
           customPhilosophyConcepts: mergedCustomPhil,
           customScienceConcepts: mergedCustomSci,
           meditationLogs: mergedMeditation,
-          realLifeChallenges: mergeByTimestamp(state.realLifeChallenges, remoteData.realLifeChallenges || []),
-          englishReviewWords: { ...(remoteData.englishReviewWords || {}), ...state.englishReviewWords },
-          dailyCompletedActivities: state.dailyCompletedActivities,
-          lastCompletedDate: state.lastCompletedDate,
+          realLifeChallenges: mergedChallenges,
+          englishReviewWords: mergedEnglish,
+          dailyCompletedActivities: mergedDailyActivities,
+          lastCompletedDate: mergedLastCompletedDate,
           lastBackupDate: now,
         };
 
         batch.set(userDocRef, profileToPush, { merge: true });
 
-        // Push merged logs
+        // Push merged detailed logs to subcollections
         mergedPhil.forEach(session => {
           const refDoc = doc(collection(userDocRef, 'philosophy_reflections'), session.timestamp.toString());
           batch.set(refDoc, session, { merge: true });

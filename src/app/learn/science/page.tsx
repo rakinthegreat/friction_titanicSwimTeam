@@ -276,7 +276,7 @@ export default function ScienceModule() {
           </h1>
           <p className="text-foreground/70 text-lg font-medium max-w-md">
             {isGenerating
-              ? "Our AI is analyzing the scientific landscape to bring you 10 brand new discoveries."
+              ? "Our AI is analyzing the scientific landscape to bring you 5 brand new discoveries."
               : "You've explored every concept in our current lab. You're a true scientific pioneer!"}
           </p>
           {error && <p className="text-red-500 font-bold mt-4">{error}</p>}

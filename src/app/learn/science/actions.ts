@@ -49,6 +49,7 @@ const client = new OpenAI({
 
 export async function generateScienceConcepts(interests: string[] = []) {
     try {
+        console.log("Generating science concepts...");
         let userPrompt = "Generate 5 advanced scientific concepts.";
         if (interests && interests.length > 0) {
             userPrompt += ` Try to relate some of the concepts to these user interests if possible: ${interests.join(', ')}. However, prioritize deep, fascinating science over forced relations.`;
@@ -79,8 +80,14 @@ export async function generateScienceConcepts(interests: string[] = []) {
           const endIdx = fullContent.lastIndexOf(']') + 1;
           const jsonStr = startIdx !== -1 && endIdx !== -1 ? fullContent.substring(startIdx, endIdx) : fullContent;
           
-          const parsedConcepts = JSON.parse(jsonStr);
-          return { success: true, concepts: Array.isArray(parsedConcepts) ? parsedConcepts : [parsedConcepts] };
+          const parsed = JSON.parse(jsonStr);
+          const concepts = Array.isArray(parsed) ? parsed : (parsed.concepts || parsed.data || Object.values(parsed)[0]);
+
+          if (!Array.isArray(concepts)) {
+              throw new Error('Parsed data is not an array.');
+          }
+
+          return { success: true, concepts: concepts.slice(0, 5) };
         } catch (parseError) {
           console.error("JSON Parse Error:", fullContent);
           throw new Error("Failed to parse AI response as valid JSON.");

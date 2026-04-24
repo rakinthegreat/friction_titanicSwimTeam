@@ -277,7 +277,7 @@ export default function PhilosophyModule() {
           </h1>
           <p className="text-foreground/70 text-lg font-medium max-w-md">
             {isGenerating
-              ? "Our AI is analyzing the universe to bring you 10 brand new philosophical concepts."
+              ? "Our AI is analyzing the universe to bring you 5 brand new philosophical concepts."
               : "You've explored every concept in our current library. You're a true philosopher!"}
           </p>
           {error && <p className="text-red-500 font-bold mt-4">{error}</p>}
