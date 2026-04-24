@@ -17,8 +17,21 @@ export const WordOfTheDayWidget = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const CACHE_KEY = 'word_of_day_cache';
+
     const fetchWordOfTheDay = async () => {
       try {
+        const today = new Date().toISOString().split('T')[0];
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed.date === today) {
+            setData(parsed.data);
+            setLoading(false);
+            return;
+          }
+        }
+
         const word = getDailyWord();
         
         // Only fetch dictionary definition
@@ -28,11 +41,14 @@ export const WordOfTheDayWidget = () => {
         const defData = await defRes.json();
         const entry = defData[0];
 
-        setData({
+        const wordData = {
           word: word,
           meaning: entry.meanings[0].definitions[0].definition,
           phonetic: entry.phonetic || ''
-        });
+        };
+
+        setData(wordData);
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ date: today, data: wordData }));
       } catch (error) {
         console.error("Failed to fetch word of the day:", error);
         // Static fallback if even dictionary fails
