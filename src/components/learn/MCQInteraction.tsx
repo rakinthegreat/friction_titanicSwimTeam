@@ -13,6 +13,7 @@ interface MCQInteractionProps {
   options: Option[];
   onSubmit: (isCorrect: boolean, selectedOption: string, correctOption: string) => void;
   autoSubmit?: boolean;
+  manualConfirm?: boolean;
   showQuestion?: boolean;
   colorScheme?: 'classic' | 'modern';
 }
@@ -22,6 +23,7 @@ export const MCQInteraction = ({
   options,
   onSubmit,
   autoSubmit = false,
+  manualConfirm = false,
   showQuestion = true,
   colorScheme = 'modern'
 }: MCQInteractionProps) => {
@@ -31,20 +33,33 @@ export const MCQInteraction = ({
   const handleSelect = (idx: number) => {
     if (isSubmitted) return;
     setSelectedIdx(idx);
+    
+    if (!manualConfirm) {
+      setIsSubmitted(true);
+      const selected = options[idx];
+      const correct = options.find(o => o.is_correct) || options[0];
+      const delay = autoSubmit ? 600 : (selected.description ? 2500 : 1200);
+
+      setTimeout(() => {
+        onSubmit(selected.is_correct, selected.optiontext, correct.optiontext);
+        setSelectedIdx(null);
+        setIsSubmitted(false);
+      }, delay);
+    }
+  };
+
+  const handleConfirm = () => {
+    if (selectedIdx === null) return;
     setIsSubmitted(true);
+  };
 
-    const selected = options[idx];
+  const handleNext = () => {
+    if (selectedIdx === null) return;
+    const selected = options[selectedIdx];
     const correct = options.find(o => o.is_correct) || options[0];
-
-    // Determine delay: fast for game modes, longer if there's a description to read
-    const delay = autoSubmit ? 600 : (selected.description ? 2500 : 1200);
-
-    // Auto-advance after showing feedback
-    setTimeout(() => {
-      onSubmit(selected.is_correct, selected.optiontext, correct.optiontext);
-      setSelectedIdx(null);
-      setIsSubmitted(false);
-    }, delay);
+    onSubmit(selected.is_correct, selected.optiontext, correct.optiontext);
+    setSelectedIdx(null);
+    setIsSubmitted(false);
   };
 
   return (
@@ -107,7 +122,32 @@ export const MCQInteraction = ({
           );
         })}
       </div>
-
+      {manualConfirm && (
+        <div className="pt-4">
+          {!isSubmitted ? (
+            <button
+              onClick={handleConfirm}
+              disabled={selectedIdx === null}
+              className={`
+                w-full py-5 rounded-[2rem] font-black text-xl transition-all shadow-neo-out
+                ${selectedIdx !== null
+                  ? 'bg-accent-secondary text-white hover:scale-[1.02] active:scale-95' 
+                  : 'bg-black/10 dark:bg-white/10 text-foreground/40 cursor-not-allowed shadow-none'}
+              `}
+            >
+              Confirm Answer
+            </button>
+          ) : (
+            <button
+              onClick={handleNext}
+              className="w-full py-5 rounded-[2rem] font-black text-xl bg-accent-secondary text-white hover:scale-[1.02] active:scale-95 shadow-neo-out animate-in fade-in zoom-in duration-500 ring-4 ring-accent-secondary/30 flex items-center justify-center gap-2 group"
+            >
+              Next Question
+              <Check className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

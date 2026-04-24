@@ -374,6 +374,7 @@ export default function ScienceModule() {
           <MCQInteraction
             question={currentStep.question}
             options={currentStep.options}
+            manualConfirm={true}
             onSubmit={(isCorrect, selected, correct) => {
               setCurrentSessionMCQs(prev => [
                 ...prev,

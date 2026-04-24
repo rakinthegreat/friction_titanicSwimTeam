@@ -284,7 +284,7 @@ export default function TriviaPage() {
                 optiontext: option,
                 is_correct: index === currentQuestion.correctAnswer
               }))}
-              autoSubmit={true}
+              manualConfirm={true}
               showQuestion={false}
               onSubmit={(isCorrect) => {
                 if (isCorrect) {

@@ -206,7 +206,6 @@ export default function PhilosophyModule() {
                 <div className="space-y-4">
                   <div className="space-y-1">
                     <h3 className="text-xs font-black text-accent-secondary uppercase tracking-widest">{ref.conceptName}</h3>
-                    <h3 className="text-xs font-black text-[#7EA68B] uppercase tracking-widest">{ref.conceptName}</h3>
                     <div className="p-4 bg-card rounded-2xl shadow-neo-in opacity-60">
                       <p className="text-sm font-medium leading-relaxed text-foreground/70">{ref.conceptText}</p>
                     </div>
@@ -376,6 +375,7 @@ export default function PhilosophyModule() {
           <MCQInteraction
             question={currentStep.question}
             options={currentStep.options}
+            manualConfirm={true}
             onSubmit={(isCorrect, selected, correct) => {
               setCurrentSessionMCQs(prev => [
                 ...prev,
