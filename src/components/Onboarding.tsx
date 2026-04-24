@@ -35,7 +35,7 @@ export default function Onboarding() {
   const toggleInterest = (id: string) => {
     if (selected.includes(id)) {
       setSelected(selected.filter((i) => i !== id));
-    } else if (selected.length < 3) {
+    } else {
       setSelected([...selected, id]);
     }
   };
@@ -57,7 +57,7 @@ export default function Onboarding() {
   };
 
   const handleNext = () => {
-    if (step === 1 && selected.length >= 3) {
+    if (step === 1 && selected.length >= 2) {
       setStep(2);
     } else if (step === 2 && videoSelected.length >= 1) {
       setStep(3);
@@ -83,7 +83,7 @@ export default function Onboarding() {
           <div className="space-y-4">
             <h1 className="text-4xl font-black tracking-tight">Pick your fuel.</h1>
             <p className="text-foreground/50 text-lg font-medium">
-              Select your interests to personalize your reclaimed time (Maximum 3).
+              Select your interests to personalize your reclaimed time (minimum 2).
             </p>
           </div>
 
@@ -110,11 +110,11 @@ export default function Onboarding() {
           <div className="pt-8">
             <Button
               onClick={handleNext}
-              disabled={selected.length < 3}
-              className={`w-full py-5 text-xl font-black shadow-neo-out ${selected.length < 3 ? 'opacity-50' : 'active:shadow-neo-in active:scale-95'}`}
+              disabled={selected.length < 2}
+              className={`w-full py-5 text-xl font-black shadow-neo-out ${selected.length < 2 ? 'opacity-50' : 'active:shadow-neo-in active:scale-95'}`}
             >
-              {selected.length < 3
-                ? `Select ${3 - selected.length} more`
+              {selected.length < 2
+                ? `Select ${2 - selected.length} more`
                 : "Next Step"}
             </Button>
           </div>

@@ -6,7 +6,7 @@ import { WordLess } from "@/components/games/WordLess";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
 import { useEffect, useState } from "react";
-import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight, Sparkles, Hourglass } from "lucide-react";
+import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight, Sparkles, Hourglass, PlayCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ACTIVITIES } from "@/lib/activities";
@@ -22,7 +22,6 @@ export default function Home() {
   const updateStats = useUserStore((state) => state.updateStats);
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
   const [suggestions, setSuggestions] = useState<typeof ACTIVITIES>([]);
-  const [suggestionLock, setSuggestionLock] = useState<Record<number, typeof ACTIVITIES>>({});
   const setNavigationSource = useUserStore((state) => state.setNavigationSource);
   
   const preferredLanguages = useUserStore((state) => state.preferredLanguages);
@@ -35,12 +34,6 @@ export default function Home() {
     
     setMounted(true);
     setNavigationSource('home');
-    const savedDuration = localStorage.getItem('selectedDuration');
-    const savedSuggestions = localStorage.getItem('suggestions');
-    const savedLock = localStorage.getItem('suggestionLock');
-    if (savedDuration) setSelectedDuration(parseInt(savedDuration));
-    if (savedSuggestions) setSuggestions(JSON.parse(savedSuggestions));
-    if (savedLock) setSuggestionLock(JSON.parse(savedLock));
 
     const today = new Date().toISOString().split('T')[0];
     console.log('Hydration check:', { _hasHydrated, lastDate, today });
@@ -58,12 +51,6 @@ export default function Home() {
     }
     */
   }, [lastDate, setNavigationSource, _hasHydrated]);
-
-  useEffect(() => {
-    if (selectedDuration) localStorage.setItem('selectedDuration', selectedDuration.toString());
-    if (suggestions.length > 0) localStorage.setItem('suggestions', JSON.stringify(suggestions));
-    if (Object.keys(suggestionLock).length > 0) localStorage.setItem('suggestionLock', JSON.stringify(suggestionLock));
-  }, [selectedDuration, suggestions, suggestionLock]);
 
   const anySuggestionCompleted = suggestions.length > 0 && suggestions.some(a => dailyCompleted.includes(a.id));
   const allSuggestionsCompleted = suggestions.length > 0 && suggestions.every(a => dailyCompleted.includes(a.id));
@@ -134,73 +121,130 @@ export default function Home() {
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
               <Hourglass size={120} />
             </div>
-            <div className="space-y-2 relative z-10">
-              <h2 className="text-3xl font-black">Ready to reclaim time?</h2>
-              <p className="opacity-80 font-medium">Choose a wait duration to see activity options.</p>
-            </div>
-            <div className="flex flex-wrap gap-4 pt-2 relative z-10">
-              {[5, 10, 15, 20, 25].map((mins) => (
-                <button
-                  key={mins}
-                  onClick={() => {
-                    const pool = ACTIVITIES.filter(a => 
-                      a.minTime <= mins && 
-                      a.maxTime >= mins &&
-                      (a.interests.some(i => interests.includes(i)) || interests.length === 0)
-                    );
-                    
-                    const availablePool = pool.filter(a => !dailyCompleted.includes(a.id));
-                    const finalPool = availablePool.length >= 3 ? availablePool : pool;
-
-                    const shuffled = [...finalPool].sort(() => 0.5 - Math.random());
-                    const newSuggestions = shuffled.slice(0, 3);
-                    
-                    setSuggestions(newSuggestions);
-                    setSelectedDuration(mins);
-
-                    setSuggestionLock(prev => ({ ...prev, [mins]: newSuggestions }));
-                  }}
-                  className={`rounded-2xl px-6 py-4 font-black transition-all ${
-                    selectedDuration === mins 
-                    ? "bg-white text-accent-secondary shadow-neo-in scale-95" 
-                    : "bg-accent-secondary shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105"
-                  }`}
-                >
-                  {mins}m
-                </button>
-              ))}
-            </div>
-
-            {selectedDuration && suggestions.length > 0 && (
-              <div className="pt-6 space-y-4 animate-in slide-in-from-top-4 duration-500 relative z-10">
-                <div className="flex items-center justify-between">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Curated for {selectedDuration}m</p>
+            
+            {!selectedDuration ? (
+              <div className="animate-in fade-in zoom-in-95 duration-500">
+                <div className="space-y-2 relative z-10 mb-6">
+                  <h2 className="text-3xl font-black">How long do you expect to wait?</h2>
+                  <p className="opacity-80 font-medium">Choose a duration to see tailored options.</p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {suggestions.map((activity) => (
-                    <Link 
-                      key={activity.id} 
-                      href={`${activity.href}?time=${selectedDuration}`}
-                      className="group"
-                    >
-                      <div className="h-full p-4 bg-white/10 rounded-3xl border border-white/5 hover:bg-white/20 transition-all hover:-translate-y-1 relative">
-                        {dailyCompleted.includes(activity.id) && (
-                          <div className="absolute top-3 right-3 bg-white text-accent-secondary rounded-full p-1 shadow-lg z-20">
-                            <ShieldCheck className="w-4 h-4" />
-                          </div>
-                        )}
-                        <div className={`w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center mb-3 ${activity.color.replace('text-', 'text-white')}`}>
-                          {(() => {
-                            const original = ACTIVITIES.find(a => a.id === activity.id);
-                            const Icon = original?.icon;
-                            return Icon ? <Icon className="w-5 h-5 text-white" /> : null;
-                          })()}
-                        </div>
-                        <h3 className="text-sm font-black leading-tight mb-1">{activity.title}</h3>
-                        <p className="text-[10px] opacity-60 line-clamp-2 font-medium">{activity.description}</p>
+                {/* Portrait: 3+2 split. Landscape: flex row of 5 via display:contents */}
+                <div className="space-y-3 relative z-10 [@media(orientation:landscape)]:flex [@media(orientation:landscape)]:gap-3 [@media(orientation:landscape)]:space-y-0">
+                  <div className="grid grid-cols-3 gap-3 [@media(orientation:landscape)]:contents">
+                    {[5, 10, 15].map((mins) => (
+                      <button
+                        key={mins}
+                        onClick={() => {
+                          const pool = ACTIVITIES.filter(a => a.minTime <= mins && a.maxTime >= mins && (a.interests.some(i => interests.includes(i)) || interests.length === 0 || a.type === 'life'));
+                          const lifePool = pool.filter(a => a.type === 'life' && !dailyCompleted.includes(a.id));
+                          const gamePool = pool.filter(a => a.type === 'game' && !dailyCompleted.includes(a.id));
+                          const learnPool = pool.filter(a => a.type === 'learn' && !dailyCompleted.includes(a.id));
+                          const finalLife = lifePool.length > 0 ? lifePool : pool.filter(a => a.type === 'life');
+                          const finalGame = gamePool.length >= 2 ? gamePool : pool.filter(a => a.type === 'game');
+                          const finalLearn = learnPool.length >= 2 ? learnPool : pool.filter(a => a.type === 'learn');
+                          setSuggestions([...[...finalLife].sort(() => 0.5 - Math.random()).slice(0, 1), ...[...finalGame].sort(() => 0.5 - Math.random()).slice(0, 3), ...[...finalLearn].sort(() => 0.5 - Math.random()).slice(0, 3)]);
+                          setSelectedDuration(mins);
+                        }}
+                        className="rounded-2xl px-6 py-4 font-black transition-all bg-accent-secondary shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105 [@media(orientation:landscape)]:flex-1"
+                      >
+                        {mins}m
+                      </button>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 mx-auto max-w-[66%] [@media(orientation:landscape)]:contents [@media(orientation:landscape)]:max-w-none">
+                    {[20, 25].map((mins) => (
+                      <button
+                        key={mins}
+                        onClick={() => {
+                          const pool = ACTIVITIES.filter(a => a.minTime <= mins && a.maxTime >= mins && (a.interests.some(i => interests.includes(i)) || interests.length === 0 || a.type === 'life'));
+                          const lifePool = pool.filter(a => a.type === 'life' && !dailyCompleted.includes(a.id));
+                          const gamePool = pool.filter(a => a.type === 'game' && !dailyCompleted.includes(a.id));
+                          const learnPool = pool.filter(a => a.type === 'learn' && !dailyCompleted.includes(a.id));
+                          const finalLife = lifePool.length > 0 ? lifePool : pool.filter(a => a.type === 'life');
+                          const finalGame = gamePool.length >= 2 ? gamePool : pool.filter(a => a.type === 'game');
+                          const finalLearn = learnPool.length >= 2 ? learnPool : pool.filter(a => a.type === 'learn');
+                          setSuggestions([...[...finalLife].sort(() => 0.5 - Math.random()).slice(0, 1), ...[...finalGame].sort(() => 0.5 - Math.random()).slice(0, 3), ...[...finalLearn].sort(() => 0.5 - Math.random()).slice(0, 3)]);
+                          setSelectedDuration(mins);
+                        }}
+                        className="rounded-2xl px-6 py-4 font-black transition-all bg-accent-secondary shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105 [@media(orientation:landscape)]:flex-1"
+                      >
+                        {mins}m
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 relative z-10">
+                <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
+                  <div>
+                    <h2 className="text-3xl font-black">Your Options</h2>
+                    <p className="text-[12px] font-black uppercase tracking-[0.2em] opacity-80 mt-1">Curated for {selectedDuration}m</p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      setSelectedDuration(null);
+                      setSuggestions([]);
+                    }}
+                    className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors shadow-neo-out"
+                    aria-label="Change duration"
+                  >
+                    <ChevronRight className="w-6 h-6 rotate-180" />
+                  </button>
+                </div>
+                
+                <div className="space-y-6">
+                  {['life', 'game', 'learn'].map((category) => {
+                  const categorySuggestions = suggestions.filter(a => a.type === category);
+                  if (categorySuggestions.length === 0) return null;
+                  
+                  const categoryTitle = category === 'life' ? 'Life & Mindfulness' : category === 'game' ? 'Quick Games' : 'Bite-sized Learning';
+                  
+                  return (
+                    <div key={category} className="space-y-2">
+                      <h3 className="text-xs font-black uppercase tracking-widest opacity-60">{categoryTitle}</h3>
+                      <div className="flex flex-col gap-2">
+                        {categorySuggestions.map((activity) => (
+                          <Link 
+                            key={activity.id} 
+                            href={`${activity.href}?time=${selectedDuration}`}
+                            className="group"
+                          >
+                            <div className="flex items-center gap-3 px-4 py-3 bg-white/10 rounded-2xl border border-white/5 hover:bg-white/20 transition-all hover:translate-x-1 relative">
+                              {dailyCompleted.includes(activity.id) && (
+                                <div className="absolute right-3 bg-white text-accent-secondary rounded-full p-0.5 shadow-lg z-20">
+                                  <ShieldCheck className="w-3 h-3" />
+                                </div>
+                              )}
+                              <div className={`w-8 h-8 shrink-0 rounded-xl bg-white/10 flex items-center justify-center`}>
+                                {(() => {
+                                  const original = ACTIVITIES.find(a => a.id === activity.id);
+                                  const Icon = original?.icon;
+                                  return Icon ? <Icon className="w-4 h-4 text-white" /> : null;
+                                })()}
+                              </div>
+                              <h3 className="text-sm font-black leading-tight">{activity.title}</h3>
+                            </div>
+                          </Link>
+                        ))}
                       </div>
-                    </Link>
-                  ))}
+                    </div>
+                  );
+                })}
+                </div>
+
+                <div className="pt-2 border-t border-white/10 space-y-2">
+                  <h3 className="text-xs font-black uppercase tracking-widest opacity-60">Recreation</h3>
+                  <Link
+                    href={`/watch?time=${selectedDuration}`}
+                    className="flex items-center gap-3 px-4 py-3 bg-white/10 rounded-2xl border border-white/5 hover:bg-white/20 transition-all hover:translate-x-1 w-full"
+                  >
+                    <div className="w-8 h-8 shrink-0 rounded-xl bg-white/15 flex items-center justify-center">
+                      <PlayCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <p className="text-sm font-black text-white leading-tight">Wanna watch something interesting?</p>
+                    <ChevronRight className="w-4 h-4 text-white/60 ml-auto shrink-0" />
+                  </Link>
                 </div>
               </div>
             )}
@@ -261,7 +305,6 @@ export default function Home() {
           updateStats={updateStats}
         />
       </div>
-
     </main>
   );
 }

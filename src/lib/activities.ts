@@ -1,10 +1,10 @@
-import { Laptop, History, Puzzle, Languages, FlaskConical, Brain, BookOpen, HelpCircle, Zap, Move, Grid3X3, Type, BrainCircuit, Blocks } from 'lucide-react';
+import { Laptop, History, Puzzle, Languages, FlaskConical, Brain, BookOpen, HelpCircle, Zap, Move, Grid3X3, Type, BrainCircuit, Blocks, Sparkles, Leaf } from 'lucide-react';
 
 export interface ActivityDefinition {
   id: string;
   title: string;
   description: string;
-  type: 'game' | 'learn';
+  type: 'game' | 'learn' | 'life';
   href: string;
   icon: any;
   color: string;
@@ -172,6 +172,32 @@ export const ACTIVITIES: ActivityDefinition[] = [
     minTime: 5,
     maxTime: 10,
     interests: ['history', 'tech', 'science', 'philosophy'],
+  },
+  // LIFE
+  {
+    id: 'meditation',
+    title: 'Daily Meditation',
+    description: 'Reflect on your day and find focus.',
+    type: 'life',
+    href: '/activities/meditation',
+    icon: Leaf,
+    color: 'text-accent-secondary',
+    minTime: 5,
+    maxTime: 20,
+    interests: ['philosophy'],
+    scalable: true
+  },
+  {
+    id: 'challenges',
+    title: 'Real-Life Challenges',
+    description: 'Interact with the world around you.',
+    type: 'life',
+    href: '/activities/challenges',
+    icon: Sparkles,
+    color: 'text-accent',
+    minTime: 5,
+    maxTime: 30,
+    interests: [],
     scalable: true
   }
 ];
