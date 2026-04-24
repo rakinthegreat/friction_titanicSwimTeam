@@ -31,6 +31,7 @@ const hashString = (str: string) => {
 export const getDailyWord = () => {
   const today = getEffectiveDate();
   const seed = hashString(today + 'salt-word-of-day');
+  if (!WORD_LIST || WORD_LIST.length === 0) return 'serendipity';
   const index = seed % WORD_LIST.length;
   return WORD_LIST[index];
 };
@@ -39,7 +40,9 @@ export const getDailyWordLess = () => {
   const today = getEffectiveDate();
   const seed = hashString(today + 'salt-wordless');
   
+  if (!WORD_LIST || WORD_LIST.length === 0) return 'TRUST';
   const fives = WORD_LIST.filter(w => w.length === 5);
+  if (fives.length === 0) return 'TRUST';
   const index = seed % fives.length;
   return fives[index].toUpperCase();
 };

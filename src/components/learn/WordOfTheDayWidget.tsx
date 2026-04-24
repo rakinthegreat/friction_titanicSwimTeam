@@ -12,48 +12,56 @@ interface WordData {
   meaning: string;
 }
 
+import { getCachedData, setCachedData } from '@/lib/offline-data-manager';
+
 export const WordOfTheDayWidget = () => {
   const addEnglishReviewWord = useUserStore((state) => state.addEnglishReviewWord);
   const [data, setData] = useState<WordData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const CACHE_KEY = 'word_of_day_cache';
+    const CACHE_KEY = 'word_of_day_cache_v2'; // Bump version
 
     const fetchWordOfTheDay = async () => {
       try {
         const today = getEffectiveDate();
-        const cached = localStorage.getItem(CACHE_KEY);
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (parsed.date === today) {
-            setData(parsed.data);
-            setLoading(false);
-            return;
-          }
+        
+        // 1. Check localforage cache first (better than localStorage for Capacitor)
+        const cached = await getCachedData<any>(CACHE_KEY);
+        if (cached && cached.date === today) {
+          setData(cached.data);
+          setLoading(false);
+          return;
         }
 
         const word = getDailyWord();
         
-        // Only fetch dictionary definition
+        // 2. Fetch dictionary definition
         const defRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-        if (!defRes.ok) throw new Error('Dict failed');
+        let wordData: WordData;
 
-        const defData = await defRes.json();
-        const entry = defData[0];
-
-        const wordData = {
-          word: word,
-          meaning: entry.meanings[0].definitions[0].definition,
-          phonetic: entry.phonetic || ''
-        };
+        if (defRes.ok) {
+          const defData = await defRes.json();
+          const entry = defData[0];
+          wordData = {
+            word: word,
+            meaning: entry.meanings[0].definitions[0].definition,
+            phonetic: entry.phonetic || ''
+          };
+        } else {
+          // Fallback if dictionary API is down or offline
+          wordData = {
+            word: word,
+            meaning: 'A common daily word to help you reclaim your time and focus.',
+            phonetic: ''
+          };
+        }
 
         setData(wordData);
-        localStorage.setItem(CACHE_KEY, JSON.stringify({ date: today, data: wordData }));
+        await setCachedData(CACHE_KEY, { date: today, data: wordData });
         addEnglishReviewWord(word);
       } catch (error) {
         console.error("Failed to fetch word of the day:", error);
-        // Static fallback if even dictionary fails
         setData({
           word: 'serendipity',
           meaning: 'the occurrence and development of events by chance in a happy or beneficial way.',
