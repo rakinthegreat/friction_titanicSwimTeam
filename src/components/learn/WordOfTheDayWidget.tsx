@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, Loader2 } from 'lucide-react';
 import { Card } from '../ui/Card';
+import { useUserStore } from '@/store/userStore';
 
-import { getDailyWord } from '@/lib/dailyWord';
-
+import { getDailyWord, getEffectiveDate } from '@/lib/dailyWord';
 interface WordData {
   word: string;
   phonetic: string;
@@ -13,6 +13,7 @@ interface WordData {
 }
 
 export const WordOfTheDayWidget = () => {
+  const addEnglishReviewWord = useUserStore((state) => state.addEnglishReviewWord);
   const [data, setData] = useState<WordData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -21,7 +22,7 @@ export const WordOfTheDayWidget = () => {
 
     const fetchWordOfTheDay = async () => {
       try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getEffectiveDate();
         const cached = localStorage.getItem(CACHE_KEY);
         if (cached) {
           const parsed = JSON.parse(cached);
@@ -49,6 +50,7 @@ export const WordOfTheDayWidget = () => {
 
         setData(wordData);
         localStorage.setItem(CACHE_KEY, JSON.stringify({ date: today, data: wordData }));
+        addEnglishReviewWord(word);
       } catch (error) {
         console.error("Failed to fetch word of the day:", error);
         // Static fallback if even dictionary fails

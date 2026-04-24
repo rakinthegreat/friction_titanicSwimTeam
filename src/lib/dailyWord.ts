@@ -1,6 +1,6 @@
 import { WORD_LIST } from './wordlist';
 
-const getEffectiveDate = () => {
+export const getEffectiveDate = () => {
   if (typeof window !== 'undefined') {
     const override = localStorage.getItem('dev_date_override');
     if (override) return override;
