@@ -277,10 +277,10 @@ export default function Profile() {
             <button 
               onClick={handleSync}
               disabled={isSyncing}
-              className={`w-full py-4 rounded-2xl font-black shadow-neo-out transition-all flex items-center justify-center gap-2 ${
+              className={`w-full py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2 ${
                 syncSuccess 
-                  ? 'bg-green-500 text-white shadow-none' 
-                  : 'bg-card text-accent hover:scale-[1.02] active:scale-[0.98]'
+                  ? 'bg-card text-green-500 shadow-neo-in scale-[0.98]' 
+                  : 'bg-card text-accent shadow-neo-out hover:scale-[1.02] active:scale-[0.98]'
               }`}
             >
               {isSyncing ? (

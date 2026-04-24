@@ -12,6 +12,7 @@ const TUTORIAL_STEPS = [
   "Slide the tiles in any direction (Up, Down, Left, Right).",
   "When two tiles with the same number touch, they merge into one!",
   "Each merge adds the value of the new tile to your score.",
+  "A new tile appears after every move. It will glow for its first turn to help you keep track!",
   "Keep merging tiles to reach the ultimate goal: 2048!"
 ];
 
@@ -251,16 +252,16 @@ export default function Game2048Page() {
         <div className="flex items-center">
           <button
             onClick={() => router.push('/games')}
-            className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            className="p-3 rounded-2xl bg-card shadow-neo-out text-accent transition-all active:scale-95"
             aria-label="Back to games"
           >
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-2xl font-bold ml-2">2048</h1>
+          <h1 className="text-2xl font-bold ml-4">2048</h1>
         </div>
         <button
           onClick={() => setIsTutorialOpen(true)}
-          className="p-2 ml-auto rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-accent"
+          className="p-3 rounded-2xl bg-card shadow-neo-out text-accent transition-all active:scale-95"
         >
           <HelpCircle className="w-6 h-6" />
         </button>
@@ -273,7 +274,7 @@ export default function Game2048Page() {
         onClose={() => setIsTutorialOpen(false)} 
       />
 
-      <div className="flex gap-4 mb-8">
+      <div className="flex justify-center gap-4 mb-8">
         <div className="bg-card px-6 py-3 rounded-2xl shadow-neo-in text-center min-w-[90px]">
           <p className="text-[10px] font-bold uppercase tracking-tighter opacity-40 leading-none mb-2">Score</p>
           <p className="text-xl font-black leading-none">{score}</p>
@@ -287,7 +288,7 @@ export default function Game2048Page() {
       <Card
         className="flex flex-col items-center justify-center p-4 sm:p-6 mb-8 relative select-none"
       >
-        <div className="grid grid-cols-4 gap-4 sm:gap-6 w-full bg-black/5 dark:bg-white/5 p-4 sm:p-6 rounded-[2.5rem] shadow-neo-in aspect-square relative">
+        <div className="grid grid-cols-4 gap-4 sm:gap-6 w-full bg-black/10 dark:bg-white/5 p-4 sm:p-6 rounded-[2.5rem] shadow-neo-in aspect-square relative">
           {grid.flat().map((val, i) => {
             const r = Math.floor(i / 4);
             const c = i % 4;

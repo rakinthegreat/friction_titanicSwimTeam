@@ -171,18 +171,20 @@ export default function MemoryMatchPage() {
 
   return (
     <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-2xl mx-auto">
-      <div className="flex items-center mb-6">
-        <button 
-          onClick={() => router.push('/games')}
-          className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-          aria-label="Back to games"
-        >
-          <ArrowLeft className="w-6 h-6" />
-        </button>
-        <h1 className="text-2xl font-bold ml-2">Memory Match</h1>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center">
+          <button 
+            onClick={() => router.push('/games')}
+            className="p-3 rounded-2xl bg-card shadow-neo-out text-accent transition-all active:scale-95"
+            aria-label="Back to games"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          <h1 className="text-2xl font-bold ml-4">Memory Match</h1>
+        </div>
         <button 
           onClick={() => setIsTutorialOpen(true)}
-          className="p-2 ml-auto rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-accent"
+          className="p-3 rounded-2xl bg-card shadow-neo-out text-accent transition-all active:scale-95"
         >
           <HelpCircle className="w-6 h-6" />
         </button>

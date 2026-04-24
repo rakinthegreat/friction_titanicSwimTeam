@@ -6,14 +6,13 @@ import { Button } from '@/components/ui/Button';
 import { ArrowLeft, RotateCcw, Delete, HelpCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { generateSudoku, findConflicts, SudokuBoard } from '@/lib/sudoku';
-import { useUserStore } from '@/store/userStore';
 import { GameTutorial } from '@/components/games/GameTutorial';
 
 const TUTORIAL_STEPS = [
-  "The goal is to fill the 9x9 grid with numbers 1-9.",
-  "Each number must appear exactly once in every row, column, and 3x3 box.",
+  "Fill the 9x9 grid with numbers 1-9.",
+  "Each row, column, and 3x3 block must contain every number exactly once.",
   "Select a cell and tap a number to fill it.",
-  "Conflicts will be highlighted. Clear all conflicts and fill the board to win!"
+  "Conflicts will be highlighted in red. Solve the full board without errors to win!"
 ];
 
 export default function SudokuPage() {
@@ -33,18 +32,12 @@ export default function SudokuPage() {
       localStorage.setItem('tutorial-sudoku', 'true');
     }
   }, []);
-  const updateStats = useUserStore((state) => state.updateStats);
-  const [grid, setGrid] = useState<number[][]>([]); // Placeholder if needed or use existing board state
 
   const startNewGame = useCallback(() => {
     setIsLoading(true);
-    const params = new URLSearchParams(window.location.search);
-    const time = parseInt(params.get('time') || '10');
-    // FIXED: Sudoku is now 20m+ fixed difficulty
-    const blanks = 40;
-
+    // Use timeout to allow UI to render spinner before heavy generation
     setTimeout(() => {
-      const { puzzle } = generateSudoku(Math.floor(blanks));
+      const { puzzle } = generateSudoku(40); // 40 blanks = easy/medium difficulty
       setInitialBoard(puzzle);
       setBoard(puzzle.map(row => [...row]));
       setConflicts([]);
@@ -86,8 +79,6 @@ export default function SudokuPage() {
     if (isFull && currentConflicts.length === 0) {
       setIsWon(true);
       setSelectedCell(null);
-      updateStats(15, 'sudoku');
-      useUserStore.getState().completeActivity('sudoku');
     }
   };
 
@@ -104,18 +95,26 @@ export default function SudokuPage() {
 
   return (
     <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-lg mx-auto">
-      <div className="flex items-center mb-4">
-        <button 
-          onClick={() => router.push('/games')}
-          className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-          aria-label="Back to games"
-        >
-          <ArrowLeft className="w-6 h-6" />
-        </button>
-        <h1 className="text-2xl font-bold ml-2">Sudoku</h1>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center">
+          <button 
+            onClick={() => router.push('/games')}
+            className="p-3 rounded-2xl bg-card text-accent transition-all active:scale-95"
+            style={{ 
+              boxShadow: '8px 8px 16px rgba(163, 177, 198, 0.6), -8px -8px 16px rgba(255, 255, 255, 0.8)' 
+            }}
+            aria-label="Back to games"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          <h1 className="text-2xl font-bold ml-4">Sudoku</h1>
+        </div>
         <button 
           onClick={() => setIsTutorialOpen(true)}
-          className="p-2 ml-auto rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-accent"
+          className="p-3 rounded-2xl bg-card text-accent transition-all active:scale-95"
+          style={{ 
+            boxShadow: '8px 8px 16px rgba(163, 177, 198, 0.6), -8px -8px 16px rgba(255, 255, 255, 0.8)' 
+          }}
         >
           <HelpCircle className="w-6 h-6" />
         </button>
@@ -139,14 +138,30 @@ export default function SudokuPage() {
         </div>
 
         {/* Board */}
-        <div className="relative mb-8 w-full max-w-[340px] select-none p-1 border-[4px] border-black dark:border-white rounded-2xl">
-          <div className="grid grid-cols-3 gap-0 bg-foreground/20 dark:bg-white/10 overflow-hidden rounded-xl border-[1.5px] border-black dark:border-white">
+        <div 
+          className="relative mb-8 w-full max-w-[340px] select-none p-1 rounded-2xl bg-black/5"
+          style={{ 
+            border: '4px solid var(--foreground)',
+            boxShadow: 'inset 8px 8px 16px rgba(163, 177, 198, 0.4), inset -8px -8px 16px rgba(255, 255, 255, 0.8)'
+          }}
+        >
+          <div 
+            className="grid grid-cols-3 gap-0 overflow-hidden rounded-xl"
+            style={{ 
+              backgroundColor: 'rgba(0, 0, 0, 0.3)', // Deeper contrast for lines in light mode
+              border: '1.5px solid var(--foreground)' 
+            }}
+          >
             {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((blockIndex) => {
               const startR = Math.floor(blockIndex / 3) * 3;
               const startC = (blockIndex % 3) * 3;
 
               return (
-                <div key={blockIndex} className="grid grid-cols-3 gap-[1px] border-[1.5px] border-black dark:border-white">
+                <div 
+                  key={blockIndex} 
+                  className="grid grid-cols-3 gap-[1px]"
+                  style={{ border: '1.5px solid var(--foreground)' }}
+                >
                   {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((cellIndex) => {
                     const r = startR + Math.floor(cellIndex / 3);
                     const c = startC + (cellIndex % 3);
@@ -164,7 +179,7 @@ export default function SudokuPage() {
                         className={`
                           aspect-square flex items-center justify-center text-xl font-bold cursor-pointer transition-all duration-200 relative
                           ${isInitial 
-                            ? 'bg-black/10 dark:bg-white/5 text-foreground font-black' 
+                            ? 'bg-black/10 dark:bg-white/10 text-foreground font-black' 
                             : 'bg-card text-accent font-medium'}
                           ${isSameNumber ? '!bg-accent/20 dark:!bg-accent/30 !text-accent' : ''}
                           ${isSelected ? '!bg-accent !text-white z-10 shadow-lg scale-105 rounded-sm' : ''}
