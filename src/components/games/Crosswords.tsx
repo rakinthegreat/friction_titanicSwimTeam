@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Trophy, HelpCircle, Loader2, ChevronDown } from 'lucide-react';
+import { Trophy, HelpCircle, Loader2, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getDailyCrossword } from '@/lib/dailyCrossword';
 import { useUserStore } from '@/store/userStore';
 
@@ -386,6 +386,39 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
     }
   };
 
+  const getActiveClue = () => {
+    if (!clues) return null;
+    return clues.find(c => {
+      if (c.direction !== lastDir) return false;
+      for (let i = 0; i < c.answer.length; i++) {
+        const r = c.direction === 'across' ? c.row : c.row + i;
+        const col = c.direction === 'across' ? c.col + i : c.col;
+        if (r === focused.r && col === focused.c) return true;
+      }
+      return false;
+    }) || clues[0];
+  };
+
+  const nextClue = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (!clues) return;
+    const current = getActiveClue();
+    const idx = clues.findIndex(c => c === current);
+    const next = clues[(idx + 1) % clues.length];
+    setFocused({ r: next.row, c: next.col });
+    setLastDir(next.direction);
+  };
+
+  const prevClue = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (!clues) return;
+    const current = getActiveClue();
+    const idx = clues.findIndex(c => c === current);
+    const prev = clues[(idx - 1 + clues.length) % clues.length];
+    setFocused({ r: prev.row, c: prev.col });
+    setLastDir(prev.direction);
+  };
+
   if (clues === null) return (
     <div className="h-64 flex flex-col items-center justify-center space-y-4">
       <Loader2 className="w-8 h-8 animate-spin text-accent" />
@@ -446,73 +479,70 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
       </div>
 
       <div className="w-full max-w-md space-y-6">
-        {(() => {
-          const activeClue = clues.find(c => {
-            if (c.direction !== lastDir) return false;
-            for (let i = 0; i < c.answer.length; i++) {
-              const r = c.direction === 'across' ? c.row : c.row + i;
-              const col = c.direction === 'across' ? c.col + i : c.col;
-              if (r === focused.r && col === focused.c) return true;
-            }
-            return false;
-          });
-
-          return (
-            <div className="bg-card/50 rounded-[2.5rem] shadow-neo-in border border-foreground/5 overflow-hidden">
-              {/* Collapsible Section Trigger */}
-              <button 
-                onClick={() => setShowAllClues(!showAllClues)}
-                className="w-full p-8 flex items-center justify-between hover:bg-foreground/5 transition-all group"
-              >
-                <div className="flex flex-col items-start">
-                  <span className="text-sm font-black uppercase tracking-[0.2em] text-accent flex items-center gap-3 group-hover:scale-105 transition-transform">
-                    <HelpCircle size={20} className="text-accent" />
-                    DAILY CLUES
-                  </span>
-                  <p className="text-[10px] font-bold text-foreground/30 uppercase mt-1 tracking-[0.15em]">
-                    {showAllClues ? "Tap to close list" : "Tap to expand all clues"}
-                  </p>
-                </div>
-                <ChevronDown className={`w-6 h-6 text-accent transition-transform duration-500 ${showAllClues ? 'rotate-180' : ''}`} />
-              </button>
-
-              {showAllClues && (
-                <div className="px-8 pb-10 max-h-[500px] overflow-y-auto space-y-10 animate-in slide-in-from-top-2 duration-300 scrollbar-hide border-t border-foreground/5 pt-8">
-                  <div className="space-y-6">
-                    <p className="text-xs font-black text-accent/40 uppercase tracking-[0.3em] border-b border-foreground/10 pb-2">Across</p>
-                    <div className="space-y-4">
-                      {clues.filter(c => c.direction === 'across').map(c => (
-                        <button 
-                          key={`across-${c.label}`} 
-                          onClick={() => { setFocused({ r: c.row, c: c.col }); setLastDir('across'); }}
-                          className={`w-full text-left p-5 rounded-[1.5rem] transition-all flex items-start gap-5 ${activeClue?.label === c.label && activeClue?.direction === 'across' ? 'bg-accent/15 shadow-neo-in ring-1 ring-accent/30' : 'bg-foreground/5 hover:bg-foreground/10'}`}
-                        >
-                          <span className="font-black text-accent text-xl mt-0.5 min-w-[1.5rem] text-center">{c.label}</span>
-                          <span className="text-sm font-bold text-foreground/80 leading-relaxed italic">"{c.clue}"</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="space-y-6">
-                    <p className="text-xs font-black text-accent/40 uppercase tracking-[0.3em] border-b border-foreground/10 pb-2">Down</p>
-                    <div className="space-y-4">
-                      {clues.filter(c => c.direction === 'down').map(c => (
-                        <button 
-                          key={`down-${c.label}`} 
-                          onClick={() => { setFocused({ r: c.row, c: c.col }); setLastDir('down'); }}
-                          className={`w-full text-left p-5 rounded-[1.5rem] transition-all flex items-start gap-5 ${activeClue?.label === c.label && activeClue?.direction === 'down' ? 'bg-accent/15 shadow-neo-in ring-1 ring-accent/30' : 'bg-foreground/5 hover:bg-foreground/10'}`}
-                        >
-                          <span className="font-black text-accent text-xl mt-0.5 min-w-[1.5rem] text-center">{c.label}</span>
-                          <span className="text-sm font-bold text-foreground/80 leading-relaxed italic">"{c.clue}"</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
+        <div className="bg-card/50 rounded-[3rem] shadow-neo-in border border-foreground/5 overflow-hidden min-h-[200px] flex flex-col justify-center">
+          <div className="flex items-center justify-between px-2 py-4">
+            <button 
+              onClick={prevClue}
+              className="p-2 rounded-full hover:bg-foreground/5 text-accent transition-all active:scale-90 flex-shrink-0"
+            >
+              <ChevronLeft className="w-8 h-8" />
+            </button>
+            
+            <div 
+              onClick={() => setShowAllClues(!showAllClues)}
+              className="flex-1 text-center cursor-pointer px-1 group"
+            >
+              <span className="text-[10px] font-black text-accent/40 uppercase tracking-[0.3em] block mb-3 group-hover:text-accent transition-colors">
+                {getActiveClue()?.label} {getActiveClue()?.direction}
+              </span>
+              <p className="text-sm font-bold leading-relaxed italic line-clamp-6 px-1 opacity-80">
+                "{getActiveClue()?.clue}"
+              </p>
             </div>
-          );
-        })()}
+
+            <button 
+              onClick={nextClue}
+              className="p-2 rounded-full hover:bg-foreground/5 text-accent transition-all active:scale-90 flex-shrink-0"
+            >
+              <ChevronRight className="w-8 h-8" />
+            </button>
+          </div>
+
+          {showAllClues && (
+            <div className="px-8 pb-10 max-h-[500px] overflow-y-auto space-y-10 animate-in slide-in-from-top-2 duration-300 scrollbar-hide border-t border-foreground/5 pt-8">
+              <div className="space-y-6">
+                <p className="text-xs font-black text-accent/40 uppercase tracking-[0.3em] border-b border-foreground/10 pb-2">Across</p>
+                <div className="space-y-4">
+                  {clues.filter(c => c.direction === 'across').map(c => (
+                    <button 
+                      key={`across-${c.label}`} 
+                      onClick={() => { setFocused({ r: c.row, c: c.col }); setLastDir('across'); }}
+                      className={`w-full text-left p-5 rounded-[1.5rem] transition-all flex items-start gap-5 ${getActiveClue()?.label === c.label && getActiveClue()?.direction === 'across' ? 'bg-accent/15 shadow-neo-in ring-1 ring-accent/30' : 'bg-foreground/5 hover:bg-foreground/10'}`}
+                    >
+                      <span className="font-black text-accent text-xl mt-0.5 min-w-[1.5rem] text-center">{c.label}</span>
+                      <span className="text-sm font-bold text-foreground/80 leading-relaxed italic">"{c.clue}"</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-6">
+                <p className="text-xs font-black text-accent/40 uppercase tracking-[0.3em] border-b border-foreground/10 pb-2">Down</p>
+                <div className="space-y-4">
+                  {clues.filter(c => c.direction === 'down').map(c => (
+                    <button 
+                      key={`down-${c.label}`} 
+                      onClick={() => { setFocused({ r: c.row, c: c.col }); setLastDir('down'); }}
+                      className={`w-full text-left p-5 rounded-[1.5rem] transition-all flex items-start gap-5 ${getActiveClue()?.label === c.label && getActiveClue()?.direction === 'down' ? 'bg-accent/15 shadow-neo-in ring-1 ring-accent/30' : 'bg-foreground/5 hover:bg-foreground/10'}`}
+                    >
+                      <span className="font-black text-accent text-xl mt-0.5 min-w-[1.5rem] text-center">{c.label}</span>
+                      <span className="text-sm font-bold text-foreground/80 leading-relaxed italic">"{c.clue}"</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
 
         <div className="flex flex-col gap-3">
           {hint && (

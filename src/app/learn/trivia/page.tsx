@@ -6,6 +6,7 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { ArrowLeft, Globe, MapPin, CheckCircle2, XCircle, Trophy, Compass, Timer, Flame, Brain, HelpCircle, Star, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { LessonProgressBar } from '@/components/learn/LessonProgressBar';
+import { MCQInteraction } from '@/components/learn/MCQInteraction';
 import geographyData from '@/stored-data/geography.json';
 import bangladeshData from '@/stored-data/bangladesh.json';
 import internationalData from '@/stored-data/international.json';
@@ -39,9 +40,8 @@ export default function TriviaPage() {
   const [isShaking, setIsShaking] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'plus' | 'minus', value: number } | null>(null);
   
-  // Interaction state
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
+  // Interaction state (Handled by MCQInteraction now)
+
 
   // Track remaining questions to prevent repeats
   const remainingDataRef = useRef<{ question: string, answer: string }[]>([]);
@@ -147,8 +147,6 @@ export default function TriviaPage() {
     const nextItem = remainingDataRef.current.pop() || fullData[0];
     
     setCurrentQuestion(generateQuestion(nextItem, fullData));
-    setSelectedAnswer(null);
-    setIsAnswerRevealed(false);
   }, [generateQuestion]);
 
   const startGame = (selectedCategory: Category) => {
@@ -191,29 +189,7 @@ export default function TriviaPage() {
     setTimeout(() => setFeedback(null), 800);
   };
 
-  const handleAnswerSelect = (optionIndex: number) => {
-    if (isAnswerRevealed || !currentQuestion) return;
 
-    setSelectedAnswer(optionIndex);
-    setIsAnswerRevealed(true);
-
-    const isCorrect = optionIndex === currentQuestion.correctAnswer;
-    if (isCorrect) {
-      setScore(prev => prev + 1);
-      setTimeLeft(prev => prev + 3);
-      triggerFeedback('plus', 3);
-    } else {
-      setTimeLeft(prev => Math.max(0, prev - 5));
-      triggerFeedback('minus', 5);
-    }
-
-    // Load next question quickly
-    setTimeout(() => {
-      if (timeLeft > 0 && gameState === 'playing') {
-        loadNextQuestion(category);
-      }
-    }, 600);
-  };
 
   const resetGame = () => {
     setGameState('menu');
@@ -268,7 +244,7 @@ export default function TriviaPage() {
             {/* Header Info */}
             <div className="flex justify-between items-center gap-4">
               <div className={`flex items-center gap-4 px-6 py-4 rounded-3xl shadow-neo-in bg-card transition-colors duration-300 ${timeLeft <= 10 ? 'border-2 border-red-500/50' : 'border-none'}`}>
-                 <div className={`p-2 rounded-xl ${timeLeft <= 10 ? 'bg-red-500 text-white animate-pulse' : 'bg-accent-secondary text-white'}`}>
+                 <div className={`p-2 rounded-xl ${timeLeft <= 10 ? 'bg-[#DC2626] text-white animate-pulse' : 'bg-accent-secondary text-white'}`}>
                    <Timer className="w-6 h-6" />
                  </div>
                  <div className="relative">
@@ -276,7 +252,7 @@ export default function TriviaPage() {
                       {Math.max(0, timeLeft)}s
                     </p>
                     {feedback && (
-                      <span className={`absolute -right-12 top-0 font-black text-xl animate-in slide-in-from-bottom-2 fade-in ${feedback.type === 'plus' ? 'text-green-500' : 'text-red-500'}`}>
+                      <span className={`absolute -right-12 top-0 font-black text-xl animate-in slide-in-from-bottom-2 fade-in ${feedback.type === 'plus' ? 'text-accent' : 'text-orange-600'}`}>
                         {feedback.type === 'plus' ? '+' : '-'}{feedback.value}
                       </span>
                     )}
@@ -301,54 +277,30 @@ export default function TriviaPage() {
               </h2>
             </div>
 
-            {/* Options */}
-            <div className="grid grid-cols-1 gap-4">
-              {currentQuestion.options.map((option, index) => {
-                const isSelected = selectedAnswer === index;
-                const isCorrect = index === currentQuestion.correctAnswer;
-                
-                let variant: 'default' | 'selected' | 'correct' | 'incorrect' = 'default';
-                if (isAnswerRevealed) {
-                  if (isCorrect) variant = 'correct';
-                  else if (isSelected) variant = 'incorrect';
-                } else if (isSelected) {
-                  variant = 'selected';
+            {/* Options using MCQInteraction */}
+            <MCQInteraction
+              question={currentQuestion.text}
+              options={currentQuestion.options.map((option, index) => ({
+                optiontext: option,
+                is_correct: index === currentQuestion.correctAnswer
+              }))}
+              autoSubmit={true}
+              showQuestion={false}
+              onSubmit={(isCorrect) => {
+                if (isCorrect) {
+                  setScore(prev => prev + 1);
+                  setTimeLeft(prev => prev + 3);
+                  triggerFeedback('plus', 3);
+                } else {
+                  setTimeLeft(prev => Math.max(0, prev - 5));
+                  triggerFeedback('minus', 5);
                 }
-
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    disabled={isAnswerRevealed}
-                    className={`
-                      group relative p-6 rounded-[2rem] text-left transition-all duration-300 border-2
-                      ${variant === 'default' ? 'bg-card border-transparent shadow-neo-out hover:border-accent-secondary/30' : ''}
-                      ${variant === 'selected' ? 'bg-accent-secondary/10 border-accent-secondary shadow-neo-in scale-[0.98]' : ''}
-                      ${variant === 'correct' ? 'bg-green-500/20 border-green-500 shadow-neo-in scale-[0.98]' : ''}
-                      ${variant === 'incorrect' ? 'bg-red-500/20 border-red-500 shadow-neo-in scale-[0.98]' : ''}
-                      ${isAnswerRevealed && variant === 'default' ? 'opacity-40 grayscale-[0.5] scale-[0.95] shadow-none' : ''}
-                    `}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`
-                        w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all font-black
-                        ${variant === 'default' ? 'border-foreground/20 group-hover:border-accent-secondary/50' : ''}
-                        ${variant === 'selected' ? 'border-accent-secondary bg-accent-secondary text-white' : ''}
-                        ${variant === 'correct' ? 'border-green-500 bg-green-500 text-white' : ''}
-                        ${variant === 'incorrect' ? 'border-red-500 bg-red-500 text-white' : ''}
-                      `}>
-                        {isAnswerRevealed && isCorrect ? <CheckCircle2 className="w-6 h-6" /> : 
-                         isAnswerRevealed && isSelected && !isCorrect ? <XCircle className="w-6 h-6" /> : 
-                         <span>{String.fromCharCode(65 + index)}</span>}
-                      </div>
-                      <span className={`text-xl font-bold ${variant !== 'default' ? 'text-foreground' : 'text-foreground/80'}`}>
-                        {option}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+                
+                if (timeLeft > 0 && gameState === 'playing') {
+                  loadNextQuestion(category);
+                }
+              }}
+            />
           </div>
         </div>
       ) : (

@@ -44,11 +44,11 @@
 ## Phase 6: Testing & Bug Fixes
 - [ ] Onboarding Page
 - [ ] Dashboard Page
-- [ ] Learning Page
-    - [ ] English Learning
-    - [ ] Philosophy Learning
-    - [ ] Science Learning
-    - [ ] History Trivia
+- [x] Learning Page
+    - [x] English Learning
+    - [x] Philosophy Learning
+    - [x] Science Learning
+    - [x] History Trivia
 - [x] Games Page
     - [x] WordLess
     - [x] Sudoku

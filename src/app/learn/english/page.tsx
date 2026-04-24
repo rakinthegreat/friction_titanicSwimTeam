@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { LessonProgressBar } from '@/components/learn/LessonProgressBar';
-import { EnglishFITBInteraction } from '@/components/learn/EnglishFITBInteraction';
+import { MCQInteraction } from '@/components/learn/MCQInteraction';
 import { Card } from '@/components/ui/Card';
 import { CheckCircle2, XCircle, BookOpen, ChevronLeft, Loader2, Play, Combine, RefreshCcw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -36,6 +36,8 @@ export default function EnglishModule() {
   // Fill & Review State
   const [fillQuestions, setFillQuestions] = useState<FillQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+
 
   // Match State
   const [matchRounds, setMatchRounds] = useState<MatchRound[]>([]);
@@ -102,19 +104,9 @@ export default function EnglishModule() {
     setLoading(false);
   };
 
-  const handleFITBSubmit = (isCorrect: boolean, selectedWord: string) => {
-    const currentQ = fillQuestions[currentIndex];
-    
-    if (isCorrect) {
-      setScore(prev => prev + 5);
-      if (viewMode === 'review') {
-        recordEnglishReviewSuccess(currentQ.answer);
-      }
-    } else {
-      setScore(prev => prev - 3);
-      addEnglishReviewWord(currentQ.answer);
-    }
-    
+
+
+  const handleNextFill = () => {
     setCurrentIndex(prev => prev + 1);
   };
 
@@ -312,14 +304,55 @@ export default function EnglishModule() {
       </div>
 
       <div className="flex-1 pb-12 px-2 flex flex-col">
-        {(viewMode === 'fill' || viewMode === 'review') && fillQuestions[currentIndex] && (
-          <EnglishFITBInteraction
-            key={currentIndex}
-            question={fillQuestions[currentIndex].text}
-            options={fillQuestions[currentIndex].options}
-            answer={fillQuestions[currentIndex].answer}
-            onSubmit={handleFITBSubmit}
-          />
+        {/* FILL OR REVIEW MODE */}
+        {(viewMode === 'fill' || viewMode === 'review') && (
+          <div className="space-y-8 animate-in slide-in-from-bottom-8 duration-500 max-w-2xl mx-auto w-full">
+            <div className="space-y-2 text-center">
+              <h2 className="text-sm font-black text-blue-400 uppercase tracking-[0.2em]">
+                {viewMode === 'review' ? 'Review Word' : 'Fill in the blank'}
+              </h2>
+            </div>
+
+            <Card className="p-8 sm:p-10 bg-card rounded-[3rem] shadow-neo-out relative overflow-hidden">
+              <BookOpen className="absolute -top-12 -right-12 w-48 h-48 text-blue-400/5 rotate-12" />
+              <div className="text-2xl sm:text-3xl font-black leading-tight relative z-10">
+                {fillQuestions[currentIndex].text.split('___').map((part, i, arr) => (
+                  <React.Fragment key={i}>
+                    {part}
+                    {i < arr.length - 1 && (
+                      <span className={`inline-block px-4 py-1 mx-2 border-b-4 font-black border-foreground/20 text-foreground/40`}>
+                        {'______'}
+                      </span>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            </Card>
+
+            <MCQInteraction
+              question={fillQuestions[currentIndex].text}
+              options={fillQuestions[currentIndex].options.map(opt => ({
+                optiontext: opt.word,
+                is_correct: opt.word === fillQuestions[currentIndex].answer,
+                description: opt.meaning
+              }))}
+              colorScheme="modern"
+              showQuestion={false}
+              onSubmit={(isCorrect) => {
+                if (isCorrect) {
+                  setScore(prev => prev + 5);
+                  if (viewMode === 'review') {
+                    recordEnglishReviewSuccess(fillQuestions[currentIndex].answer);
+                  }
+                } else {
+                  setScore(prev => prev - 3);
+                  addEnglishReviewWord(fillQuestions[currentIndex].answer);
+                }
+                // The continue button in MCQInteraction will handle moving to next
+                handleNextFill();
+              }}
+            />
+          </div>
         )}
 
         {/* MATCH MODE */}
@@ -338,8 +371,8 @@ export default function EnglishModule() {
                   const isError = errorPair?.word === i;
 
                   let style = "bg-card text-foreground border-2 border-transparent hover:border-blue-400/50 hover:scale-[1.02]";
-                  if (isMatched) style = "bg-green-500 text-white opacity-50 cursor-not-allowed shadow-none border-2 border-green-500";
-                  else if (isError) style = "bg-red-500 text-white border-2 border-red-500";
+                  if (isMatched) style = "bg-[#7EA68B] text-white opacity-50 cursor-not-allowed shadow-none border-2 border-[#7EA68B]";
+                  else if (isError) style = "bg-[#DC2626] text-white border-2 border-[#DC2626]";
                   else if (isSelected) style = "bg-card text-blue-500 border-2 border-blue-400";
 
                   return (
@@ -363,8 +396,8 @@ export default function EnglishModule() {
                   const isError = errorPair?.meaning === i;
 
                   let style = "bg-card text-foreground border-2 border-transparent hover:border-blue-400/50 hover:scale-[1.02]";
-                  if (isMatched) style = "bg-green-500 text-white opacity-50 cursor-not-allowed shadow-none border-2 border-green-500";
-                  else if (isError) style = "bg-red-500 text-white border-2 border-red-500";
+                  if (isMatched) style = "bg-[#7EA68B] text-white opacity-50 cursor-not-allowed shadow-none border-2 border-[#7EA68B]";
+                  else if (isError) style = "bg-[#DC2626] text-white border-2 border-[#DC2626]";
                   else if (isSelected) style = "bg-card text-blue-500 border-2 border-blue-400";
 
                   return (
@@ -385,14 +418,20 @@ export default function EnglishModule() {
       </div>
 
       {/* Universal Finish Early Button */}
-      <div className={`pt-4 pb-8 px-2 w-full ${viewMode === 'match' ? 'max-w-2xl mx-auto' : ''}`}>
-        <button 
-          onClick={finishSession} 
-          className="w-full py-4 rounded-3xl font-bold text-sm transition-all uppercase tracking-widest text-foreground/30 hover:text-foreground/80 active:scale-95 bg-transparent"
-        >
-          Finish Learning Early
-        </button>
-      </div>
+      {viewMode !== 'menu' && (viewMode !== 'match') && (
+        <div className="pt-4 pb-8 px-2">
+          <button onClick={finishSession} className="w-full py-4 rounded-3xl font-bold text-sm transition-all uppercase tracking-widest text-foreground/30 hover:text-foreground/80 active:scale-95 bg-transparent">
+            Finish Learning Early
+          </button>
+        </div>
+      )}
+      {viewMode === 'match' && (
+        <div className="pt-4 pb-8 px-2 max-w-2xl mx-auto w-full">
+          <button onClick={finishSession} className="w-full py-4 rounded-3xl font-bold text-sm transition-all uppercase tracking-widest text-foreground/30 hover:text-foreground/80 active:scale-95 bg-transparent">
+            Finish Learning Early
+          </button>
+        </div>
+      )}
     </main>
   );
 }
