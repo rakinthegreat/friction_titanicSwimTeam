@@ -31,6 +31,12 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
   const [lastDir, setLastDir] = useState<'across' | 'down'>('across');
   const [shake, setShake] = useState(false);
   const [correctCells, setCorrectCells] = useState<Set<string>>(new Set());
+  const [startTime] = useState(Date.now());
+  const [canReveal, setCanReveal] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [hint, setHint] = useState<string | null>(null);
+  const [isLoadingHint, setIsLoadingHint] = useState(false);
 
   const fetchedRef = useRef(false);
 
@@ -48,13 +54,24 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
         }
       } catch (e) {
         console.error("CRITICAL: Failed to load crossword puzzle:", e);
-        setClues([]); 
+        setClues([]);
       }
     };
     fetchPuzzle();
-  }, []);
 
-  const gridDefinition: Cell[][] = Array(GRID_SIZE).fill(null).map(() => 
+    const timer = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const remaining = Math.max(0, 60 - elapsed);
+      setTimeLeft(remaining);
+      if (remaining === 0) {
+        setCanReveal(true);
+        clearInterval(timer);
+      }
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [startTime]);
+
+  const gridDefinition: Cell[][] = Array(GRID_SIZE).fill(null).map(() =>
     Array(GRID_SIZE).fill(null).map(() => ({ letter: "", isWall: true }))
   );
 
@@ -116,12 +133,12 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
 
     clues.forEach(clue => {
       let clueCorrect = true;
-      const positions: {r: number, c: number}[] = [];
-      
+      const positions: { r: number, c: number }[] = [];
+
       for (let i = 0; i < clue.answer.length; i++) {
         const r = clue.direction === 'across' ? clue.row : clue.row + i;
         const c = clue.direction === 'across' ? clue.col + i : clue.col;
-        positions.push({r, c});
+        positions.push({ r, c });
         if (grid[r][c] !== clue.answer[i]) {
           clueCorrect = false;
           allCorrect = false;
@@ -141,6 +158,81 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
     } else {
       setShake(true);
       setTimeout(() => setShake(false), 500);
+    }
+  };
+
+  const handleReveal = () => {
+    if (!clues) return;
+    const newGrid = [...grid];
+    clues.forEach(clue => {
+      for (let i = 0; i < clue.answer.length; i++) {
+        const r = clue.direction === 'across' ? clue.row : clue.row + i;
+        const c = clue.direction === 'across' ? clue.col + i : clue.col;
+        newGrid[r][c] = clue.answer[i];
+      }
+    });
+    setGrid(newGrid);
+    setGrid(newGrid);
+    setIsRevealed(true);
+  };
+
+  const handleHint = async () => {
+    if (!clues || isLoadingHint) return;
+    
+    // Find clue that covers focused cell
+    // We try to prioritize the direction the user is currently typing in (lastDir)
+    let activeClue = clues.find(c => {
+      if (c.direction !== lastDir) return false;
+      for (let i = 0; i < c.answer.length; i++) {
+        const r = c.direction === 'across' ? c.row : c.row + i;
+        const col = c.direction === 'across' ? c.col + i : c.col;
+        if (r === focused.r && col === focused.c) return true;
+      }
+      return false;
+    });
+
+    // Fallback to any clue at that position
+    if (!activeClue) {
+      activeClue = clues.find(c => {
+        for (let i = 0; i < c.answer.length; i++) {
+          const r = c.direction === 'across' ? c.row : c.row + i;
+          const col = c.direction === 'across' ? c.col + i : c.col;
+          if (r === focused.r && col === focused.c) return true;
+        }
+        return false;
+      });
+    }
+
+    if (!activeClue) {
+      setHint("Select a letter in a word to get a hint!");
+      return;
+    }
+
+    setIsLoadingHint(true);
+    setHint(null);
+
+    try {
+      const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${activeClue.answer}`);
+      const data = await res.json();
+      
+      const synonyms: string[] = [];
+      if (Array.isArray(data)) {
+        data.forEach(entry => {
+          entry.meanings?.forEach((m: any) => {
+            if (m.synonyms) synonyms.push(...m.synonyms);
+          });
+        });
+      }
+
+      if (synonyms.length > 0) {
+        setHint(`Hint for ${activeClue.label} ${activeClue.direction.toUpperCase()}: Synonyms include "${synonyms.slice(0, 3).join(', ')}"`);
+      } else {
+        setHint(`No specific synonyms found for this word, but keep trying!`);
+      }
+    } catch (e) {
+      setHint("Could not fetch hint at this time.");
+    } finally {
+      setIsLoadingHint(false);
     }
   };
 
@@ -180,18 +272,16 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
                   ref={(el) => {
                     if (focused.r === r && focused.c === c) el?.focus();
                   }}
-                  className={`w-full h-full text-center font-black text-lg transition-all outline-none border-none ${
-                    focused.r === r && focused.c === c 
-                      ? 'bg-accent/20 text-accent' 
+                  className={`w-full h-full text-center font-black text-lg transition-all outline-none border-none ${focused.r === r && focused.c === c
+                      ? 'bg-accent/20 text-accent'
                       : correctCells.has(`${r}-${c}`)
                         ? 'bg-accent/40 text-white'
                         : 'bg-card text-foreground'
-                  }`}
+                    }`}
                 />
                 {cell.label && (
-                  <span className={`absolute top-0.5 left-1 text-[8px] sm:text-[9px] font-bold leading-none pointer-events-none ${
-                    correctCells.has(`${r}-${c}`) ? 'text-white/60' : 'text-foreground/40'
-                  }`}>
+                  <span className={`absolute top-0.5 left-1 text-[8px] sm:text-[9px] font-bold leading-none pointer-events-none ${correctCells.has(`${r}-${c}`) ? 'text-white/60' : 'text-foreground/40'
+                    }`}>
                     {cell.label}
                   </span>
                 )}
@@ -201,37 +291,87 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
         )))}
       </div>
 
-      <div className="w-full max-w-sm space-y-6">
+      <div className="w-full max-w-md space-y-6">
         <div className="bg-card/50 p-4 rounded-2xl shadow-neo-in border border-foreground/5 max-h-48 overflow-y-auto scrollbar-hide">
-           <h3 className="text-xs font-black uppercase tracking-widest text-accent mb-3 flex items-center gap-2">
-             <HelpCircle size={14} /> Daily Clues
-           </h3>
-           <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <p className="text-[10px] font-black text-foreground/30 uppercase tracking-tighter">Across</p>
-                {clues.filter(c => c.direction === 'across').map(clue => (
-                  <p key={clue.label} className="text-xs font-medium text-foreground/80 leading-tight">
-                    <span className="font-bold text-accent mr-1">{clue.label}.</span> {clue.clue}
-                  </p>
-                ))}
-              </div>
-              <div className="space-y-2">
-                <p className="text-[10px] font-black text-foreground/30 uppercase tracking-tighter">Down</p>
-                {clues.filter(c => c.direction === 'down').map(clue => (
-                  <p key={clue.label} className="text-xs font-medium text-foreground/80 leading-tight">
-                    <span className="font-bold text-accent mr-1">{clue.label}.</span> {clue.clue}
-                  </p>
-                ))}
-              </div>
-           </div>
+          <h3 className="text-xs font-black uppercase tracking-widest text-accent mb-3 flex items-center gap-2">
+            <HelpCircle size={14} /> Daily Clues
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <p className="text-[10px] font-black text-foreground/30 uppercase tracking-tighter">Across</p>
+              {clues.filter(c => c.direction === 'across').map(clue => (
+                <p key={clue.label} className="text-xs font-medium text-foreground/80 leading-tight">
+                  <span className="font-bold text-accent mr-1">{clue.label}.</span> {clue.clue}
+                </p>
+              ))}
+            </div>
+            <div className="space-y-2">
+              <p className="text-[10px] font-black text-foreground/30 uppercase tracking-tighter">Down</p>
+              {clues.filter(c => c.direction === 'down').map(clue => (
+                <p key={clue.label} className="text-xs font-medium text-foreground/80 leading-tight">
+                  <span className="font-bold text-accent mr-1">{clue.label}.</span> {clue.clue}
+                </p>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <Button 
-          onClick={handleSubmit}
-          className="w-full py-6 text-lg font-black italic tracking-widest shadow-neo-out hover:shadow-neo-in transition-all active:scale-95"
-        >
-          SUBMIT SOLUTION
-        </Button>
+        <div className="flex flex-col gap-3">
+          {hint && (
+            <div className="bg-accent/10 p-3 rounded-xl border border-accent/20 text-[10px] font-medium text-accent animate-in fade-in slide-in-from-top-1 relative group">
+              {hint}
+              <button 
+                onClick={() => setHint(null)}
+                className="absolute top-1 right-2 opacity-0 group-hover:opacity-100 transition-opacity text-[8px] font-black uppercase hover:text-accent-secondary"
+              >
+                Clear
+              </button>
+            </div>
+          )}
+
+          {isRevealed && (
+            <div className="bg-accent-secondary/10 p-4 rounded-xl border border-accent-secondary/20 space-y-3 animate-in fade-in slide-in-from-top-2 duration-500">
+              <div className="flex items-center gap-2 text-accent-secondary font-black text-[10px] uppercase tracking-widest">
+                <HelpCircle size={14} /> Solution Revealed
+              </div>
+              <p className="text-[10px] text-foreground/60 font-medium leading-tight">Study the grid above to learn today's answers. Try again tomorrow for a fresh challenge!</p>
+              <Button 
+                onClick={() => onComplete(0)} 
+                variant="outline"
+                className="w-full py-2 text-[8px] font-black tracking-widest uppercase border-accent-secondary/20 text-accent-secondary hover:bg-accent-secondary/5"
+              >
+                Exit Game
+              </Button>
+            </div>
+          )}
+          
+          <Button
+            onClick={handleSubmit}
+            className="w-full py-6 text-lg font-black italic tracking-widest shadow-neo-out hover:shadow-neo-in transition-all active:scale-95"
+          >
+            CHECK
+          </Button>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              variant="outline"
+              onClick={handleHint}
+              disabled={won || isRevealed || isLoadingHint}
+              className="py-3 text-[10px] font-black tracking-[0.2em] uppercase shadow-neo-out hover:shadow-neo-in transition-all border-foreground/5 text-foreground/60 disabled:opacity-30"
+            >
+              {isLoadingHint ? <Loader2 className="w-3 h-3 animate-spin" /> : "Get Hint"}
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={handleReveal}
+              disabled={!canReveal || won || isRevealed}
+              className="py-3 text-[10px] font-black tracking-[0.2em] uppercase shadow-neo-out hover:shadow-neo-in transition-all border-accent/20 text-accent disabled:opacity-50 disabled:grayscale"
+            >
+              {canReveal ? "Reveal Solution" : `Reveal in ${timeLeft}s`}
+            </Button>
+          </div>
+        </div>
       </div>
 
       {won && (

@@ -5,7 +5,15 @@ import { WordLess } from '@/components/games/WordLess';
 import { Card } from '@/components/ui/Card';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, HelpCircle } from 'lucide-react';
+import { GameTutorial } from '@/components/games/GameTutorial';
+
+const TUTORIAL_STEPS = [
+  "Guess the hidden 5-letter word in 6 tries.",
+  "GREEN: The letter is in the word and in the correct spot.",
+  "YELLOW: The letter is in the word but in the wrong spot.",
+  "GRAY: The letter is not in the word in any spot."
+];
 
 import { getDailyWordLess } from '@/lib/dailyWord';
 
@@ -14,6 +22,15 @@ export default function WordLessPage() {
   const updateStats = useUserStore((state) => state.updateStats);
   const [dailyWord, setDailyWord] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('tutorial-wordless');
+    if (!hasSeen) {
+      setIsTutorialOpen(true);
+      localStorage.setItem('tutorial-wordless', 'true');
+    }
+  }, []);
 
   useEffect(() => {
     try {
@@ -41,7 +58,20 @@ export default function WordLessPage() {
           <ArrowLeft className="w-6 h-6" />
         </button>
         <h1 className="text-2xl font-bold">WordLess</h1>
+        <button 
+          onClick={() => setIsTutorialOpen(true)}
+          className="p-2 ml-auto rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-accent"
+        >
+          <HelpCircle className="w-6 h-6" />
+        </button>
       </header>
+
+      <GameTutorial 
+        title="WordLess"
+        steps={TUTORIAL_STEPS}
+        isOpen={isTutorialOpen}
+        onClose={() => setIsTutorialOpen(false)}
+      />
 
       <div className="max-w-md mx-auto">
         <Card className="p-8 shadow-neo-out min-h-[400px] flex flex-col justify-center">

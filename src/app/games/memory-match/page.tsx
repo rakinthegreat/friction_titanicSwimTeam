@@ -17,6 +17,14 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { GameTutorial } from '@/components/games/GameTutorial';
+
+const TUTORIAL_STEPS = [
+  "Tap a card to flip it and reveal its hidden icon.",
+  "Try to find and flip its matching pair immediately after.",
+  "If the icons match, they stay revealed. If not, they flip back.",
+  "Match all pairs in the grid to win the game and save your time!"
+];
 
 const ICON_MAP: Record<string, any[]> = {
   tech: [Laptop, Cpu, Smartphone, Radio],
@@ -49,6 +57,15 @@ export default function MemoryMatchPage() {
   const [moves, setMoves] = useState(0);
   const [isWon, setIsWon] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('tutorial-memory-match');
+    if (!hasSeen) {
+      setIsTutorialOpen(true);
+      localStorage.setItem('tutorial-memory-match', 'true');
+    }
+  }, []);
 
   const initGame = useCallback(() => {
     // 1. Get icons based on interests
@@ -163,7 +180,20 @@ export default function MemoryMatchPage() {
           <ArrowLeft className="w-6 h-6" />
         </button>
         <h1 className="text-2xl font-bold ml-2">Memory Match</h1>
+        <button 
+          onClick={() => setIsTutorialOpen(true)}
+          className="p-2 ml-auto rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-accent"
+        >
+          <HelpCircle className="w-6 h-6" />
+        </button>
       </div>
+
+      <GameTutorial 
+        title="Memory Match"
+        steps={TUTORIAL_STEPS}
+        isOpen={isTutorialOpen}
+        onClose={() => setIsTutorialOpen(false)}
+      />
 
       <Card className="flex flex-col items-center justify-start p-6 sm:p-8">
         <div className="w-full grid grid-cols-3 items-center mb-8 px-2">

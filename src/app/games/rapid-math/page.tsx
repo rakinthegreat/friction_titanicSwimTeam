@@ -3,9 +3,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Timer, Zap, Trophy, RefreshCw, ArrowLeft, Plus, Minus } from 'lucide-react';
+import { Timer, Zap, Trophy, RefreshCw, ArrowLeft, Plus, Minus, HelpCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
+import { GameTutorial } from '@/components/games/GameTutorial';
+
+const TUTORIAL_STEPS = [
+  "You'll be presented with a mathematical equation.",
+  "Pick the correct result from the four options below.",
+  "Each correct answer adds a few seconds to your total time.",
+  "Solve as many as you can before the clock runs out!"
+];
 
 interface Equation {
   text: string;
@@ -25,6 +33,15 @@ export default function RapidMathPage() {
   const [options, setOptions] = useState<number[]>([]);
   const [feedback, setFeedback] = useState<{ text: string, type: 'plus' | 'minus' } | null>(null);
   const [isShaking, setIsShaking] = useState(false);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('tutorial-rapid-math');
+    if (!hasSeen) {
+      setIsTutorialOpen(true);
+      localStorage.setItem('tutorial-rapid-math', 'true');
+    }
+  }, []);
 
   const generateEquation = useCallback(() => {
     const operators = ['+', '-', '*'];

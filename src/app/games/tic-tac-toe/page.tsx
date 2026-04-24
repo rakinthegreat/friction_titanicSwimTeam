@@ -3,9 +3,17 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { ArrowLeft, RotateCcw } from 'lucide-react';
+import { ArrowLeft, RotateCcw, HelpCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
+import { GameTutorial } from '@/components/games/GameTutorial';
+
+const TUTORIAL_STEPS = [
+  "Tap an empty square to place your 'X'.",
+  "The AI will automatically place an 'O' after your turn.",
+  "Connect three 'X's in a row (horizontal, vertical, or diagonal) to win.",
+  "Try to block the AI from completing its row!"
+];
 
 type Player = 'X' | 'O' | null;
 
@@ -15,6 +23,15 @@ export default function TicTacToePage() {
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState<boolean>(true);
   const [winner, setWinner] = useState<Player | 'Draw' | null>(null);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('tutorial-tictactoe');
+    if (!hasSeen) {
+      setIsTutorialOpen(true);
+      localStorage.setItem('tutorial-tictactoe', 'true');
+    }
+  }, []);
 
   // Simple AI
   useEffect(() => {
@@ -114,7 +131,20 @@ export default function TicTacToePage() {
           <ArrowLeft className="w-6 h-6" />
         </button>
         <h1 className="text-2xl font-bold ml-2">Tic-Tac-Toe</h1>
+        <button 
+          onClick={() => setIsTutorialOpen(true)}
+          className="p-2 ml-auto rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-accent"
+        >
+          <HelpCircle className="w-6 h-6" />
+        </button>
       </div>
+
+      <GameTutorial 
+        title="Tic-Tac-Toe"
+        steps={TUTORIAL_STEPS}
+        isOpen={isTutorialOpen}
+        onClose={() => setIsTutorialOpen(false)}
+      />
 
       <Card className="flex flex-col items-center justify-start p-6 sm:p-8">
         <div className="mb-8 text-2xl font-black min-h-[40px] flex items-center justify-center">

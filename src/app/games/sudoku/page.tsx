@@ -3,10 +3,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { ArrowLeft, RotateCcw, Delete } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Delete, HelpCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { generateSudoku, findConflicts, SudokuBoard } from '@/lib/sudoku';
 import { useUserStore } from '@/store/userStore';
+import { GameTutorial } from '@/components/games/GameTutorial';
+
+const TUTORIAL_STEPS = [
+  "The goal is to fill the 9x9 grid with numbers 1-9.",
+  "Each number must appear exactly once in every row, column, and 3x3 box.",
+  "Select a cell and tap a number to fill it.",
+  "Conflicts will be highlighted. Clear all conflicts and fill the board to win!"
+];
 
 export default function SudokuPage() {
   const router = useRouter();
@@ -16,6 +24,15 @@ export default function SudokuPage() {
   const [conflicts, setConflicts] = useState<{ row: number, col: number }[]>([]);
   const [isWon, setIsWon] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('tutorial-sudoku');
+    if (!hasSeen) {
+      setIsTutorialOpen(true);
+      localStorage.setItem('tutorial-sudoku', 'true');
+    }
+  }, []);
   const updateStats = useUserStore((state) => state.updateStats);
   const [grid, setGrid] = useState<number[][]>([]); // Placeholder if needed or use existing board state
 
@@ -96,7 +113,20 @@ export default function SudokuPage() {
           <ArrowLeft className="w-6 h-6" />
         </button>
         <h1 className="text-2xl font-bold ml-2">Sudoku</h1>
+        <button 
+          onClick={() => setIsTutorialOpen(true)}
+          className="p-2 ml-auto rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-accent"
+        >
+          <HelpCircle className="w-6 h-6" />
+        </button>
       </div>
+
+      <GameTutorial 
+        title="Sudoku"
+        steps={TUTORIAL_STEPS}
+        isOpen={isTutorialOpen}
+        onClose={() => setIsTutorialOpen(false)}
+      />
 
       <Card className="flex flex-col items-center justify-start p-4 sm:p-8">
         {/* Win Message */}

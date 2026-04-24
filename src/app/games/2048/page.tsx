@@ -3,9 +3,17 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { ArrowLeft, RotateCcw } from 'lucide-react';
+import { ArrowLeft, RotateCcw, HelpCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
+import { GameTutorial } from '@/components/games/GameTutorial';
+
+const TUTORIAL_STEPS = [
+  "Slide the tiles in any direction (Up, Down, Left, Right).",
+  "When two tiles with the same number touch, they merge into one!",
+  "Each merge adds the value of the new tile to your score.",
+  "Keep merging tiles to reach the ultimate goal: 2048!"
+];
 
 type Grid = number[][];
 
@@ -17,16 +25,27 @@ export default function Game2048Page() {
   const [gameOver, setGameOver] = useState(false);
   const [hasWon, setHasWon] = useState(false);
   const [variations, setVariations] = useState<{r: number, ox: number, oy: number}[]>([]);
+  const [lastNewPos, setLastNewPos] = useState<{r: number, c: number} | null>(null);
   const updateStats = useUserStore((state) => state.updateStats);
   
   const touchStart = useRef<{ x: number, y: number } | null>(null);
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('tutorial-2048');
+    if (!hasSeen) {
+      setIsTutorialOpen(true);
+      localStorage.setItem('tutorial-2048', 'true');
+    }
+  }, []);
 
   // Initialize game
   const initGame = useCallback(() => {
     let newGrid = Array(4).fill(0).map(() => Array(4).fill(0));
-    newGrid = addRandomTile(newGrid);
-    newGrid = addRandomTile(newGrid);
-    setGrid(newGrid);
+    const { grid: g1, newPos: p1 } = addRandomTile(newGrid);
+    const { grid: g2, newPos: p2 } = addRandomTile(g1);
+    setGrid(g2);
+    setLastNewPos(p2);
     setScore(0);
     const newVariations = Array(16).fill(0).map(() => ({
       r: Math.random() * 4 - 2,
@@ -52,18 +71,18 @@ export default function Game2048Page() {
     }
   }, [score, bestScore]);
 
-  const addRandomTile = (currentGrid: Grid): Grid => {
+  const addRandomTile = (currentGrid: Grid): { grid: Grid, newPos: {r: number, c: number} | null } => {
     const emptyCells = [];
     for (let r = 0; r < 4; r++) {
       for (let c = 0; c < 4; c++) {
         if (currentGrid[r][c] === 0) emptyCells.push({ r, c });
       }
     }
-    if (emptyCells.length === 0) return currentGrid;
+    if (emptyCells.length === 0) return { grid: currentGrid, newPos: null };
     const { r, c } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
     const newGrid = currentGrid.map(row => [...row]);
     newGrid[r][c] = Math.random() < 0.9 ? 2 : 4;
-    return newGrid;
+    return { grid: newGrid, newPos: { r, c } };
   };
 
   const move = useCallback((direction: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT') => {
@@ -123,8 +142,9 @@ export default function Game2048Page() {
     for (let i = 0; i < backRotations; i++) newGrid = rotateClockwise(newGrid);
 
     if (moved) {
-      const finalGrid = addRandomTile(newGrid);
+      const { grid: finalGrid, newPos } = addRandomTile(newGrid);
       setGrid(finalGrid);
+      setLastNewPos(newPos);
       setScore(currentScore);
       if (isGameOver(finalGrid)) {
         setGameOver(true);
@@ -152,26 +172,61 @@ export default function Game2048Page() {
       else if (['ArrowLeft', 'a', 'A'].includes(e.key)) move('LEFT');
       else if (['ArrowRight', 'd', 'D'].includes(e.key)) move('RIGHT');
     };
+
+    const handleTStart = (e: TouchEvent) => {
+      // Prevent scrolling/ghosting
+      if (e.cancelable) e.preventDefault();
+      touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    };
+
+    const handleTEnd = (e: TouchEvent) => {
+      if (!touchStart.current) return;
+      if (e.cancelable) e.preventDefault();
+      const dx = e.changedTouches[0].clientX - touchStart.current.x;
+      const dy = e.changedTouches[0].clientY - touchStart.current.y;
+      touchStart.current = null;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        if (Math.abs(dx) > 30) move(dx > 0 ? 'RIGHT' : 'LEFT');
+      } else {
+        if (Math.abs(dy) > 30) move(dy > 0 ? 'DOWN' : 'UP');
+      }
+    };
+
+    const handleMDown = (e: MouseEvent) => {
+      // Prevent selection/ghosting
+      e.preventDefault();
+      touchStart.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const handleMUp = (e: MouseEvent) => {
+      if (!touchStart.current) return;
+      e.preventDefault();
+      const dx = e.clientX - touchStart.current.x;
+      const dy = e.clientY - touchStart.current.y;
+      touchStart.current = null;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        if (Math.abs(dx) > 30) move(dx > 0 ? 'RIGHT' : 'LEFT');
+      } else {
+        if (Math.abs(dy) > 30) move(dy > 0 ? 'DOWN' : 'UP');
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('touchstart', handleTStart, { passive: false });
+    window.addEventListener('touchend', handleTEnd, { passive: false });
+    window.addEventListener('mousedown', handleMDown);
+    window.addEventListener('mouseup', handleMUp);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('touchstart', handleTStart);
+      window.removeEventListener('touchend', handleTEnd);
+      window.removeEventListener('mousedown', handleMDown);
+      window.removeEventListener('mouseup', handleMUp);
+    };
   }, [move]);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!touchStart.current) return;
-    const dx = e.changedTouches[0].clientX - touchStart.current.x;
-    const dy = e.changedTouches[0].clientY - touchStart.current.y;
-    touchStart.current = null;
-
-    if (Math.abs(dx) > Math.abs(dy)) {
-      if (Math.abs(dx) > 30) move(dx > 0 ? 'RIGHT' : 'LEFT');
-    } else {
-      if (Math.abs(dy) > 30) move(dy > 0 ? 'DOWN' : 'UP');
-    }
-  };
 
   const getTileColor = (val: number) => {
     switch (val) {
@@ -194,50 +249,69 @@ export default function Game2048Page() {
     <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-xl mx-auto touch-none">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center">
-          <button 
+          <button
             onClick={() => router.push('/games')}
             className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
             aria-label="Back to games"
           >
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-4xl font-black ml-2 text-accent">2048</h1>
+          <h1 className="text-2xl font-bold ml-2">2048</h1>
         </div>
-        <div className="flex gap-4">
-          <div className="bg-card px-6 py-3 rounded-2xl shadow-neo-in text-center min-w-[90px]">
-            <p className="text-[10px] font-bold uppercase tracking-tighter opacity-40 leading-none mb-2">Score</p>
-            <p className="text-xl font-black leading-none">{score}</p>
-          </div>
-          <div className="bg-card px-6 py-3 rounded-2xl shadow-neo-in text-center min-w-[90px]">
-            <p className="text-[10px] font-bold uppercase tracking-tighter opacity-40 leading-none mb-2">Best</p>
-            <p className="text-xl font-black leading-none">{bestScore}</p>
-          </div>
+        <button
+          onClick={() => setIsTutorialOpen(true)}
+          className="p-2 ml-auto rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-accent"
+        >
+          <HelpCircle className="w-6 h-6" />
+        </button>
+      </div>
+
+      <GameTutorial
+        title="2048"
+        steps={TUTORIAL_STEPS}
+        isOpen={isTutorialOpen}
+        onClose={() => setIsTutorialOpen(false)} 
+      />
+
+      <div className="flex gap-4 mb-8">
+        <div className="bg-card px-6 py-3 rounded-2xl shadow-neo-in text-center min-w-[90px]">
+          <p className="text-[10px] font-bold uppercase tracking-tighter opacity-40 leading-none mb-2">Score</p>
+          <p className="text-xl font-black leading-none">{score}</p>
+        </div>
+        <div className="bg-card px-6 py-3 rounded-2xl shadow-neo-in text-center min-w-[90px]">
+          <p className="text-[10px] font-bold uppercase tracking-tighter opacity-40 leading-none mb-2">Best</p>
+          <p className="text-xl font-black leading-none">{bestScore}</p>
         </div>
       </div>
 
-      <Card 
-        className="flex flex-col items-center justify-center p-4 sm:p-6 mb-8 relative"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
+      <Card
+        className="flex flex-col items-center justify-center p-4 sm:p-6 mb-8 relative select-none"
       >
         <div className="grid grid-cols-4 gap-4 sm:gap-6 w-full bg-black/5 dark:bg-white/5 p-4 sm:p-6 rounded-[2.5rem] shadow-neo-in aspect-square relative">
-          {grid.flat().map((val, i) => (
-            <div
-              key={i}
-              className={`
-                aspect-square rounded-2xl flex items-center justify-center transition-all duration-150 
-                ${getTileColor(val)}
-                ${val === 0 ? 'shadow-neo-in' : 'scale-100'}
-              `}
-              style={{
-                transform: variations[i] 
-                  ? `rotate(${variations[i].r}deg) translate(${variations[i].ox}px, ${variations[i].oy}px)` 
-                  : 'none'
-              }}
-            >
-              {val !== 0 && val}
-            </div>
-          ))}
+          {grid.flat().map((val, i) => {
+            const r = Math.floor(i / 4);
+            const c = i % 4;
+            const isLatest = lastNewPos?.r === r && lastNewPos?.c === c;
+            
+            return (
+              <div
+                key={i}
+                className={`
+                  aspect-square rounded-2xl flex items-center justify-center transition-all duration-300 
+                  ${getTileColor(val)}
+                  ${val === 0 ? 'shadow-neo-in' : 'scale-100'}
+                  ${isLatest ? 'ring-4 ring-white/30 animate-pulse' : ''}
+                `}
+                style={{
+                  transform: variations[i]
+                    ? `rotate(${variations[i].r}deg) translate(${variations[i].ox}px, ${variations[i].oy}px)`
+                    : 'none'
+                }}
+              >
+                {val !== 0 && val}
+              </div>
+            );
+          })}
 
           {/* Overlays */}
           {(gameOver || hasWon) && (
@@ -256,12 +330,10 @@ export default function Game2048Page() {
 
       <div className="flex flex-col gap-4 items-center">
         <p className="text-sm font-medium opacity-40 text-center">
-          {typeof window !== 'undefined' && 'ontouchstart' in window 
-            ? 'Swipe tiles to merge matching numbers!' 
-            : 'Use Arrow Keys or WASD to merge numbers!'}
+          Swipe, Drag or use Arrow Keys to merge tiles!
         </p>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           onClick={initGame}
           className="w-full max-w-[200px]"
         >

@@ -18,7 +18,7 @@ export default function CrosswordsPage() {
 
   return (
     <main className="min-h-screen bg-background p-6">
-      <header className="max-w-md mx-auto mb-8 flex items-center">
+      <header className="max-w-xl mx-auto mb-8 flex items-center">
         <button 
           onClick={() => router.push('/games')}
           className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors mr-2"
@@ -28,7 +28,7 @@ export default function CrosswordsPage() {
         <h1 className="text-2xl font-bold tracking-tight italic uppercase">Crosswords</h1>
       </header>
 
-      <div className="max-w-md mx-auto">
+      <div className="max-w-xl mx-auto">
         <Card className="p-6 sm:p-8 shadow-neo-out bg-card/30 backdrop-blur-sm border border-foreground/5">
           <Suspense fallback={<div className="h-64 flex items-center justify-center animate-pulse text-foreground/20 italic font-black">Loading...</div>}>
             <Crosswords onComplete={handleComplete} />

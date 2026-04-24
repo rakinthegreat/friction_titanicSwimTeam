@@ -70,7 +70,7 @@ export const MCQInteraction = ({ question, options, onSubmit }: MCQInteractionPr
             >
               <div className="flex items-center gap-4">
                 <div className={`
-                  w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors
+                  w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors flex-shrink-0
                   ${variant === 'default' ? 'border-foreground/20 group-hover:border-accent-secondary/50' : ''}
                   ${variant === 'selected' ? 'border-accent-secondary bg-accent-secondary text-white' : ''}
                   ${variant === 'correct' ? 'border-green-500 bg-green-500 text-white' : ''}
