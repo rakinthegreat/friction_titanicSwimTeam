@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useUserStore } from '@/store/userStore';
@@ -28,20 +28,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return () => unsubscribe();
   }, []);
-
-  // Client-side AuthGuard for Capacitor
-  useEffect(() => {
-    if (typeof window !== 'undefined' && (window as any).Capacitor && _hasHydrated) {
-      const isAuthRoute = pathname.startsWith('/login');
-      const isProtectedRoute = pathname === '/' || pathname.startsWith('/profile');
-
-      if (isProtectedRoute && !uid) {
-        router.push('/login');
-      } else if (isAuthRoute && uid) {
-        router.push('/');
-      }
-    }
-  }, [uid, pathname, router, _hasHydrated]);
 
   return <>{children}</>;
 }

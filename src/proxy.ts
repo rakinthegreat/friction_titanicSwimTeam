@@ -8,8 +8,8 @@ export function proxy(request: NextRequest) {
 
   const isAuthRoute = path.startsWith('/login');
 
-  // The homepage and anything under /profile are protected
-  const isProtectedRoute = path === '/' || path.startsWith('/profile');
+  // Only /profile is strictly protected
+  const isProtectedRoute = path.startsWith('/profile');
 
   // If trying to access a protected route without being logged in
   if (isProtectedRoute && !session) {
