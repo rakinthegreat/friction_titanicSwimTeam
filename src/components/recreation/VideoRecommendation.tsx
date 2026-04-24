@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { PlayCircle, RotateCcw, Loader2, X } from 'lucide-react';
-import { getDynamicSearchQueries, fetchYouTubeVideos } from '@/app/recreation/actions';
+import { getRecommendedVideos } from '@/app/recreation/actions';
 
 interface VideoRecommendationProps {
   interests: string[];
@@ -28,34 +28,52 @@ export const VideoRecommendation = ({ interests, videoGenres, dailyCompleted, up
 
   const getEnvironmentalContext = () => {
     const cachedWeather = localStorage.getItem('weather_cache');
-    let location = "Unknown";
-    let weather = "Clear";
+    let city = "Unknown";
+    let condition = "Clear";
     
     if (cachedWeather) {
       const data = JSON.parse(cachedWeather);
-      location = data.city;
-      weather = data.condition;
+      city = data.city;
+      condition = data.condition;
     }
 
     return {
-      location,
+      location: city,
       timeOfDay: getTimeOfDay(),
-      weather
+      weather: condition
     };
   };
 
-  const handleFetchDynamicVideos = async () => {
-    if (interests.length === 0 || isVideosLoading) return;
+  const handleFetchDynamicVideos = async (forceRefresh = false) => {
+    if (isVideosLoading) return;
     
+    // Check Cache
+    if (!forceRefresh) {
+      const cachedData = localStorage.getItem('video_cache');
+      const cachedTime = localStorage.getItem('video_cache_time');
+      
+      if (cachedData && cachedTime) {
+        const ageInMs = Date.now() - parseInt(cachedTime);
+        const oneHourInMs = 60 * 60 * 1000;
+        
+        if (ageInMs < oneHourInMs) {
+          console.log('[Cache] Loading videos from cache');
+          setDynamicVideos(JSON.parse(cachedData));
+          return;
+        }
+      }
+    }
+
     setIsVideosLoading(true);
     try {
-      const historySummary = dailyCompleted.slice(-3); 
       const context = getEnvironmentalContext();
-      const queries = await getDynamicSearchQueries(interests, historySummary, context);
-      const videos = await fetchYouTubeVideos(queries);
+      const videos = await getRecommendedVideos(interests, videoGenres, context);
       
-      if (videos.length > 0) {
+      if (videos && videos.length > 0) {
         setDynamicVideos(videos);
+        // Save to cache
+        localStorage.setItem('video_cache', JSON.stringify(videos));
+        localStorage.setItem('video_cache_time', Date.now().toString());
       }
     } catch (error) {
       console.error("Failed to load dynamic videos:", error);
@@ -65,10 +83,8 @@ export const VideoRecommendation = ({ interests, videoGenres, dailyCompleted, up
   };
 
   useEffect(() => {
-    if (dynamicVideos.length === 0 && interests.length > 0) {
-      handleFetchDynamicVideos();
-    }
-  }, [interests]);
+    handleFetchDynamicVideos(false); // Check cache first on mount
+  }, [interests, videoGenres]);
 
   const filteredVideos = dynamicVideos.filter(v => {
     if (v.duration < 60) return false;
@@ -80,22 +96,37 @@ export const VideoRecommendation = ({ interests, videoGenres, dailyCompleted, up
     return true;
   });
 
-  const visibleVideos = filteredVideos.slice(0, visibleCount);
+  const visibleVideos = filteredVideos.slice(0, 6);
 
   const handleVideoClick = (videoId: string) => {
     setPlayingVideo(videoId);
     updateStats(5);
   };
 
+  const hasNoData = interests.length === 0 && dailyCompleted.length === 0;
+
   return (
     <section className="bg-card rounded-[2.5rem] p-8 space-y-6 shadow-neo-out border border-white/5 relative z-10">
       <div className="flex justify-between items-start">
         <div className="space-y-1">
-          <h2 className="text-3xl font-black">Personalized Recreation</h2>
-          <p className="text-foreground/60 font-medium">AI-curated discoveries based on your journey.</p>
+          <div className="flex items-center gap-2">
+            <h2 className="text-3xl font-black">
+              {hasNoData ? "Discovery Mode" : "Personalized Recreation"}
+            </h2>
+            {hasNoData && (
+              <span className="px-2 py-0.5 rounded-full bg-accent/20 text-accent text-[10px] font-black uppercase tracking-widest animate-pulse">
+                New User
+              </span>
+            )}
+          </div>
+          <p className="text-foreground/60 font-medium">
+            {hasNoData 
+              ? "Exploring popular and trending topics while we learn your vibe."
+              : "AI-curated discoveries based on your journey."}
+          </p>
         </div>
         <button
-          onClick={handleFetchDynamicVideos}
+          onClick={() => handleFetchDynamicVideos(true)}
           disabled={isVideosLoading}
           className="p-3 rounded-2xl bg-accent/10 text-accent hover:bg-accent/20 transition-all disabled:opacity-50"
           title="Refresh Recommendations"
@@ -159,18 +190,6 @@ export const VideoRecommendation = ({ interests, videoGenres, dailyCompleted, up
           </div>
         )}
       </div>
-
-      {/* Load More Button */}
-      {filteredVideos.length > visibleCount && (
-        <div className="pt-4 flex justify-center">
-          <button
-            onClick={() => setVisibleCount(prev => prev + 3)}
-            className="px-8 py-3 rounded-full bg-accent text-white font-black hover:scale-105 active:scale-95 transition-all shadow-neo-out"
-          >
-            Explore More
-          </button>
-        </div>
-      )}
 
       {/* Video Modal */}
       {playingVideo && (
