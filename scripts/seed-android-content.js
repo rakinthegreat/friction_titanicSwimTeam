@@ -76,6 +76,13 @@ async function seedVideos() {
 }
 
 async function main() {
+  const outputPath = path.resolve(__dirname, '../src/lib/offline-data.json');
+  
+  if (fs.existsSync(outputPath)) {
+    console.log(`Offline data already exists at ${outputPath}. Skipping seed.`);
+    return;
+  }
+
   const quotes = await seedQuotes();
   const videos = await seedVideos();
 
@@ -85,7 +92,6 @@ async function main() {
     generatedAt: new Date().toISOString()
   };
 
-  const outputPath = path.resolve(__dirname, '../src/lib/offline-data.json');
   fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
   console.log(`Successfully seeded offline data to ${outputPath}`);
 }
