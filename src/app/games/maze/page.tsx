@@ -20,6 +20,8 @@ const SIZE_DEFAULT = 23;
 export default function MazePage() {
   const router = useRouter();
   const updateStats = useUserStore((state) => state.updateStats);
+  const recordGameStart = useUserStore((state) => state.recordGameStart);
+  const recordGameResult = useUserStore((state) => state.recordGameResult);
 
   const [size, setSize] = useState(SIZE_DEFAULT);
   const [maze, setMaze] = useState<number[][]>([]);
@@ -27,6 +29,9 @@ export default function MazePage() {
   const [goal, setGoal] = useState({ x: SIZE_DEFAULT - 2, y: SIZE_DEFAULT - 2 });
   const [minMoves, setMinMoves] = useState(0);
   const [obstacles, setObstacles] = useState<Set<string>>(new Set());
+
+  const startTime = useRef<number>(Date.now());
+  const gameEnded = useRef<boolean>(false);
 
   const calculateShortestPath = (grid: number[][], start: {x: number, y: number}, target: {x: number, y: number}, obstacleSet: Set<string>) => {
     const queue: [number, number, number][] = [[start.x, start.y, 0]];
@@ -71,6 +76,12 @@ export default function MazePage() {
   }, []);
 
   const generateMaze = useCallback(() => {
+    // Record quit if starting new maze without finishing current
+    if (!gameEnded.current && moves > 0) {
+      const timeSpent = (Date.now() - startTime.current) / 1000;
+      recordGameResult('maze', 'quit', timeSpent);
+    }
+
     const newMaze = Array(size).fill(null).map(() => Array(size).fill(1));
     const stack: [number, number][] = [];
     const start = { x: 1, y: 1 };
@@ -176,17 +187,35 @@ export default function MazePage() {
     setPlayer({ x: 1, y: 1 });
     setWon(false);
     setMoves(0);
-  }, [size]);
+
+    // Track game start
+    recordGameStart('maze');
+    startTime.current = Date.now();
+    gameEnded.current = false;
+  }, [size, recordGameStart, recordGameResult, moves]);
 
   const resetPlayer = () => {
     setPlayer({ x: 1, y: 1 });
     setWon(false);
     setMoves(0);
+    // Track retry as a start? Or just keep current session?
+    // Let's keep current session for retry same maze.
   };
+
+  const movesRef = React.useRef(moves);
+  useEffect(() => {
+    movesRef.current = moves;
+  }, [moves]);
 
   useEffect(() => {
     generateMaze();
-  }, [generateMaze]);
+    return () => {
+      if (!gameEnded.current && movesRef.current > 0) {
+        const timeSpent = (Date.now() - startTime.current) / 1000;
+        recordGameResult('maze', 'quit', timeSpent);
+      }
+    };
+  }, []); // Only once on mount
 
   const movePlayer = useCallback((dx: number, dy: number) => {
     if (won) return;
@@ -198,17 +227,21 @@ export default function MazePage() {
 
       if (nx >= 0 && nx < size && ny >= 0 && ny < size && maze[ny][nx] === 0 && !isObstacle) {
         const isGoal = nx === goal.x && ny === goal.y;
-        if (isGoal) {
+        if (isGoal && !gameEnded.current) {
           setWon(true);
           updateStats(3);
           useUserStore.getState().completeActivity('maze');
+          
+          gameEnded.current = true;
+          const timeSpent = (Date.now() - startTime.current) / 1000;
+          recordGameResult('maze', 'win', timeSpent);
         }
         setMoves(m => m + 1);
         return { x: nx, y: ny };
       }
       return prev;
     });
-  }, [won, maze, goal, updateStats]);
+  }, [won, maze, goal, updateStats, recordGameResult]);
 
   const lastPos = useRef<{ x: number, y: number } | null>(null);
 

@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Trophy, HelpCircle, Loader2 } from 'lucide-react';
 import { getDailyCrossword } from '@/lib/dailyCrossword';
+import { useUserStore } from '@/store/userStore';
 
 interface Cell {
   letter: string;
@@ -31,14 +32,47 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
   const [lastDir, setLastDir] = useState<'across' | 'down'>('across');
   const [shake, setShake] = useState(false);
   const [correctCells, setCorrectCells] = useState<Set<string>>(new Set());
-  const [startTime] = useState(Date.now());
+  const recordGameStart = useUserStore((state) => state.recordGameStart);
+  const recordGameResult = useUserStore((state) => state.recordGameResult);
+  const gameEnded = useRef<boolean>(false);
   const [canReveal, setCanReveal] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [hint, setHint] = useState<string | null>(null);
   const [isLoadingHint, setIsLoadingHint] = useState(false);
+  const startTimeRef = useRef<number>(Date.now());
 
   const fetchedRef = useRef(false);
+
+  useEffect(() => {
+    // Record game start
+    recordGameStart('crosswords');
+    startTimeRef.current = Date.now();
+    gameEnded.current = false;
+
+    const timer = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
+      const remaining = Math.max(0, 60 - elapsed);
+      setTimeLeft(remaining);
+      if (remaining === 0) {
+        setCanReveal(true);
+        clearInterval(timer);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+      if (!gameEnded.current && gridRef.current.some(row => row.some(cell => cell !== ""))) {
+        const timeSpent = (Date.now() - startTimeRef.current) / 1000;
+        recordGameResult('crosswords', 'quit', timeSpent);
+      }
+    };
+  }, [recordGameStart, recordGameResult]);
+
+  const gridRef = useRef<string[][]>(grid);
+  useEffect(() => {
+    gridRef.current = grid;
+  }, [grid]);
 
   useEffect(() => {
     if (fetchedRef.current) return;
@@ -58,18 +92,7 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
       }
     };
     fetchPuzzle();
-
-    const timer = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - startTime) / 1000);
-      const remaining = Math.max(0, 60 - elapsed);
-      setTimeLeft(remaining);
-      if (remaining === 0) {
-        setCanReveal(true);
-        clearInterval(timer);
-      }
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [startTime]);
+  }, []);
 
   const gridDefinition: Cell[][] = Array(GRID_SIZE).fill(null).map(() =>
     Array(GRID_SIZE).fill(null).map(() => ({ letter: "", isWall: true }))
@@ -152,8 +175,11 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
 
     setCorrectCells(newCorrect);
 
-    if (allCorrect) {
+    if (allCorrect && !gameEnded.current) {
       setWon(true);
+      gameEnded.current = true;
+      const timeSpent = (Date.now() - startTimeRef.current) / 1000;
+      recordGameResult('crosswords', 'win', timeSpent);
       setTimeout(() => onComplete(50), 2500);
     } else {
       setShake(true);
@@ -172,8 +198,13 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
       }
     });
     setGrid(newGrid);
-    setGrid(newGrid);
     setIsRevealed(true);
+
+    if (!gameEnded.current) {
+      gameEnded.current = true;
+      const timeSpent = (Date.now() - startTimeRef.current) / 1000;
+      recordGameResult('crosswords', 'loss', timeSpent);
+    }
   };
 
   const handleHint = async () => {

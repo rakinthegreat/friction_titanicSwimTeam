@@ -21,6 +21,15 @@ interface LearningSession {
   timestamp: number;
 }
 
+interface GameStats {
+  timesPlayed: number;
+  wins: number;
+  losses: number;
+  quits: number;
+  totalTimeSpent: number; // in seconds
+  averageTime: number;
+}
+
 interface UserState {
   uid: string | null;
   interests: string[];
@@ -32,6 +41,7 @@ interface UserState {
     lastActivityDate: string | null;
     highScores: Record<string, number>;
   };
+  gameStats: Record<string, GameStats>;
   preferences: {
     darkMode: boolean;
     blockDoomscrolling: boolean;
@@ -79,6 +89,8 @@ interface UserState {
   setInterests: (interests: string[]) => void;
   setVideoGenres: (genres: string[]) => void;
   updateStats: (minutes: number, gameId?: string, score?: number) => void;
+  recordGameStart: (gameId: string) => void;
+  recordGameResult: (gameId: string, result: 'win' | 'loss' | 'quit', timeSpentSeconds: number) => void;
   setDarkMode: (enabled: boolean) => void;
 
   // Philosophy Actions
@@ -99,17 +111,21 @@ interface UserState {
   addMeditationLog: (log: { prompt: string; reflection: string }) => void;
 
   // Challenge Actions
-  addRealLifeChallenge: (challenge: { challenge: string; context: {
-    location: string;
-    posture: string;
-    vibe: string;
-    energy: string;
-  }; estimatedTime: number }) => string;
+  addRealLifeChallenge: (challenge: {
+    challenge: string; context: {
+      location: string;
+      posture: string;
+      vibe: string;
+      energy: string;
+    }; estimatedTime: number
+  }) => string;
   completeRealLifeChallenge: (id: string, experience?: string) => void;
 
   completeActivity: (id: string) => void;
   setNavigationSource: (source: 'home' | 'profile') => void;
   syncWithFirebase: () => Promise<void>;
+  _hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -118,6 +134,8 @@ export const useUserStore = create<UserState>()(
       uid: null,
       interests: [],
       videoGenres: [],
+      _hasHydrated: false,
+      setHasHydrated: (state) => set({ _hasHydrated: state }),
       stats: {
         totalMinutesSaved: 0,
         activitiesCompleted: 0,
@@ -125,6 +143,7 @@ export const useUserStore = create<UserState>()(
         lastActivityDate: null,
         highScores: {},
       },
+      gameStats: {},
       preferences: {
         darkMode: false,
         blockDoomscrolling: true,
@@ -173,7 +192,7 @@ export const useUserStore = create<UserState>()(
             const now = new Date(today);
             const diffTime = Math.abs(now.getTime() - last.getTime());
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            
+
             if (diffDays === 1) {
               newStreak += 1;
             } else {
@@ -189,6 +208,64 @@ export const useUserStore = create<UserState>()(
               streakDays: newStreak,
               lastActivityDate: today,
               highScores: newHighScores,
+            },
+          };
+        }),
+
+      recordGameStart: (gameId) =>
+        set((state) => {
+          const currentStats = state.gameStats[gameId] || {
+            timesPlayed: 0,
+            wins: 0,
+            losses: 0,
+            quits: 0,
+            totalTimeSpent: 0,
+            averageTime: 0,
+          };
+
+          return {
+            gameStats: {
+              ...state.gameStats,
+              [gameId]: {
+                ...currentStats,
+                timesPlayed: currentStats.timesPlayed + 1,
+              },
+            },
+          };
+        }),
+
+      recordGameResult: (gameId, result, timeSpentSeconds) =>
+        set((state) => {
+          const currentStats = state.gameStats[gameId] || {
+            timesPlayed: 0,
+            wins: 0,
+            losses: 0,
+            quits: 0,
+            totalTimeSpent: 0,
+            averageTime: 0,
+          };
+
+          const newWins = result === 'win' ? currentStats.wins + 1 : currentStats.wins;
+          const newLosses = result === 'loss' ? currentStats.losses + 1 : currentStats.losses;
+          const newQuits = result === 'quit' ? currentStats.quits + 1 : currentStats.quits;
+          const newTotalTime = currentStats.totalTimeSpent + timeSpentSeconds;
+
+          // Total outcomes (wins + losses + quits) might be less than timesPlayed if some games are still in progress
+          // but for average time, we only consider games that ended.
+          const totalEnded = newWins + newLosses + newQuits;
+          const newAverage = totalEnded > 0 ? newTotalTime / totalEnded : 0;
+
+          return {
+            gameStats: {
+              ...state.gameStats,
+              [gameId]: {
+                ...currentStats,
+                wins: newWins,
+                losses: newLosses,
+                quits: newQuits,
+                totalTimeSpent: newTotalTime,
+                averageTime: newAverage,
+              },
             },
           };
         }),
@@ -248,14 +325,14 @@ export const useUserStore = create<UserState>()(
         set((state) => {
           const currentCount = state.englishReviewWords[word];
           if (currentCount === undefined) return state;
-          
+
           if (currentCount >= 1) {
             // Reached 2 successes, remove the word
             const newReviewWords = { ...state.englishReviewWords };
             delete newReviewWords[word];
             return { englishReviewWords: newReviewWords };
           }
-          
+
           // Otherwise increment
           return {
             englishReviewWords: {
@@ -307,9 +384,9 @@ export const useUserStore = create<UserState>()(
             lastCompletedDate: today,
           };
         }),
-      
+
       setNavigationSource: (source) => set({ navigationSource: source }),
-      
+
       syncWithFirebase: async () => {
         const state = useUserStore.getState();
         if (!state.uid) throw new Error("User not authenticated");
@@ -327,17 +404,17 @@ export const useUserStore = create<UserState>()(
         const remoteSci = sciSnap.docs.map(d => d.data() as LearningSession);
 
         // 2. MERGE: Intelligent merging logic
-        
+
         // Simple Union/Max Fields
         const mergedInterests = Array.from(new Set([...state.interests, ...(remoteData.interests || [])]));
         const mergedVideoGenres = Array.from(new Set([...state.videoGenres, ...(remoteData.videoGenres || [])]));
-        
+
         const mergedStats = {
           totalMinutesSaved: Math.max(state.stats.totalMinutesSaved, remoteData.stats?.totalMinutesSaved || 0),
           activitiesCompleted: Math.max(state.stats.activitiesCompleted, remoteData.stats?.activitiesCompleted || 0),
           streakDays: Math.max(state.stats.streakDays, remoteData.stats?.streakDays || 0),
-          lastActivityDate: (state.stats.lastActivityDate || '') > (remoteData.stats?.lastActivityDate || '') 
-            ? state.stats.lastActivityDate 
+          lastActivityDate: (state.stats.lastActivityDate || '') > (remoteData.stats?.lastActivityDate || '')
+            ? state.stats.lastActivityDate
             : (remoteData.stats?.lastActivityDate || null),
           highScores: { ...(remoteData.stats?.highScores || {}), ...state.stats.highScores }
         };
@@ -358,7 +435,7 @@ export const useUserStore = create<UserState>()(
         // Concepts & Words
         const mergedCompletedPhil = Array.from(new Set([...state.completedPhilosophyConcepts, ...(remoteData.completedPhilosophyConcepts || [])]));
         const mergedCompletedSci = Array.from(new Set([...state.completedScienceConcepts, ...(remoteData.completedScienceConcepts || [])]));
-        
+
         const mergeCustom = (local: any[], remote: any[]) => {
           const map = new Map<string, any>();
           remote.forEach(c => map.set(c.name || c.title || c.concept_name, c));
@@ -370,11 +447,34 @@ export const useUserStore = create<UserState>()(
         const mergedCustomSci = mergeCustom(state.customScienceConcepts, remoteData.customScienceConcepts || []);
         const mergedEnglish = { ...(remoteData.englishReviewWords || {}), ...state.englishReviewWords };
 
+        // Game Stats Merging (take max of each metric per game)
+        const mergedGameStats: Record<string, GameStats> = { ...(remoteData.gameStats || {}) };
+        Object.entries(state.gameStats).forEach(([gameId, local]) => {
+          const remote = mergedGameStats[gameId];
+          if (!remote) {
+            mergedGameStats[gameId] = local;
+          } else {
+            const wins = Math.max(local.wins, remote.wins);
+            const losses = Math.max(local.losses || 0, remote.losses || 0);
+            const quits = Math.max(local.quits || 0, remote.quits || 0);
+            const totalTimeSpent = Math.max(local.totalTimeSpent, remote.totalTimeSpent);
+            const totalEnded = wins + losses + quits;
+            mergedGameStats[gameId] = {
+              timesPlayed: Math.max(local.timesPlayed, remote.timesPlayed),
+              wins,
+              losses,
+              quits,
+              totalTimeSpent,
+              averageTime: totalEnded > 0 ? totalTimeSpent / totalEnded : 0,
+            };
+          }
+        });
+
         // Daily Progress (Keep newest)
         const mergedLastCompletedDate = (state.lastCompletedDate || '') > (remoteData.lastCompletedDate || '')
           ? state.lastCompletedDate
           : (remoteData.lastCompletedDate || null);
-        
+
         const mergedDailyActivities = state.lastCompletedDate === mergedLastCompletedDate
           ? state.dailyCompletedActivities
           : (remoteData.dailyCompletedActivities || []);
@@ -385,6 +485,7 @@ export const useUserStore = create<UserState>()(
           interests: mergedInterests,
           videoGenres: mergedVideoGenres,
           stats: mergedStats,
+          gameStats: mergedGameStats,
           philosophyReflections: mergedPhil,
           scienceReflections: mergedSci,
           meditationLogs: mergedMeditation,
@@ -401,11 +502,12 @@ export const useUserStore = create<UserState>()(
 
         // 4. PUSH: Save merged state back to Firestore
         const batch = writeBatch(db);
-        
+
         const profileToPush = {
           interests: mergedInterests,
           videoGenres: mergedVideoGenres,
           stats: mergedStats,
+          gameStats: mergedGameStats,
           preferences: state.preferences,
           completedPhilosophyConcepts: mergedCompletedPhil,
           completedScienceConcepts: mergedCompletedSci,
@@ -437,7 +539,10 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: 'user-storage',
-      storage: createJSONStorage(() => localforage as any),
+      storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );
