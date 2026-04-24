@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Calendar, RefreshCw, X, Bug } from 'lucide-react';
+import { Calendar, RefreshCw, X, Bug, Layout } from 'lucide-react';
+import { useUserStore } from '@/store/userStore';
 
 export const DevBar = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [overrideDate, setOverrideDate] = useState('');
   const [currentDate, setCurrentDate] = useState('');
+  const { showDevTiles } = useUserStore((state) => state.preferences);
+  const setShowDevTiles = useUserStore((state) => state.setShowDevTiles);
 
   useEffect(() => {
     const saved = localStorage.getItem('dev_date_override');
@@ -64,6 +67,19 @@ export const DevBar = () => {
                 onChange={(e) => setOverrideDate(e.target.value)}
                 className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/50"
               />
+            </div>
+
+            <div className="flex items-center justify-between p-3 bg-foreground/5 rounded-xl border border-border/50">
+              <div className="flex items-center gap-2">
+                <Layout className="w-4 h-4 text-accent" />
+                <span className="text-xs font-bold">Show Dev Tiles</span>
+              </div>
+              <button
+                onClick={() => setShowDevTiles(!showDevTiles)}
+                className={`w-10 h-5 rounded-full transition-colors relative ${showDevTiles ? 'bg-accent' : 'bg-foreground/20'}`}
+              >
+                <div className={`absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform ${showDevTiles ? 'translate-x-5' : ''}`} />
+              </button>
             </div>
 
             <div className="flex gap-2">
