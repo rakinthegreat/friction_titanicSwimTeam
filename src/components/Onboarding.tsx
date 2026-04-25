@@ -113,7 +113,7 @@ export default function Onboarding() {
       setInterests(selected);
       setVideoGenres(videoSelected);
       setPreferredLanguages(languagesSelected);
-      
+
       const points = selectedFriction.map(type => {
         const preset = FRICTION_PRESETS.find(p => p.type === type);
         const config = frictionConfigs[type] || { start: preset?.defaultStart || '09:00', end: preset?.defaultEnd || '10:00' };
@@ -415,7 +415,7 @@ export default function Onboarding() {
                 <div className="space-y-2">
                   <h3 className="font-black uppercase tracking-wider text-sm">Optimize Your Experience</h3>
                   <p className="text-foreground/60 text-sm font-medium leading-relaxed">
-                    Head over to your **Profile** to customize system permissions. This helps WaitLess detect waiting periods more accurately.
+                    Head over to your Profile to customize system permissions. This helps WaitLess detect waiting periods more accurately.
                   </p>
                 </div>
               </div>

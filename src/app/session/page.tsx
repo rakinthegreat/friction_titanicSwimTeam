@@ -37,18 +37,17 @@ export default function SessionPage() {
   if (!_hasHydrated || !sessionDuration) return null;
 
   return (
-    <main className="min-h-screen bg-background text-foreground pb-8 animate-in fade-in duration-500 pt-20">
-      <div className="max-w-4xl mx-auto p-8 space-y-6">
-        <header className="flex items-center mb-8">
-
-          <div className="ml-4">
+    <main className="min-h-screen bg-background text-foreground pb-4 animate-in fade-in duration-500">
+      <div className="max-w-4xl mx-auto px-6 pt-0 pb-2 space-y-6">
+        <header className="flex items-center mb-4">
+          <div>
             <h1 className="text-4xl font-extrabold tracking-tight">Active Session</h1>
             <p className="text-accent font-medium uppercase tracking-widest text-sm">Drafting Activities</p>
           </div>
         </header>
 
         <section className="grid grid-cols-1 gap-4">
-          <div className="bg-accent rounded-[2.5rem] p-6 sm:p-10 text-white space-y-6 shadow-[8px_8px_20px_rgba(0,0,0,0.15),-4px_-4px_15px_rgba(0,0,0,0.05)] ring-1 ring-black/5 overflow-hidden relative group">
+          <div className="bg-accent rounded-[2.5rem] p-6 sm:px-10 sm:pt-10 sm:pb-8 text-white space-y-6 shadow-[8px_8px_20px_rgba(0,0,0,0.15),-4px_-4px_15px_rgba(0,0,0,0.05)] ring-1 ring-black/5 overflow-hidden relative group">
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 relative z-10">
               <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">

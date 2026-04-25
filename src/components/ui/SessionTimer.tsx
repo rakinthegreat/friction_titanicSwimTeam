@@ -37,7 +37,7 @@ export function SessionTimer() {
 
   return (
     <>
-      <div className="h-20 w-full shrink-0" />
+      <div className="h-16 w-full shrink-0" />
       <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top-10 duration-500">
         <div className={`flex items-center gap-4 px-5 py-2.5 rounded-full shadow-neo-out border transition-colors ${isTimeUp
           ? 'bg-red-500/10 border-red-500/20 text-red-500'
