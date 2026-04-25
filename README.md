@@ -12,17 +12,23 @@ Waitless derives its name from the desire to feel the wait a bit less, or make o
 
 ## The Philosophy of Friction
 
-Unlike traditional productivity apps that focus on speed and efficiency, **WaitLess** detects friction points in your life and guides you to use them mindfully. 
+We believe friction is not something to be always eliminated or sped up, rather it can be a tool for personal growth in the congitive and social field through learning, brain games and real life challenges.
 
-By automatically detecting friction moments—such as when you are idle at home or stuck in a commute—and by learning "Friction Times" where you would otherwise doomscroll, WaitLess enables you to turn this friction into something meaningful. This friction isn't a barrier; it's a tool for awareness, helping you pause before falling into mindless scrolling and redirecting your energy toward meaningful growth.
+By automatically detecting friction moments, such as when you are idle at home or stuck in a commute, and by learning "Friction Times" where you would otherwise doomscroll, WaitLess enables you to turn this friction into something meaningful. This friction isn't a barrier; it's a tool for awareness, helping you pause before falling into mindless scrolling and redirecting your energy toward meaningful growth.
 
 ## Design Aesthetic: Neumorphism
 
 WaitLess utilizes a **Neumorphic design system** to keep the interface exceptionally simple and distraction-free. By using soft shadows and subtle depth instead of loud colors and complex gradients, the app creates a calm, tactile environment that keeps the user focused on the task at hand. This "soft UI" approach reduces cognitive load, ensuring that the app itself never becomes a point of unnecessary digital friction.
 
+## App Logo
+
+<br/>
+<br/>
+<br/>
+
 ## Core Features
 
-### Intentional Friction & Automatic Detection
+### Automatic Detection & Friction Periods
 *   **Intelligent Friction Detection**: The app monitors and detects periods of potential digital friction by GPS, helping you stay aware of your habits in real-time.
 *   **Recurring Friction**: Set specific daily or weekly time blocks (e.g., "Bedtime Procrastination" or "Morning Commute").
 *   **Custom Friction**: Quickly add one-off friction blocks for immediate focus needs.
@@ -34,7 +40,7 @@ WaitLess utilizes a **Neumorphic design system** to keep the interface exception
 *   **Smart Video Curation**: WaitLess utilizes AI to curate YouTube videos that match your specific interests and available time, ensuring even your breaks are meaningful.
 
 ### The Laboratory (Science)
-*   **Discoveries on Demand**: Explore advanced scientific concepts in Physics, Biology, Astronomy, and more.
+*   **Discoveries on Demand**: Explore advanced scientific concepts
 *   **AI-Guided Learning**: Engage with interactive MCQs and open-ended reflections.
 *   **Researcher Feedback**: Get real-time AI insights on your scientific observations.
 
@@ -82,14 +88,14 @@ WaitLess is built with a cutting-edge, cross-platform architecture:
 *   **Styling**: Custom Neumorphic Design System (CSS Variables)
 *   **State Management**: Zustand with persistent storage
 *   **AI Engine**: NVIDIA NIM (moonshotai/kimi-k2-instruct-0905)
-*   **Database**: Firebase Firestore (Real-time data synchronization)
+*   **Database**: Firebase Firestore
 *   **Authentication**: Firebase Auth (Secure user management)
 *   **Mobile Framework**: Capacitor JS (Native Android & iOS support)
 *   **Activity Recognition**: Google Activity Recognition API (Automatic habit & friction detection)
 *   **Notifications**: Capacitor Local Notifications (System-level scheduling)
 *   **Icons & Motion**: Lucide React & Framer Motion
 
-## External APIs & Services
+## APIs & Services
 
 WaitLess integrates several industry-standard APIs to provide a rich, real-time experience:
 
@@ -97,6 +103,4 @@ WaitLess integrates several industry-standard APIs to provide a rich, real-time 
 *   **Geolocation & Mapping**: Nominatim (OpenStreetMap) for reverse geocoding and location context.
 *   **IP Services**: IPAPI.co and FreeIPAPI for fallback location detection.
 *   **Content Discovery**: YouTube (Custom curated scraping for mindful video recommendations).
-*   **Core Infrastructure**: Firebase Authentication and Firestore for secure, real-time data persistence.
-*   **Intelligence**: NVIDIA NIM (Kimi model) & Google Gemini (Advanced language models for personalized content and feedback).
 *   **Activity Recognition**: Google Activity Recognition API for intelligent habit and commute detection.
