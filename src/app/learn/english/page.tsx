@@ -163,6 +163,8 @@ export default function EnglishModule() {
   const finishSession = () => {
     const minutes = Math.max(1, Math.floor(currentIndex / 2));
     updateStats(minutes, 'english_vocab', score);
+    setCurrentIndex(0);
+    setScore(0);
     setViewMode('menu');
   };
 
@@ -234,7 +236,11 @@ export default function EnglishModule() {
           </button>
         </div>
 
-        <button onClick={() => router.push('/learn')} className="mx-auto flex items-center gap-2 text-foreground/40 hover:text-foreground transition-colors font-black uppercase tracking-widest text-sm">
+        <button onClick={() => {
+          setCurrentIndex(0);
+          setScore(0);
+          router.push('/learn');
+        }} className="mx-auto flex items-center gap-2 text-foreground/40 hover:text-foreground transition-colors font-black uppercase tracking-widest text-sm">
           <ChevronLeft size={20} /> Back to Hub
         </button>
       </main>

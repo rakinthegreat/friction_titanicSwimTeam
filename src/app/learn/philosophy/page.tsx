@@ -120,7 +120,11 @@ export default function PhilosophyModule() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <button
-            onClick={() => setViewMode('learn')}
+            onClick={() => {
+              setCurrentIndex(0);
+              setCurrentSessionMCQs([]);
+              setViewMode('learn');
+            }}
             className="group relative p-1 rounded-[3rem] bg-gradient-to-br from-accent-secondary to-accent transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out"
           >
             <div className="bg-card rounded-[2.8rem] p-10 h-full flex flex-col items-center text-center space-y-6">
@@ -294,7 +298,11 @@ export default function PhilosophyModule() {
           </button>
           {!isGenerating && (
             <button
-              onClick={() => setViewMode('menu')}
+              onClick={() => {
+                setCurrentIndex(0);
+                setCurrentSessionMCQs([]);
+                setViewMode('menu');
+              }}
               className="px-8 py-5 bg-card text-foreground rounded-2xl font-black text-xl shadow-neo-out hover:scale-105 active:scale-95 transition-all"
             >
               Return to Sanctum
@@ -318,7 +326,11 @@ export default function PhilosophyModule() {
           </p>
         </div>
         <button
-          onClick={() => setViewMode('menu')}
+          onClick={() => {
+            setCurrentIndex(0);
+            setCurrentSessionMCQs([]);
+            setViewMode('menu');
+          }}
           className="w-full sm:w-auto px-12 py-5 bg-accent-secondary text-white rounded-2xl font-black text-xl shadow-neo-out hover:scale-105 active:scale-95 transition-all"
         >
           Return to Sanctum
@@ -330,7 +342,11 @@ export default function PhilosophyModule() {
   return (
     <main className="min-h-screen max-w-2xl mx-auto p-4 flex flex-col">
       <div className="pt-4 px-2 flex items-center gap-4">
-        <button onClick={() => setViewMode('menu')} className="p-2 hover:bg-card rounded-xl transition-colors">
+        <button onClick={() => {
+          setCurrentIndex(0);
+          setCurrentSessionMCQs([]);
+          setViewMode('menu');
+        }} className="p-2 hover:bg-card rounded-xl transition-colors">
           <ChevronLeft size={20} />
         </button>
         <div className="flex-1">
