@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { LessonProgressBar } from '@/components/learn/LessonProgressBar';
 import { EnglishFITBInteraction } from '@/components/learn/EnglishFITBInteraction';
 import { Card } from '@/components/ui/Card';
-import { CheckCircle2, XCircle, BookOpen, ChevronLeft, Loader2, Play, Combine, RefreshCcw } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, XCircle, BookOpen, ChevronLeft, Loader2, Play, Combine, RefreshCcw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import vocabData from '@/stored-data/english-vocab.json';
@@ -108,7 +108,7 @@ export default function EnglishModule() {
 
   const handleFITBSubmit = (isCorrect: boolean, selectedWord: string) => {
     const currentQ = fillQuestions[currentIndex];
-    
+
     if (isCorrect) {
       setScore(prev => prev + 5);
       if (viewMode === 'review') {
@@ -118,7 +118,7 @@ export default function EnglishModule() {
       setScore(prev => prev - 3);
       addEnglishReviewWord(currentQ.answer);
     }
-    
+
     setCurrentIndex(prev => prev + 1);
   };
 
@@ -175,74 +175,82 @@ export default function EnglishModule() {
   // ==== MENU VIEW ====
   if (viewMode === 'menu') {
     return (
-      <main className="min-h-screen max-w-4xl mx-auto p-6 flex flex-col justify-center space-y-12 animate-in fade-in duration-700">
-        <div className="space-y-4 text-center">
-          <h1 className="text-6xl font-black tracking-tighter text-foreground italic">
-            English <span className="text-blue-400">Mastery</span>
-          </h1>
-          <p className="text-xl text-foreground/60 font-medium max-w-xl mx-auto">
-            Expand your vocabulary through context, meaning, and targeted review.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <button onClick={startFillMode} className="group relative p-1 rounded-[3rem] bg-gradient-to-br from-blue-400 to-blue-600 transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out">
-            <div className="bg-card rounded-[2.8rem] p-8 h-full flex flex-col items-center text-center space-y-6">
-              <div className="w-16 h-16 bg-blue-400/10 text-blue-400 rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Play size={32} strokeWidth={2.5} />
-              </div>
-              <div>
-                <h2 className="text-2xl font-black mb-2">Fill in Blanks</h2>
-                <p className="text-sm text-foreground/60 font-bold">Use context clues to find the missing word.</p>
-              </div>
-            </div>
-          </button>
-
-          <button onClick={startMatchMode} className="group relative p-1 rounded-[3rem] bg-gradient-to-br from-blue-400 to-blue-600 transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out">
-            <div className="bg-card rounded-[2.8rem] p-8 h-full flex flex-col items-center text-center space-y-6">
-              <div className="w-16 h-16 bg-blue-400/10 text-blue-400 rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Combine size={32} strokeWidth={2.5} />
-              </div>
-              <div>
-                <h2 className="text-2xl font-black mb-2">Word Match</h2>
-                <p className="text-sm text-foreground/60 font-bold">Connect 5 words with their correct definitions.</p>
-              </div>
-            </div>
-          </button>
-
+      <main className="min-h-screen max-w-4xl mx-auto p-6 flex flex-col animate-in fade-in duration-700">
+        <div className="w-full flex items-center mb-8">
           <button
-            onClick={startReviewMode}
-            disabled={Object.keys(englishReviewWords).length < 5}
-            className={`group relative p-1 rounded-[3rem] transition-all shadow-neo-out ${Object.keys(englishReviewWords).length < 5 ? 'bg-foreground/10 cursor-not-allowed opacity-50' : 'bg-gradient-to-br from-blue-400 to-blue-600 hover:scale-[1.02] active:scale-95'}`}
+            onClick={() => {
+              setCurrentIndex(0);
+              setScore(0);
+              router.push('/learn');
+            }}
+            className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-blue-400 transition-all active:scale-95"
+            aria-label="Back to Hub"
           >
-            <div className="bg-card rounded-[2.8rem] p-8 h-full flex flex-col items-center text-center space-y-6">
-              <div className="w-16 h-16 bg-blue-400/10 text-blue-400 rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                <RefreshCcw size={32} strokeWidth={2.5} />
-              </div>
-              <div>
-                <h2 className="text-2xl font-black mb-2">Review Words</h2>
-                <p className="text-sm text-foreground/60 font-bold">
-                  {Object.keys(englishReviewWords).length < 5
-                    ? `Need ${5 - Object.keys(englishReviewWords).length} more words to unlock.`
-                    : "Master the words you've missed previously."}
-                </p>
-              </div>
-              {Object.keys(englishReviewWords).length > 0 && (
-                <div className="px-4 py-1 bg-blue-400/20 text-blue-400 rounded-full text-xs font-black uppercase tracking-widest">
-                  {Object.keys(englishReviewWords).length} to Review
-                </div>
-              )}
-            </div>
+            <ArrowLeft className="w-6 h-6" />
           </button>
         </div>
 
-        <button onClick={() => {
-          setCurrentIndex(0);
-          setScore(0);
-          router.push('/learn');
-        }} className="mx-auto flex items-center gap-2 text-foreground/40 hover:text-foreground transition-colors font-black uppercase tracking-widest text-sm">
-          <ChevronLeft size={20} /> Back to Hub
-        </button>
+        <div className="flex-1 flex flex-col justify-center space-y-12">
+          <div className="space-y-4 text-center">
+            <h1 className="text-6xl font-black tracking-tighter text-foreground italic">
+              English <span className="text-blue-400">Mastery</span>
+            </h1>
+            <p className="text-xl text-foreground/60 font-medium max-w-xl mx-auto">
+              Expand your vocabulary through context, meaning, and targeted review.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <button onClick={startFillMode} className="group relative p-1 rounded-[3rem] bg-gradient-to-br from-blue-400 to-blue-600 transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out">
+              <div className="bg-card rounded-[2.8rem] p-8 h-full flex flex-col items-center text-center space-y-6">
+                <div className="w-16 h-16 bg-blue-400/10 text-blue-400 rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Play size={32} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black mb-2">Fill in Blanks</h2>
+                  <p className="text-sm text-foreground/60 font-bold">Use context clues to find the missing word.</p>
+                </div>
+              </div>
+            </button>
+
+            <button onClick={startMatchMode} className="group relative p-1 rounded-[3rem] bg-gradient-to-br from-blue-400 to-blue-600 transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out">
+              <div className="bg-card rounded-[2.8rem] p-8 h-full flex flex-col items-center text-center space-y-6">
+                <div className="w-16 h-16 bg-blue-400/10 text-blue-400 rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Combine size={32} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black mb-2">Word Match</h2>
+                  <p className="text-sm text-foreground/60 font-bold">Connect 5 words with their correct definitions.</p>
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={startReviewMode}
+              disabled={Object.keys(englishReviewWords).length < 5}
+              className={`group relative p-1 rounded-[3rem] transition-all shadow-neo-out ${Object.keys(englishReviewWords).length < 5 ? 'bg-foreground/10 cursor-not-allowed opacity-50' : 'bg-gradient-to-br from-blue-400 to-blue-600 hover:scale-[1.02] active:scale-95'}`}
+            >
+              <div className="bg-card rounded-[2.8rem] p-8 h-full flex flex-col items-center text-center space-y-6">
+                <div className="w-16 h-16 bg-blue-400/10 text-blue-400 rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <RefreshCcw size={32} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black mb-2">Review Words</h2>
+                  <p className="text-sm text-foreground/60 font-bold">
+                    {Object.keys(englishReviewWords).length < 5
+                      ? `Need ${5 - Object.keys(englishReviewWords).length} more words to unlock.`
+                      : "Master the words you've missed previously."}
+                  </p>
+                </div>
+                {Object.keys(englishReviewWords).length > 0 && (
+                  <div className="px-4 py-1 bg-blue-400/20 text-blue-400 rounded-full text-xs font-black uppercase tracking-widest">
+                    {Object.keys(englishReviewWords).length} to Review
+                  </div>
+                )}
+              </div>
+            </button>
+          </div>
+        </div>
       </main>
     );
   }
@@ -397,7 +405,7 @@ export default function EnglishModule() {
               className="w-full py-6 rounded-[2.5rem] bg-[#7EA68B] text-white font-black text-2xl shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 group ring-4 ring-[#7EA68B]/20"
             >
               Next Round
-              <CheckCircle2 className="w-8 h-8 group-hover:translate-x-1 transition-transform" />
+
             </button>
           </div>
         )}

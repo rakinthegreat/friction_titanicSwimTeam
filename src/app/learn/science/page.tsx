@@ -5,7 +5,7 @@ import { LessonProgressBar } from '@/components/learn/LessonProgressBar';
 import { FreeResponseInteraction } from '@/components/learn/FreeResponseInteraction';
 import { MCQInteraction } from '@/components/learn/MCQInteraction';
 import { Card } from '@/components/ui/Card';
-import { FlaskConical, Trophy, Loader2, BookOpen, History, Sparkles, ChevronLeft, Calendar } from 'lucide-react';
+import { FlaskConical, Trophy, Loader2, BookOpen, History, Sparkles, ChevronLeft, Calendar, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { concepts } from '@/app/learn/science/topics';
 import { useUserStore } from '@/store/userStore';
@@ -107,64 +107,72 @@ export default function ScienceModule() {
 
   if (viewMode === 'menu') {
     return (
-      <main className="min-h-screen max-w-4xl mx-auto p-6 flex flex-col justify-center space-y-12 animate-in fade-in duration-700">
-        <div className="space-y-4 text-center">
-          <h1 className="text-6xl font-black tracking-tighter text-foreground italic">
-            The <span className="text-blue-500">Laboratory</span>
-          </h1>
-          <p className="text-xl text-foreground/60 font-medium max-w-xl mx-auto">
-            Explore the fundamental laws of nature and the cutting-edge discoveries of the modern era.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <main className="min-h-screen max-w-4xl mx-auto p-6 flex flex-col animate-in fade-in duration-700">
+        <div className="w-full flex items-center mb-8">
           <button
             onClick={() => {
               setCurrentIndex(0);
               setCurrentSessionMCQs([]);
-              setViewMode('learn');
+              router.push('/learn');
             }}
-            className="group relative p-1 rounded-[3rem] bg-gradient-to-br from-blue-500 to-cyan-500 transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out"
+            className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-blue-500 transition-all active:scale-95"
+            aria-label="Back to Hub"
           >
-            <div className="bg-card rounded-[2.8rem] p-10 h-full flex flex-col items-center text-center space-y-6">
-              <div className="w-20 h-20 bg-blue-500/10 text-blue-500 rounded-3xl flex items-center justify-center group-hover:rotate-12 transition-transform">
-                <BookOpen size={40} strokeWidth={2.5} />
-              </div>
-              <div>
-                <h2 className="text-3xl font-black mb-2">Start Discovery</h2>
-                <p className="text-foreground/60 font-bold">Explore 10 scientific concepts tailored to your interests.</p>
-              </div>
-            </div>
-          </button>
-
-          <button
-            onClick={() => setViewMode('review')}
-            className="group relative p-1 rounded-[3rem] bg-black/5 dark:bg-white/5 transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out"
-          >
-            <div className="bg-card rounded-[2.8rem] p-10 h-full flex flex-col items-center text-center space-y-6">
-              <div className="w-20 h-20 bg-foreground/5 text-foreground/40 rounded-3xl flex items-center justify-center group-hover:-rotate-12 transition-transform">
-                <History size={40} strokeWidth={2.5} />
-              </div>
-              <div>
-                <h2 className="text-3xl font-black mb-2">Review Findings</h2>
-                <p className="text-foreground/60 font-bold">Revisit your past experiments and AI-guided insights.</p>
-              </div>
-              {scienceReflections.length > 0 && (
-                <div className="px-4 py-1 bg-blue-500/20 text-blue-500 rounded-full text-xs font-black uppercase tracking-widest">
-                  {scienceReflections.length} Findings Logged
-                </div>
-              )}
-            </div>
+            <ArrowLeft className="w-6 h-6" />
           </button>
         </div>
 
-        <button
-          onClick={() => router.push('/learn')}
-          className="mx-auto flex items-center gap-2 text-foreground/40 hover:text-foreground transition-colors font-black uppercase tracking-widest text-sm"
-        >
-          <ChevronLeft size={20} />
-          Back to Hub
-        </button>
+        <div className="flex-1 flex flex-col justify-center space-y-12">
+          <div className="space-y-4 text-center">
+            <h1 className="text-6xl font-black tracking-tighter text-foreground italic">
+              The <span className="text-blue-500">Laboratory</span>
+            </h1>
+            <p className="text-xl text-foreground/60 font-medium max-w-xl mx-auto">
+              Explore the fundamental laws of nature and the cutting-edge discoveries of the modern era.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <button
+              onClick={() => {
+                setCurrentIndex(0);
+                setCurrentSessionMCQs([]);
+                setViewMode('learn');
+              }}
+              className="group relative p-1 rounded-[3rem] bg-gradient-to-br from-blue-500 to-cyan-500 transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out"
+            >
+              <div className="bg-card rounded-[2.8rem] p-10 h-full flex flex-col items-center text-center space-y-6">
+                <div className="w-20 h-20 bg-blue-500/10 text-blue-500 rounded-3xl flex items-center justify-center group-hover:rotate-12 transition-transform">
+                  <BookOpen size={40} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-black mb-2">Start Discovery</h2>
+                  <p className="text-foreground/60 font-bold">Explore 10 scientific concepts tailored to your interests.</p>
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setViewMode('review')}
+              className="group relative p-1 rounded-[3rem] bg-black/5 dark:bg-white/5 transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out"
+            >
+              <div className="bg-card rounded-[2.8rem] p-10 h-full flex flex-col items-center text-center space-y-6">
+                <div className="w-20 h-20 bg-foreground/5 text-foreground/40 rounded-3xl flex items-center justify-center group-hover:-rotate-12 transition-transform">
+                  <History size={40} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-black mb-2">Review Findings</h2>
+                  <p className="text-foreground/60 font-bold">Revisit your past experiments and AI-guided insights.</p>
+                </div>
+                {scienceReflections.length > 0 && (
+                  <div className="px-4 py-1 bg-blue-500/20 text-blue-500 rounded-full text-xs font-black uppercase tracking-widest">
+                    {scienceReflections.length} Findings Logged
+                  </div>
+                )}
+              </div>
+            </button>
+          </div>
+        </div>
       </main>
     );
   }

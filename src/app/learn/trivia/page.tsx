@@ -201,41 +201,46 @@ export default function TriviaPage() {
   return (
     <main className="min-h-screen max-w-4xl mx-auto flex flex-col p-4 animate-in fade-in duration-700">
       {gameState === 'menu' ? (
-        <div className="flex-1 flex flex-col items-center justify-center space-y-12 py-12">
-          <div className="text-center space-y-4">
-            <div className="inline-block p-4 rounded-3xl bg-accent-secondary/10 text-accent-secondary shadow-neo-out mb-2">
-              <Brain className="w-12 h-12" />
+        <>
+          <div className="w-full flex items-center mb-8">
+            <button
+              onClick={() => router.push('/learn')}
+              className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent-secondary transition-all active:scale-95"
+              aria-label="Back to Hub"
+            >
+              <ArrowLeft className="w-6 h-6" />
+            </button>
+          </div>
+
+          <div className="flex-1 flex flex-col items-center justify-center space-y-12 py-12">
+            <div className="text-center space-y-4">
+              <div className="inline-block p-4 rounded-3xl bg-accent-secondary/10 text-accent-secondary shadow-neo-out mb-2">
+                <Brain className="w-12 h-12" />
+              </div>
+              <h1 className="text-6xl font-black tracking-tighter text-foreground">Trivia</h1>
+              <p className="text-xl font-bold text-foreground/50 tracking-wide uppercase">Select a Topic</p>
             </div>
-            <h1 className="text-6xl font-black tracking-tighter text-foreground">Trivia</h1>
-            <p className="text-xl font-bold text-foreground/50 tracking-wide uppercase">Select Your Territory</p>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full">
-            {[
-              { id: 'bangladesh', title: 'Bangladesh', icon: MapPin, color: 'text-accent' },
-              { id: 'international', title: 'International', icon: Globe, color: 'text-accent-secondary' },
-              { id: 'geography', title: 'Geography', icon: Compass, color: 'text-blue-400' }
-            ].map((cat) => (
-              <Card
-                key={cat.id}
-                onClick={() => startGame(cat.id as Category)}
-                className="flex flex-col items-center justify-center p-10 hover:-translate-y-2 group cursor-pointer rounded-[3rem] border-none shadow-neo-out bg-card transition-all"
-              >
-                <div className={`p-8 rounded-[2.5rem] bg-black/5 dark:bg-white/5 mb-6 group-hover:scale-110 group-hover:shadow-neo-in transition-all ${cat.color}`}>
-                  <cat.icon className="w-16 h-16" />
-                </div>
-                <h3 className="text-2xl font-black tracking-tight">{cat.title}</h3>
-              </Card>
-            ))}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full">
+              {[
+                { id: 'bangladesh', title: 'Bangladesh', icon: MapPin, color: 'text-accent' },
+                { id: 'international', title: 'International', icon: Globe, color: 'text-accent-secondary' },
+                { id: 'geography', title: 'Geography', icon: Compass, color: 'text-blue-400' }
+              ].map((cat) => (
+                <Card
+                  key={cat.id}
+                  onClick={() => startGame(cat.id as Category)}
+                  className="flex flex-col items-center justify-center p-10 hover:-translate-y-2 group cursor-pointer rounded-[3rem] border-none shadow-neo-out bg-card transition-all"
+                >
+                  <div className={`p-8 rounded-[2.5rem] bg-black/5 dark:bg-white/5 mb-6 group-hover:scale-110 group-hover:shadow-neo-in transition-all ${cat.color}`}>
+                    <cat.icon className="w-16 h-16" />
+                  </div>
+                  <h3 className="text-2xl font-black tracking-tight">{cat.title}</h3>
+                </Card>
+              ))}
+            </div>
           </div>
-
-          <button
-            onClick={() => router.push('/learn')}
-            className="px-12 py-5 rounded-3xl font-black text-xl bg-card text-foreground/50 shadow-neo-out hover:scale-105 active:scale-95 transition-all"
-          >
-            Go Back
-          </button>
-        </div>
+        </>
       ) : gameState === 'playing' && currentQuestion ? (
         <div className="flex-1 flex flex-col py-4">
           <LessonProgressBar current={60 - timeLeft} total={60} onClose={resetGame} />

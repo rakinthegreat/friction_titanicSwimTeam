@@ -42,8 +42,9 @@
 - [ ] Production build and Android APK generation
 
 ## Phase 6: Testing & Bug Fixes
-- [ ] Onboarding Page
+- [x] Onboarding Page
 - [ ] Dashboard Page
+    - [ ] English And Trivia dont appear in the dash board.
 - [x] Learning Page
     - [x] English Learning
     - [x] Philosophy Learning
