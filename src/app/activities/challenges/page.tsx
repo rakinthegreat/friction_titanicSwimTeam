@@ -108,7 +108,7 @@ export default function ChallengesPage() {
         <ThemeToggle />
       </header>
 
-      <section className="bg-card rounded-[2.5rem] p-10 shadow-neo-out border border-white/5 relative overflow-hidden">
+      <section className="bg-card rounded-[2.5rem] p-10  border border-black/5 relative overflow-hidden">
         {step === 'context' && (
           <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-6">
@@ -124,7 +124,7 @@ export default function ChallengesPage() {
                   <button
                     key={loc}
                     onClick={() => setLocation(loc)}
-                    className={`py-5 px-3 rounded-3xl font-black text-[10px] uppercase tracking-wider transition-all ${location === loc ? 'bg-accent text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
+                    className={`py-5 px-3 rounded-3xl font-black text-[10px] uppercase tracking-wider transition-all ${location === loc ? 'bg-accent text-white shadow-neo-in' : 'bg-card text-foreground/40 shadow-neo-out hover:scale-105'
                       }`}
                   >
                     {loc}
@@ -142,7 +142,7 @@ export default function ChallengesPage() {
                   <button
                     key={p}
                     onClick={() => setPosture(p)}
-                    className={`py-6 px-4 rounded-3xl font-black text-sm uppercase tracking-wider transition-all ${posture === p ? 'bg-accent-secondary text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
+                    className={`py-6 px-4 rounded-3xl font-black text-sm uppercase tracking-wider transition-all ${posture === p ? 'bg-accent-secondary text-white shadow-neo-in' : 'bg-card text-foreground/40 shadow-neo-out hover:scale-105'
                       }`}
                   >
                     {p}
@@ -161,7 +161,7 @@ export default function ChallengesPage() {
                     <button
                       key={v}
                       onClick={() => setVibe(v)}
-                      className={`py-4 px-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all ${vibe === v ? 'bg-accent text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
+                      className={`py-4 px-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all ${vibe === v ? 'bg-accent text-white shadow-neo-in' : 'bg-card text-foreground/40 shadow-neo-out hover:scale-105'
                         }`}
                     >
                       {v}
@@ -179,7 +179,7 @@ export default function ChallengesPage() {
                     <button
                       key={e}
                       onClick={() => setEnergy(e)}
-                      className={`py-4 px-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all ${energy === e ? 'bg-accent-secondary text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
+                      className={`py-4 px-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all ${energy === e ? 'bg-accent-secondary text-white shadow-neo-in' : 'bg-card text-foreground/40 shadow-neo-out hover:scale-105'
                         }`}
                     >
                       {e}
@@ -245,8 +245,8 @@ export default function ChallengesPage() {
               onClick={handleComplete}
               disabled={isDoneDisabled}
               className={`w-full py-6 rounded-3xl font-black text-xl shadow-neo-out transition-all ${isDoneDisabled
-                  ? 'bg-background text-foreground/20 grayscale cursor-not-allowed'
-                  : 'bg-green-500 text-white hover:scale-[1.02] active:scale-95'
+                ? 'bg-card text-foreground/20 grayscale cursor-not-allowed'
+                : 'bg-green-500 text-white hover:scale-[1.02] active:scale-95'
                 }`}
             >
               {isDoneDisabled ? 'STAY FOCUSED...' : 'DONE!'}
@@ -267,7 +267,7 @@ export default function ChallengesPage() {
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
               placeholder="Record your experience here..."
-              className="w-full h-48 p-6 bg-background rounded-3xl border-none shadow-neo-in focus:ring-2 focus:ring-accent outline-none text-lg font-medium resize-none"
+              className="w-full h-48 p-6 bg-card rounded-3xl border-none shadow-neo-in focus:ring-2 focus:ring-accent outline-none text-lg font-medium resize-none"
             />
 
             <button

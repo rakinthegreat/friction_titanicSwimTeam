@@ -4,8 +4,39 @@
   --background: #F9F6F0;
   --foreground: #2D2D2D;
   --card: #FFFFFF;
-  --accent: #7EA68B; /* More Saturated Sage Green */
-  --accent-secondary: #E99C75; /* More Saturated Soft Orange */
+  --accent: #7EA68B;
+  --accent-secondary: #E99C75;
+  
+  /* Light Mode (No white shadows) */
+  --neo-shadow-dark: rgba(0, 0, 0, 0.12);
+  --neo-shadow-light: rgba(0, 0, 0, 0.04);
+  --neo-shadow-out-offset-dark: -6px -6px 12px;
+  --neo-shadow-out-offset-light: 6px 6px 12px;
+}
+
+[data-theme='light'] {
+  --background: #F9F6F0;
+  --foreground: #2D2D2D;
+  --card: #FFFFFF;
+  --accent: #7EA68B;
+  --accent-secondary: #E99C75;
+  --neo-shadow-dark: rgba(0, 0, 0, 0.12);
+  --neo-shadow-light: rgba(0, 0, 0, 0.04);
+  --neo-shadow-out-offset-dark: -6px -6px 12px;
+  --neo-shadow-out-offset-light: 6px 6px 12px;
+}
+
+[data-theme='dark'] {
+  --background: #121212;
+  --foreground: #E0E0E0;
+  --card: #1E1E1E;
+  --accent: #E99C75;
+  --accent-secondary: #7EA68B;
+  --neo-shadow-dark: rgba(0, 0, 0, 0.5);
+  --neo-shadow-light: rgba(255, 255, 255, 0.05);
+  /* Dark mode stays as is (Shadow on bottom) */
+  --neo-shadow-out-offset-dark: 8px 8px 16px;
+  --neo-shadow-out-offset-light: -8px -8px 16px;
 }
 
 @theme {
@@ -15,47 +46,9 @@
   --color-accent: var(--accent);
   --color-accent-secondary: var(--accent-secondary);
   
-  /* Neomorphic Shadows */
-  --shadow-neo-out: 8px 8px 16px var(--neo-shadow-dark), -8px -8px 16px var(--neo-shadow-light);
+  /* Dynamic Neomorphic Shadows */
+  --shadow-neo-out: var(--neo-shadow-out-offset-dark) var(--neo-shadow-dark), var(--neo-shadow-out-offset-light) var(--neo-shadow-light);
   --shadow-neo-in: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #121212;
-    --foreground: #E0E0E0;
-    --card: #1E1E1E;
-    --accent-secondary: #C27C58;
-    --neo-shadow-dark: rgba(0, 0, 0, 0.5);
-    --neo-shadow-light: rgba(255, 255, 255, 0.05);
-  }
-}
-
-:root {
-  --background: #F9F6F0;
-  --foreground: #2D2D2D;
-  --card: #FFFFFF;
-  --accent: #7EA68B;
-  --accent-secondary: #E99C75;
-  --neo-shadow-dark: rgba(163, 177, 198, 0.4);
-  --neo-shadow-light: rgba(255, 255, 255, 0.8);
-}
-
-[data-theme='dark'] {
-  --background: #121212;
-  --foreground: #E0E0E0;
-  --card: #1E1E1E;
-  --accent-secondary: #C27C58;
-  --neo-shadow-dark: rgba(0, 0, 0, 0.5);
-  --neo-shadow-light: rgba(255, 255, 255, 0.05);
-}
-
-[data-theme='light'] {
-  --background: #F9F6F0;
-  --foreground: #2D2D2D;
-  --card: #FFFFFF;
-  --neo-shadow-dark: rgba(163, 177, 198, 0.4);
-  --neo-shadow-light: rgba(255, 255, 255, 0.8);
 }
 
 body {
