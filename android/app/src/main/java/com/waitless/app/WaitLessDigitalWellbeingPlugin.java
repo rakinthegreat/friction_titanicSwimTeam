@@ -28,6 +28,10 @@ import java.util.TreeMap;
         @Permission(
             alias = "notifications",
             strings = { Manifest.permission.POST_NOTIFICATIONS }
+        ),
+        @Permission(
+            alias = "physicalactivity",
+            strings = { Manifest.permission.ACTIVITY_RECOGNITION }
         )
     }
 )
@@ -70,8 +74,6 @@ public class WaitLessDigitalWellbeingPlugin extends Plugin {
     @PluginMethod
     public void openUsageSettings(PluginCall call) {
         Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
-        intent.setData(uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getContext().startActivity(intent);
         call.resolve();
@@ -92,7 +94,30 @@ public class WaitLessDigitalWellbeingPlugin extends Plugin {
     @PluginMethod
     public void requestNotificationPermission(PluginCall call) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissionForAlias("notifications", call, "checkNotificationPermissionResult");
+            requestPermissionForAlias("notifications", call, "checkPermissionResult");
+        } else {
+            JSObject ret = new JSObject();
+            ret.put("granted", true);
+            call.resolve(ret);
+        }
+    }
+
+    @PluginMethod
+    public void hasPhysicalActivityPermission(PluginCall call) {
+        JSObject ret = new JSObject();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            boolean granted = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED;
+            ret.put("granted", granted);
+        } else {
+            ret.put("granted", true);
+        }
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void requestPhysicalActivityPermission(PluginCall call) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            requestPermissionForAlias("physicalactivity", call, "checkPermissionResult");
         } else {
             JSObject ret = new JSObject();
             ret.put("granted", true);
@@ -101,8 +126,10 @@ public class WaitLessDigitalWellbeingPlugin extends Plugin {
     }
 
     @PermissionCallback
-    private void checkNotificationPermissionResult(PluginCall call) {
-        hasNotificationPermission(call);
+    private void checkPermissionResult(PluginCall call) {
+        JSObject ret = new JSObject();
+        ret.put("granted", true);
+        call.resolve(ret);
     }
 
     @PluginMethod
@@ -120,14 +147,12 @@ public class WaitLessDigitalWellbeingPlugin extends Plugin {
     @PluginMethod
     public void requestBatteryOptimizationPermission(PluginCall call) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-            Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
-            intent.setData(uri);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intent.setData(Uri.parse("package:" + getContext().getPackageName()));
             getContext().startActivity(intent);
         }
         call.resolve();
     }
 }
-
