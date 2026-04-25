@@ -1,9 +1,11 @@
 'use client';
 
 import { useUserStore } from "@/store/userStore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { X, Hourglass } from "lucide-react";
+import { pushToast } from "./ToastNotification";
+import { NotificationService } from "@/lib/notifications";
 
 export function SessionTimer() {
   const sessionEndTime = useUserStore((state) => state.sessionEndTime);
@@ -13,6 +15,7 @@ export function SessionTimer() {
   const router = useRouter();
 
   const [timeLeft, setTimeLeft] = useState<number>(0);
+  const hasNotifiedRef = useRef(false);
 
   useEffect(() => {
     if (!sessionEndTime) return;
@@ -28,12 +31,28 @@ export function SessionTimer() {
     return () => clearInterval(interval);
   }, [sessionEndTime]);
 
+  const isTimeUp = timeLeft === 0;
+
+  useEffect(() => {
+    if (isTimeUp && sessionEndTime && !hasNotifiedRef.current) {
+      hasNotifiedRef.current = true;
+      
+      const title = "⌛ Time's Up!";
+      const body = "Your activity session has ended. Great job staying focused!";
+      
+      pushToast(title, body, '/');
+      NotificationService.sendNotification(title, body);
+    }
+    
+    if (!isTimeUp) {
+      hasNotifiedRef.current = false;
+    }
+  }, [isTimeUp, sessionEndTime]);
+
   if (!_hasHydrated || !sessionEndTime || pathname === '/') return null;
 
   const minutes = Math.floor(timeLeft / 60000);
   const seconds = Math.floor((timeLeft % 60000) / 1000);
-
-  const isTimeUp = timeLeft === 0;
 
   return (
     <>

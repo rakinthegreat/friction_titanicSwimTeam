@@ -28,6 +28,16 @@ const VIDEO_GENRES = [
   { id: 'News', label: 'News', icon: Newspaper },
 ];
 
+const DAYS_OF_WEEK = [
+  { id: 0, label: 'S', full: 'Sun' },
+  { id: 1, label: 'M', full: 'Mon' },
+  { id: 2, label: 'T', full: 'Tue' },
+  { id: 3, label: 'W', full: 'Wed' },
+  { id: 4, label: 'T', full: 'Thu' },
+  { id: 5, label: 'F', full: 'Fri' },
+  { id: 6, label: 'S', full: 'Sat' },
+];
+
 export default function Profile() {
   const stats = useUserStore((state) => state.stats);
   const gameStats = useUserStore((state) => state.gameStats);
@@ -72,6 +82,8 @@ export default function Profile() {
   const [customFriction, setCustomFriction] = useState({ label: '', start: '09:00', end: '10:00' });
   const [editingFrictionId, setEditingFrictionId] = useState<string | null>(null);
   const [tempFrictionTime, setTempFrictionTime] = useState({ start: '', end: '' });
+  const [configDays, setConfigDays] = useState<number[]>([1, 2, 3, 4, 5]);
+  const [tempFrictionDays, setTempFrictionDays] = useState<number[]>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -156,7 +168,7 @@ export default function Profile() {
 
   const handleUpdateFrictionTime = (id: string) => {
     const updated = frictionPoints.map(p =>
-      p.id === id ? { ...p, startTime: tempFrictionTime.start, endTime: tempFrictionTime.end } : p
+      p.id === id ? { ...p, startTime: tempFrictionTime.start, endTime: tempFrictionTime.end, days: tempFrictionDays } : p
     );
     setFrictionPoints(updated);
     setEditingFrictionId(null);
@@ -165,6 +177,7 @@ export default function Profile() {
   const handleAddPresetFriction = (preset: typeof FRICTION_PRESETS[0]) => {
     setSelectedPresetForConfig(preset);
     setConfigTimes({ start: preset.defaultStart, end: preset.defaultEnd });
+    setConfigDays([1, 2, 3, 4, 5]); // Default to weekdays
   };
 
   const handleConfirmPresetFriction = () => {
@@ -174,7 +187,7 @@ export default function Profile() {
         label: selectedPresetForConfig.label,
         startTime: configTimes.start,
         endTime: configTimes.end,
-        days: [1, 2, 3, 4, 5]
+        days: configDays
       });
       setSelectedPresetForConfig(null);
       setIsAddingFriction(false);
@@ -188,7 +201,7 @@ export default function Profile() {
         label: customFriction.label,
         startTime: customFriction.start,
         endTime: customFriction.end,
-        days: [1, 2, 3, 4, 5]
+        days: configDays
       });
       setCustomFriction({ label: '', start: '09:00', end: '10:00' });
       setIsCreatingCustomFriction(false);
@@ -546,6 +559,27 @@ export default function Profile() {
                     </div>
                   </div>
 
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2">Active Days</label>
+                    <div className="flex justify-between gap-1 p-2 bg-card rounded-2xl shadow-neo-in">
+                      {DAYS_OF_WEEK.map((day) => {
+                        const isSelected = configDays.includes(day.id);
+                        return (
+                          <button
+                            key={day.id}
+                            onClick={() => {
+                              if (isSelected) setConfigDays(configDays.filter(d => d !== day.id));
+                              else setConfigDays([...configDays, day.id]);
+                            }}
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black transition-all ${isSelected ? 'bg-accent text-white shadow-neo-out' : 'text-foreground/30 hover:bg-foreground/5'}`}
+                          >
+                            {day.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <button
                     onClick={handleConfirmPresetFriction}
                     className="w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out active:shadow-neo-in active:scale-95 transition-all mt-4"
@@ -583,6 +617,26 @@ export default function Profile() {
                         onChange={(e) => setCustomFriction({ ...customFriction, end: e.target.value })}
                         className="w-full bg-card py-3 px-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-bold text-sm"
                       />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2">Active Days</label>
+                    <div className="flex justify-between gap-1 p-2 bg-card rounded-2xl shadow-neo-in">
+                      {DAYS_OF_WEEK.map((day) => {
+                        const isSelected = configDays.includes(day.id);
+                        return (
+                          <button
+                            key={day.id}
+                            onClick={() => {
+                              if (isSelected) setConfigDays(configDays.filter(d => d !== day.id));
+                              else setConfigDays([...configDays, day.id]);
+                            }}
+                            className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black transition-all ${isSelected ? 'bg-accent text-white shadow-neo-out' : 'text-foreground/30 hover:bg-foreground/5'}`}
+                          >
+                            {day.label}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                   <button
@@ -633,25 +687,53 @@ export default function Profile() {
                         <div className="space-y-1">
                           <h4 className="font-black text-sm uppercase tracking-tight">{point.label}</h4>
                           {isEditing ? (
-                            <div className="flex items-center gap-2 mt-2">
-                              <input
-                                type="time"
-                                value={tempFrictionTime.start}
-                                onChange={(e) => setTempFrictionTime({ ...tempFrictionTime, start: e.target.value })}
-                                className="bg-card text-[10px] font-black p-1 rounded-md shadow-neo-in focus:outline-none"
-                              />
-                              <span className="text-[10px] opacity-20">to</span>
-                              <input
-                                type="time"
-                                value={tempFrictionTime.end}
-                                onChange={(e) => setTempFrictionTime({ ...tempFrictionTime, end: e.target.value })}
-                                className="bg-card text-[10px] font-black p-1 rounded-md shadow-neo-in focus:outline-none"
-                              />
+                            <div className="flex flex-col gap-2 mt-2">
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="time"
+                                  value={tempFrictionTime.start}
+                                  onChange={(e) => setTempFrictionTime({ ...tempFrictionTime, start: e.target.value })}
+                                  className="bg-card text-[10px] font-black p-1 rounded-md shadow-neo-in focus:outline-none"
+                                />
+                                <span className="text-[10px] opacity-20">to</span>
+                                <input
+                                  type="time"
+                                  value={tempFrictionTime.end}
+                                  onChange={(e) => setTempFrictionTime({ ...tempFrictionTime, end: e.target.value })}
+                                  className="bg-card text-[10px] font-black p-1 rounded-md shadow-neo-in focus:outline-none"
+                                />
+                              </div>
+                              <div className="flex gap-1">
+                                {DAYS_OF_WEEK.map(day => {
+                                  const isSelected = tempFrictionDays.includes(day.id);
+                                  return (
+                                    <button
+                                      key={day.id}
+                                      onClick={() => {
+                                        if (isSelected) setTempFrictionDays(tempFrictionDays.filter(d => d !== day.id));
+                                        else setTempFrictionDays([...tempFrictionDays, day.id]);
+                                      }}
+                                      className={`w-6 h-6 rounded-md flex items-center justify-center text-[8px] font-black transition-all ${isSelected ? 'bg-accent text-white shadow-neo-out' : 'text-foreground/20 bg-card shadow-neo-in'}`}
+                                    >
+                                      {day.label}
+                                    </button>
+                                  );
+                                })}
+                              </div>
                             </div>
                           ) : (
-                            <p className="text-xs font-bold text-foreground/40">
-                              {point.startTime} — {point.endTime}
-                            </p>
+                            <div className="space-y-1">
+                              <p className="text-xs font-bold text-foreground/40">
+                                {point.startTime} — {point.endTime}
+                              </p>
+                              <div className="flex gap-1">
+                                {DAYS_OF_WEEK.map(day => (
+                                  <span key={day.id} className={`text-[8px] font-black ${point.days.includes(day.id) ? 'text-accent' : 'text-foreground/10'}`}>
+                                    {day.label}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -663,6 +745,7 @@ export default function Profile() {
                             } else {
                               setEditingFrictionId(point.id);
                               setTempFrictionTime({ start: point.startTime, end: point.endTime });
+                              setTempFrictionDays(point.days);
                             }
                           }}
                           className="p-2 bg-card rounded-xl shadow-neo-out text-accent hover:scale-110 active:scale-95 transition-all"

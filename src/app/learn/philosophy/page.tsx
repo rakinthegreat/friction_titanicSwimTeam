@@ -37,10 +37,6 @@ export default function PhilosophyModule() {
 
   React.useEffect(() => {
     setMounted(true);
-    const state = useUserStore.getState();
-    const completed = state.completedPhilosophyConcepts;
-    const allConcepts = [...concepts, ...state.customPhilosophyConcepts];
-    setSessionConcepts(allConcepts.filter(c => !completed.includes(c.concept_name)));
   }, []);
 
   const lessonData = useMemo(() => {
@@ -127,6 +123,11 @@ export default function PhilosophyModule() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <button
               onClick={() => {
+                const state = useUserStore.getState();
+                const completed = state.completedPhilosophyConcepts || [];
+                const allConcepts = [...concepts, ...(state.customPhilosophyConcepts || [])];
+                setSessionConcepts(allConcepts.filter(c => !completed.includes(c.concept_name)));
+                
                 setCurrentIndex(0);
                 setCurrentSessionMCQs([]);
                 setViewMode('learn');
@@ -139,7 +140,7 @@ export default function PhilosophyModule() {
                 </div>
                 <div>
                   <h2 className="text-3xl font-black mb-2">Start Learning</h2>
-                  <p className="text-foreground/60 font-bold">Discover 10 new philosophical concepts curated for you.</p>
+                  <p className="text-foreground/60 font-bold">Discover 3 new philosophical concepts curated for you.</p>
                 </div>
               </div>
             </button>
@@ -281,7 +282,7 @@ export default function PhilosophyModule() {
           </h1>
           <p className="text-foreground/70 text-lg font-medium max-w-md">
             {isGenerating
-              ? "Our AI is analyzing the universe to bring you 5 brand new philosophical concepts."
+              ? "Our AI is analyzing the universe to bring you 3 brand new philosophical concepts."
               : "You've explored every concept in our current library. You're a true philosopher!"}
           </p>
           {error && <p className="text-red-500 font-bold mt-4">{error}</p>}
