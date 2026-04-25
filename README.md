@@ -120,7 +120,12 @@ Philosophical Exploration
 <img width="2940" height="2014" alt="image" src="https://github.com/user-attachments/assets/ca709a2b-eadb-47a7-b5b8-18ef07a4e1cd" />
 Memory match game + Session end notification
 <img width="2940" height="1574" alt="image" src="https://github.com/user-attachments/assets/b15357c2-6b7d-4f2f-a17e-505953e6533a" />
-
+Profile page
+<img width="2940" height="5170" alt="image" src="https://github.com/user-attachments/assets/0a5fed56-f80c-4aa6-9395-8ad966259e75" />
+Idle Time detection on phone
+<img width="738" height="1600" alt="image" src="https://github.com/user-attachments/assets/a7145d0f-da5a-465a-b39e-fd28fc86b760" />
+Dark Mode
+<img width="2940" height="1774" alt="image" src="https://github.com/user-attachments/assets/92211867-4dac-4e9f-95b9-eea306a83cc0" />
 
 
 
