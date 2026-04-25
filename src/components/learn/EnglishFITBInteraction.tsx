@@ -65,7 +65,7 @@ export const EnglishFITBInteraction = ({ question, options, answer, onSubmit }: 
           const isSelected = selectedIdx === idx;
           const isCorrect = option.word === answer;
           let variant = "default";
-          
+
           if (isSubmitted) {
             if (isCorrect) {
               variant = "correct";
@@ -87,8 +87,8 @@ export const EnglishFITBInteraction = ({ question, options, answer, onSubmit }: 
                 group relative p-6 rounded-[2rem] text-left transition-all duration-300 border-2 flex flex-col
                 ${variant === 'default' ? 'bg-card border-transparent shadow-neo-out hover:border-blue-400/30 hover:scale-[1.01]' : ''}
                 ${variant === 'selected' ? 'bg-blue-400/10 border-blue-400 shadow-neo-in' : ''}
-                ${variant === 'correct' ? 'bg-green-500/20 border-green-500 shadow-neo-in' : ''}
-                ${variant === 'incorrect' ? 'bg-red-500/20 border-red-500 shadow-neo-in' : ''}
+                ${variant === 'correct' ? 'bg-[#7EA68B] border-[#7EA68B] text-white shadow-neo-in' : ''}
+                ${variant === 'incorrect' ? 'bg-[#DC2626] border-[#DC2626] text-white shadow-neo-in' : ''}
                 ${variant === 'dimmed' ? 'bg-card border-transparent opacity-40 shadow-none' : ''}
               `}
             >
@@ -97,8 +97,8 @@ export const EnglishFITBInteraction = ({ question, options, answer, onSubmit }: 
                   w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors flex-shrink-0
                   ${variant === 'default' ? 'border-foreground/20 group-hover:border-blue-400/50' : ''}
                   ${variant === 'selected' ? 'border-blue-400 bg-blue-400 text-white' : ''}
-                  ${variant === 'correct' ? 'border-green-500 bg-green-500 text-white' : ''}
-                  ${variant === 'incorrect' ? 'border-red-500 bg-red-500 text-white' : ''}
+                  ${variant === 'correct' ? 'border-[#7EA68B] bg-[#7EA68B] text-white' : ''}
+                  ${variant === 'incorrect' ? 'border-[#DC2626] bg-[#DC2626] text-white' : ''}
                   ${variant === 'dimmed' ? 'border-foreground/10 bg-transparent text-foreground/20' : ''}
                 `}>
                   {isSubmitted && isCorrect && <Check className="w-5 h-5" />}
@@ -106,11 +106,11 @@ export const EnglishFITBInteraction = ({ question, options, answer, onSubmit }: 
                   {!isSubmitted && <span className="text-xs font-bold">{String.fromCharCode(65 + idx)}</span>}
                 </div>
                 <div className="flex-1">
-                  <span className={`text-xl font-black block capitalize ${variant === 'selected' || variant === 'correct' || variant === 'incorrect' ? 'text-foreground' : 'text-foreground/80'}`}>
+                  <span className={`text-xl font-black block capitalize ${variant === 'correct' || variant === 'incorrect' ? 'text-white' : variant === 'selected' ? 'text-blue-400' : 'text-foreground/80'}`}>
                     {option.word}
                   </span>
                   {(isSubmitted && (isCorrect || isSelected)) && (
-                    <p className={`text-sm font-medium mt-1 animate-in fade-in slide-in-from-top-1 duration-300 ${variant === 'correct' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                    <p className={`text-sm font-medium mt-1 animate-in fade-in slide-in-from-top-1 duration-300 ${variant === 'correct' ? 'text-white/90' : 'text-white/90'}`}>
                       {option.meaning}
                     </p>
                   )}
@@ -128,7 +128,7 @@ export const EnglishFITBInteraction = ({ question, options, answer, onSubmit }: 
           className={`
             w-full py-5 rounded-[2rem] font-black text-xl transition-all shadow-neo-out
             ${selectedIdx !== null
-              ? 'bg-blue-400 text-white hover:scale-[1.02] active:scale-95' 
+              ? 'bg-blue-400 text-white hover:scale-[1.02] active:scale-95'
               : 'bg-black/10 dark:bg-white/10 text-foreground/40 cursor-not-allowed shadow-none'}
           `}
         >
@@ -140,7 +140,6 @@ export const EnglishFITBInteraction = ({ question, options, answer, onSubmit }: 
           className="w-full py-5 rounded-[2rem] font-black text-xl bg-blue-400 text-white hover:scale-[1.02] active:scale-95 shadow-neo-out animate-in fade-in zoom-in duration-500 ring-4 ring-blue-400/30 flex items-center justify-center gap-2 group"
         >
           Continue
-          <Check className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
         </button>
       )}
     </div>

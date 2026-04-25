@@ -33,7 +33,7 @@ export const MCQInteraction = ({
   const handleSelect = (idx: number) => {
     if (isSubmitted) return;
     setSelectedIdx(idx);
-    
+
     if (!manualConfirm) {
       setIsSubmitted(true);
       const selected = options[idx];
@@ -131,7 +131,7 @@ export const MCQInteraction = ({
               className={`
                 w-full py-5 rounded-[2rem] font-black text-xl transition-all shadow-neo-out
                 ${selectedIdx !== null
-                  ? 'bg-accent-secondary text-white hover:scale-[1.02] active:scale-95' 
+                  ? 'bg-accent-secondary text-white hover:scale-[1.02] active:scale-95'
                   : 'bg-black/10 dark:bg-white/10 text-foreground/40 cursor-not-allowed shadow-none'}
               `}
             >
@@ -143,7 +143,6 @@ export const MCQInteraction = ({
               className="w-full py-5 rounded-[2rem] font-black text-xl bg-accent-secondary text-white hover:scale-[1.02] active:scale-95 shadow-neo-out animate-in fade-in zoom-in duration-500 ring-4 ring-accent-secondary/30 flex items-center justify-center gap-2 group"
             >
               Next Question
-              <Check className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </button>
           )}
         </div>
