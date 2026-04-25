@@ -1,4 +1,5 @@
-import { Laptop, History, Puzzle, Languages, FlaskConical, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Search, X as XIcon, Brain, Sun, Moon, ArrowRight, Plus } from 'lucide-react';
+import { Laptop, History, Puzzle, Languages, FlaskConical, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Search, X as XIcon, Brain, Sun, Moon, ArrowRight, Plus, CheckCircle2, ShieldCheck, Download, Smartphone, Clock } from 'lucide-react';
+import { Capacitor } from '@capacitor/core';
 import { useState, useEffect } from 'react';
 import { useUserStore } from '@/store/userStore';
 import { Button } from './ui/Button';
@@ -372,129 +373,64 @@ export default function Onboarding() {
       )}
 
       {step === 4 && (
-        <div className="max-w-2xl w-full text-center space-y-12 animate-in slide-in-from-right-8 duration-500">
+        <div className="max-w-2xl w-full text-center space-y-12 animate-in slide-in-from-right-8 duration-700">
           <div className="space-y-4">
-            <h1 className="text-4xl font-black tracking-tight">Identify the Gaps.</h1>
-            <p className="text-foreground/50 text-lg font-medium">
-              Where do you feel the most "friction" or wasted time? Select all that apply.
+            <h1 className="text-6xl md:text-7xl font-black tracking-tighter text-foreground leading-[0.9]">All set for now.</h1>
+            <p className="text-foreground/50 text-xl font-medium max-w-lg mx-auto">
+              You're ready to start reclaiming your time.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {FRICTION_PRESETS.map((preset) => {
-              const Icon = preset.icon;
-              const isSelected = selectedFriction.includes(preset.type);
-              return (
-                <div
-                  key={preset.type}
-                  className={`flex flex-col gap-4 p-5 rounded-3xl transition-all text-left border-2 ${isSelected
-                    ? `border-accent bg-accent/5 shadow-neo-in`
-                    : 'border-transparent shadow-neo-out hover:border-accent/10 cursor-pointer'
-                    }`}
-                >
-                  <div 
-                    className="flex items-start gap-4"
-                    onClick={() => toggleFriction(preset.type)}
-                  >
-                    <div className={`p-3 rounded-2xl ${isSelected ? 'bg-accent text-white' : 'bg-foreground/5 text-foreground/40'}`}>
-                      <Icon size={24} />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className={`font-bold uppercase tracking-wider text-sm ${isSelected ? 'text-accent' : 'text-foreground'}`}>
-                        {preset.label}
-                      </h3>
-                      <p className="text-xs text-foreground/40 font-medium leading-relaxed mt-1">
-                        {preset.description}
-                      </p>
-                    </div>
+          <div className="space-y-8 bg-card p-10 rounded-[3rem] shadow-neo-out border border-white/5 relative overflow-hidden group">
+            {/* Platform specific advice */}
+            {Capacitor.getPlatform() === 'web' ? (
+              <div className="space-y-6 text-left">
+                <div className="flex gap-4 items-start">
+                  <div className="p-3 bg-accent/10 text-accent rounded-2xl">
+                    <Smartphone size={24} />
                   </div>
-
-                  {isSelected && (
-                    <div className="grid grid-cols-2 gap-3 pt-3 border-t border-accent/10 animate-in slide-in-from-top-2 duration-300">
-                      <div className="space-y-1">
-                        <label className="text-[9px] font-black uppercase text-accent/60 px-1">Starts</label>
-                        <input
-                          type="time"
-                          value={frictionConfigs[preset.type]?.start || preset.defaultStart}
-                          onChange={(e) => updateFrictionTime(preset.type, e.target.value, frictionConfigs[preset.type]?.end || preset.defaultEnd)}
-                          onClick={(e) => e.stopPropagation()}
-                          className="w-full bg-card py-2 px-3 rounded-xl shadow-neo-in focus:outline-none font-black text-xs text-accent"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-[9px] font-black uppercase text-accent/60 px-1">Ends</label>
-                        <input
-                          type="time"
-                          value={frictionConfigs[preset.type]?.end || preset.defaultEnd}
-                          onChange={(e) => updateFrictionTime(preset.type, frictionConfigs[preset.type]?.start || preset.defaultStart, e.target.value)}
-                          onClick={(e) => e.stopPropagation()}
-                          className="w-full bg-card py-2 px-3 rounded-xl shadow-neo-in focus:outline-none font-black text-xs text-accent"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-            
-            {/* Custom Option */}
-            <div className="md:col-span-2">
-              {!isAddingCustom ? (
-                <button
-                  onClick={() => setIsAddingCustom(true)}
-                  className="w-full flex items-center justify-center gap-2 p-4 rounded-3xl border-2 border-dashed border-foreground/10 text-foreground/40 font-bold hover:border-accent/20 hover:text-accent transition-all"
-                >
-                  <Plus size={18} />
-                  ADD CUSTOM CATEGORY
-                </button>
-              ) : (
-                <div className="bg-foreground/[0.02] rounded-3xl p-6 border border-accent/20 space-y-4 animate-in zoom-in duration-300">
-                  <div className="flex items-center justify-between">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-accent">Custom Friction Category</label>
-                    <button onClick={() => { setIsAddingCustom(false); setCustomFrictionData({ name: '', start: '09:00', end: '10:00' }); }} className="text-foreground/30 hover:text-red-500">
-                      <XIcon size={16} />
-                    </button>
-                  </div>
-                  
                   <div className="space-y-2">
-                    <input
-                      autoFocus
-                      type="text"
-                      placeholder="e.g. Walking the dog, Evening chores..."
-                      value={customFrictionData.name}
-                      onChange={(e) => setCustomFrictionData({ ...customFrictionData, name: e.target.value })}
-                      className="w-full bg-card py-4 px-5 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-bold text-base"
-                    />
+                    <h3 className="font-black uppercase tracking-wider text-sm">Pro Tip: Go Native</h3>
+                    <p className="text-foreground/60 text-sm font-medium leading-relaxed">
+                      WaitLess works best on our Android app, where it can automatically detect your waiting periods through activity sensors.
+                    </p>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2 text-left block">Starts</label>
-                      <div className="relative group/time">
-                        <input
-                          type="time"
-                          value={customFrictionData.start}
-                          onChange={(e) => setCustomFrictionData({ ...customFrictionData, start: e.target.value })}
-                          className="w-full bg-card py-3 px-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-black text-sm text-accent border border-transparent focus:border-accent/20"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2 text-left block">Ends</label>
-                      <div className="relative group/time">
-                        <input
-                          type="time"
-                          value={customFrictionData.end}
-                          onChange={(e) => setCustomFrictionData({ ...customFrictionData, end: e.target.value })}
-                          className="w-full bg-card py-3 px-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-black text-sm text-accent border border-transparent focus:border-accent/20"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="text-[10px] font-medium text-foreground/40 italic">You can add more and refine times in your profile later.</p>
                 </div>
-              )}
+
+                <a
+                  href="https://github.com/rakinthegreat/friction_titanicSwimTeam/releases/latest/download/app-release.apk"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-foreground text-background rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all"
+                >
+                  <Download size={20} />
+                  DOWNLOAD ANDROID APP
+                </a>
+              </div>
+            ) : (
+              <div className="flex gap-4 items-start text-left">
+                <div className="p-3 bg-accent/10 text-accent rounded-2xl">
+                  <ShieldCheck size={24} />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-black uppercase tracking-wider text-sm">Optimize Your Experience</h3>
+                  <p className="text-foreground/60 text-sm font-medium leading-relaxed">
+                    Head over to your **Profile** to customize system permissions. This helps WaitLess detect waiting periods more accurately.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-4 items-start text-left border-t border-foreground/5 pt-8">
+              <div className="p-3 bg-accent-secondary/10 text-accent-secondary rounded-2xl">
+                <Clock size={24} />
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-black uppercase tracking-wider text-sm">Customize Friction</h3>
+                <p className="text-foreground/60 text-sm font-medium leading-relaxed">
+                  You can refine your idle schedules (commute, breaks, etc.) anytime in the profile section to better fit your lifestyle.
+                </p>
+              </div>
             </div>
           </div>
 

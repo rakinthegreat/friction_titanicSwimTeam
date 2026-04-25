@@ -61,6 +61,13 @@ interface UserState {
   navigationSource: 'home' | 'profile' | 'learn' | 'games' | 'activities';
   navigationHistory: string[];
 
+  // Session State
+  sessionDuration: number | null;
+  sessionEndTime: number | null;
+  sessionStartTime: number | null;
+  startSession: (durationMinutes: number) => void;
+  endSession: () => void;
+
   // Philosophy
   completedPhilosophyConcepts: string[];
   customPhilosophyConcepts: any[];
@@ -161,6 +168,9 @@ export const useUserStore = create<UserState>()(
       interests: [],
       videoGenres: [],
       preferredLanguages: [],
+      sessionDuration: null,
+      sessionEndTime: null,
+      sessionStartTime: null,
       _hasHydrated: false,
       setHasHydrated: (state) => set({ _hasHydrated: state }),
       stats: {
@@ -238,7 +248,6 @@ export const useUserStore = create<UserState>()(
           return {
             stats: {
               ...state.stats,
-              totalMinutesSaved: state.stats.totalMinutesSaved + minutes,
               activitiesCompleted: state.stats.activitiesCompleted + 1,
               streakDays: newStreak,
               lastActivityDate: today,
@@ -456,6 +465,66 @@ export const useUserStore = create<UserState>()(
           currentQuote: newQuote,
           quotePool: newPool,
           lastQuoteUpdate: Date.now()
+        };
+      }),
+
+      startSession: (duration) => set({
+        sessionDuration: duration,
+        sessionEndTime: Date.now() + duration * 60 * 1000,
+        sessionStartTime: Date.now(),
+      }),
+      endSession: () => set((state) => {
+        const startTime = state.sessionStartTime || 
+          (state.sessionEndTime && state.sessionDuration 
+            ? state.sessionEndTime - state.sessionDuration * 60000 
+            : null);
+            
+        if (startTime) {
+          const elapsedSecs = Math.floor((Date.now() - startTime) / 1000);
+          if (elapsedSecs >= 60) {
+            let elapsedMins = elapsedSecs / 60;
+            if (state.sessionDuration && elapsedMins > state.sessionDuration) {
+              elapsedMins = state.sessionDuration;
+            }
+            // We use the existing update logic to increment totalMinutesSaved
+            // but since we are inside set() we have to do it manually or call state.updateStats.
+            // Since updateStats also calls set(), it's better to inline the state update here.
+            
+            const today = new Date().toISOString().split('T')[0];
+            let newStreak = state.stats.streakDays;
+
+            if (state.stats.lastActivityDate === null) {
+              newStreak = 1;
+            } else if (state.stats.lastActivityDate !== today) {
+              const last = new Date(state.stats.lastActivityDate);
+              const now = new Date(today);
+              const diffTime = Math.abs(now.getTime() - last.getTime());
+              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+              if (diffDays === 1) {
+                newStreak += 1;
+              } else {
+                newStreak = 1;
+              }
+            }
+            
+            return {
+              sessionDuration: null,
+              sessionEndTime: null,
+              sessionStartTime: null,
+              stats: {
+                ...state.stats,
+                totalMinutesSaved: state.stats.totalMinutesSaved + elapsedMins,
+                streakDays: newStreak,
+                lastActivityDate: today,
+              }
+            };
+          }
+        }
+        return {
+          sessionDuration: null,
+          sessionEndTime: null,
+          sessionStartTime: null,
         };
       }),
 

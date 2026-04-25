@@ -410,9 +410,15 @@ export default function MazePage() {
                     </div>
                   )}
                 </div>
-                <Button onClick={generateMaze} size="lg" className="w-full py-4 text-lg font-black italic tracking-widest shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all">
-                  <RefreshCw className="w-5 h-5 mr-3" />
-                  NEW MAZE
+                <Button onClick={() => {
+                  const state = useUserStore.getState();
+                  if (state.sessionEndTime && state.sessionEndTime > Date.now()) {
+                    router.push('/session');
+                  } else {
+                    router.push('/');
+                  }
+                }} size="lg" className="w-full py-4 text-lg font-black italic tracking-widest shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all">
+                  CONTINUE
                 </Button>
               </div>
             </div>

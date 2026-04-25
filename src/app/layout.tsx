@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { NotificationInitializer } from "@/components/NotificationInitializer";
 import { ToastContainer } from "@/components/ui/ToastNotification";
+import { SessionTimer } from "@/components/ui/SessionTimer";
 
 export default function RootLayout({
   children,
@@ -37,6 +38,7 @@ export default function RootLayout({
         <AuthProvider>
           <ToastContainer />
           <NotificationInitializer />
+          <SessionTimer />
           {children}
         </AuthProvider>
         <DevBar />
