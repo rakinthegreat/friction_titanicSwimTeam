@@ -13,6 +13,7 @@ import { ACTIVITIES } from "@/lib/activities";
 import { VideoRecommendation } from "@/components/recreation/VideoRecommendation";
 import { INITIAL_QUOTES } from "@/lib/quotes";
 import { generateQuotes } from "@/app/quotes/actions";
+import vocabData from "@/stored-data/english-vocab.json";
 import { ActivityDefinition } from '@/lib/activities';
 import { Capacitor } from '@capacitor/core';
 import { FrictionPoint } from "@/store/userStore";
@@ -156,6 +157,16 @@ export default function Home() {
   const currentQuote = useUserStore(state => state.currentQuote);
   const setQuotePool = useUserStore(state => state.setQuotePool);
   const refreshQuote = useUserStore(state => state.refreshQuote);
+
+  // Word of the Day — seeded by calendar date so it's stable within a day
+  const wordOfTheDay = (() => {
+    const today = new Date();
+    const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    const idx = seed % vocabData.length;
+    return vocabData[idx] as { question: string; answer: string; definition: string };
+  })();
+
+  const showWordOfDay = interests.includes('languages');
   const frictionPoints = useUserStore(state => state.frictionPoints);
   const [activeFriction, setActiveFriction] = useState<FrictionPoint | null>(null);
 
@@ -319,7 +330,7 @@ export default function Home() {
               <div className="animate-in fade-in zoom-in-95 duration-500">
                 <div className="space-y-1 relative z-10 mb-6">
                   <h2 className="text-2xl font-black">How long do you expect to wait?</h2>
-                  <p className="opacity-80 font-medium text-sm">Choose a duration to see tailored options.</p>
+                  <p className="opacity-80 font-medium text-sm">Choose an approximate duration of your commute</p>
                 </div>
                 {/* Portrait: 3+1 split. Landscape: flex row of 5 via display:contents */}
                 <div className="space-y-3 relative z-10 [@media(orientation:landscape)]:flex [@media(orientation:landscape)]:gap-3 [@media(orientation:landscape)]:space-y-0">
@@ -454,17 +465,50 @@ export default function Home() {
             </>
           )}
         </section>
-
-        {currentQuote && (
+        {showWordOfDay ? (
+          /* ── Word of the Day (languages interest) ── */
           <div className="bg-[#0f0f0f] rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden group animate-in fade-in slide-in-from-top-4 duration-1000">
-            {/* Dynamic Background Glow */}
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent/20 rounded-full blur-[100px] animate-pulse pointer-events-none" />
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-accent-secondary/10 rounded-full blur-[100px] animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
+
+            <div className="relative z-10 space-y-5">
+              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-accent/70">Word of the Day</p>
+
+              {/* The word */}
+              <h2 className="text-5xl md:text-6xl font-black text-white tracking-tighter capitalize animate-in fade-in slide-in-from-bottom-4 duration-700">
+                {wordOfTheDay.answer}
+              </h2>
+
+              {/* Sentence — split on blank, render word as accent span */}
+              <p className="text-white/60 font-medium text-base md:text-lg leading-relaxed">
+                {wordOfTheDay.question.split('______').map((part, i, arr) => (
+                  <span key={i}>
+                    {part}
+                    {i < arr.length - 1 && (
+                      <span className="text-accent font-black">{wordOfTheDay.answer}</span>
+                    )}
+                  </span>
+                ))}
+              </p>
+
+              {/* Definition */}
+              <div className="border-l-2 border-accent/40 pl-4">
+                <p className="text-white/40 text-sm font-medium italic leading-relaxed">
+                  {wordOfTheDay.definition}
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : currentQuote ? (
+          /* ── Motivational Quote (default) ── */
+          <div className="bg-[#0f0f0f] rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden group animate-in fade-in slide-in-from-top-4 duration-1000">
             <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent/20 rounded-full blur-[100px] animate-pulse pointer-events-none" />
             <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-accent-secondary/10 rounded-full blur-[100px] animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
 
             <div className="relative z-10 space-y-6">
               <div className="flex flex-wrap gap-x-3 gap-y-2 max-w-3xl">
                 {currentQuote.split(' ').map((word, i) => {
-                  const cleanWord = word.toLowerCase().replace(/[.,!?;:"]/g, '');
+                  const cleanWord = word.toLowerCase().replace(/[.,!?;:\"]/g, '');
                   const isKeyword = [
                     'reclaim', 'reclaiming', 'focus', 'focused', 'time', 'productivity',
                     'productive', 'friction', 'mission', 'gaps', 'wait', 'waiting',
@@ -475,8 +519,9 @@ export default function Home() {
                   return (
                     <span
                       key={i}
-                      className={`text-2xl md:text-4xl font-black leading-tight tracking-tighter animate-in fade-in slide-in-from-bottom-2 duration-700 fill-mode-both hover:scale-110 transition-all cursor-default ${isKeyword ? 'text-accent shadow-accent/20' : 'text-white'
-                        }`}
+                      className={`text-2xl md:text-4xl font-black leading-tight tracking-tighter animate-in fade-in slide-in-from-bottom-2 duration-700 fill-mode-both hover:scale-110 transition-all cursor-default ${
+                        isKeyword ? 'text-accent shadow-accent/20' : 'text-white'
+                      }`}
                       style={{ animationDelay: `${i * 70}ms` }}
                     >
                       {word}
@@ -486,7 +531,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        )}
+        ) : null}
 
         {preferences.showDevTiles && (
           <>
