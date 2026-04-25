@@ -1,6 +1,14 @@
 # WaitLess
 
+
+![alt text](icon.png)
+
+
 **WaitLess** is a modern productivity app designed to help you utilize friction in daily life rather than eliminating it. It transforms friction moments into opportunities for retrospection, real-life challenges, brain challenges, learning, and mindful recreation.
+
+## The WaitLess Identity
+
+Waitless derives its name from the desire to feel the wait a bit less, or make our life appear wait-less. Our icon is a stylized representation of a clock embedded inside a W based shape, with a cutout at the bottom symbolizing the "Less" part of the name. The hands of the clock represent the letter L, the other part of initials. Surrounding the time, there are two arrows rotating in opposite directions, symbolizing the friction that we utilize to make our life better.
 
 ## The Philosophy of Friction
 
