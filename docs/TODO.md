@@ -57,6 +57,7 @@
     - [x] Memory Match
     - [x] 2048
     - [x] Rapid Math
+- [x] Activities Page
 - [ ] Profile Page
 - [ ] Settings Page
 - [ ] Notification Permission Page
