@@ -65,6 +65,8 @@ export default function Profile() {
   const addFrictionPoint = useUserStore((state) => state.addFrictionPoint);
 
   const [isAddingFriction, setIsAddingFriction] = useState(false);
+  const [selectedPresetForConfig, setSelectedPresetForConfig] = useState<typeof FRICTION_PRESETS[0] | null>(null);
+  const [configTimes, setConfigTimes] = useState({ start: '09:00', end: '10:00' });
   const [isCreatingCustomFriction, setIsCreatingCustomFriction] = useState(false);
   const [customFriction, setCustomFriction] = useState({ label: '', start: '09:00', end: '10:00' });
   const [editingFrictionId, setEditingFrictionId] = useState<string | null>(null);
@@ -159,18 +161,23 @@ export default function Profile() {
     setEditingFrictionId(null);
   };
 
-  const handleAddPresetFriction = (type: string) => {
-    const preset = FRICTION_PRESETS.find(p => p.type === type);
-    if (preset) {
+  const handleAddPresetFriction = (preset: typeof FRICTION_PRESETS[0]) => {
+    setSelectedPresetForConfig(preset);
+    setConfigTimes({ start: preset.defaultStart, end: preset.defaultEnd });
+  };
+
+  const handleConfirmPresetFriction = () => {
+    if (selectedPresetForConfig) {
       addFrictionPoint({
-        type: preset.type,
-        label: preset.label,
-        startTime: preset.defaultStart,
-        endTime: preset.defaultEnd,
+        type: selectedPresetForConfig.type,
+        label: selectedPresetForConfig.label,
+        startTime: configTimes.start,
+        endTime: configTimes.end,
         days: [1, 2, 3, 4, 5]
       });
+      setSelectedPresetForConfig(null);
+      setIsAddingFriction(false);
     }
-    setIsAddingFriction(false);
   };
 
   const handleCreateCustomFriction = () => {
@@ -458,17 +465,69 @@ export default function Profile() {
             <div className="space-y-6 animate-in fade-in zoom-in duration-300">
               <div className="flex justify-between items-center">
                 <p className="text-xs font-bold text-foreground/40 italic">
-                  {isCreatingCustomFriction ? 'Define your custom idle period:' : 'Select a friction type or create your own:'}
+                  {selectedPresetForConfig ? `Configure your ${selectedPresetForConfig.label} time:` : isCreatingCustomFriction ? 'Define your custom idle period:' : 'Select a friction type or create your own:'}
                 </p>
                 <button
-                  onClick={() => setIsCreatingCustomFriction(!isCreatingCustomFriction)}
+                  onClick={() => {
+                    if (selectedPresetForConfig) {
+                      setSelectedPresetForConfig(null);
+                    } else {
+                      setIsCreatingCustomFriction(!isCreatingCustomFriction);
+                    }
+                  }}
                   className="text-[10px] font-black uppercase tracking-widest text-accent hover:underline"
                 >
-                  {isCreatingCustomFriction ? '← Back to Presets' : '+ Create Custom'}
+                  {selectedPresetForConfig ? '← Change Preset' : isCreatingCustomFriction ? '← Back to Presets' : '+ Create Custom'}
                 </button>
               </div>
 
-              {isCreatingCustomFriction ? (
+              {selectedPresetForConfig ? (
+                <div className="bg-foreground/[0.02] rounded-3xl p-6 border border-accent/20 space-y-4 shadow-neo-in animate-in slide-in-from-right-4 duration-300">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-4 bg-accent/10 text-accent rounded-2xl">
+                      <selectedPresetForConfig.icon size={24} />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-black uppercase text-lg">{selectedPresetForConfig.label}</h4>
+                      <p className="text-xs font-bold text-foreground/40">{selectedPresetForConfig.description}</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2">Window Starts</label>
+                      <div className="relative group/time">
+                        <input
+                          type="time"
+                          value={configTimes.start}
+                          onChange={(e) => setConfigTimes({ ...configTimes, start: e.target.value })}
+                          className="w-full bg-card py-4 px-5 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-black text-lg text-accent border border-transparent focus:border-accent/20"
+                        />
+                        <Clock size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground/20 pointer-events-none group-focus-within/time:text-accent transition-colors" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2">Window Ends</label>
+                      <div className="relative group/time">
+                        <input
+                          type="time"
+                          value={configTimes.end}
+                          onChange={(e) => setConfigTimes({ ...configTimes, end: e.target.value })}
+                          className="w-full bg-card py-4 px-5 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-black text-lg text-accent border border-transparent focus:border-accent/20"
+                        />
+                        <Clock size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground/20 pointer-events-none group-focus-within/time:text-accent transition-colors" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleConfirmPresetFriction}
+                    className="w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out active:shadow-neo-in active:scale-95 transition-all mt-4"
+                  >
+                    ADD TO SCHEDULE
+                  </button>
+                </div>
+              ) : isCreatingCustomFriction ? (
                 <div className="bg-foreground/[0.02] rounded-3xl p-6 border border-accent/20 space-y-4 shadow-neo-in animate-in slide-in-from-right-4 duration-300">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2">Label</label>
@@ -515,7 +574,7 @@ export default function Profile() {
                   return (
                     <button
                       key={preset.type}
-                      onClick={() => handleAddPresetFriction(preset.type)}
+                      onClick={() => handleAddPresetFriction(preset)}
                       className="flex items-center gap-4 p-4 bg-card rounded-2xl shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all text-left group"
                     >
                       <div className="p-3 bg-accent/10 text-accent rounded-xl group-hover:bg-accent group-hover:text-white transition-colors">
@@ -570,7 +629,7 @@ export default function Profile() {
                           )}
                         </div>
                       </div>
-                      <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex flex-col gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => {
                             if (isEditing) {

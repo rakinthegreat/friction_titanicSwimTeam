@@ -37,7 +37,8 @@ export default function Onboarding() {
   const setFrictionPoints = useUserStore((state) => state.setFrictionPoints);
 
   const [selectedFriction, setSelectedFriction] = useState<string[]>([]);
-  const [customFrictionName, setCustomFrictionName] = useState('');
+  const [frictionConfigs, setFrictionConfigs] = useState<Record<string, { start: string, end: string }>>({});
+  const [customFrictionData, setCustomFrictionData] = useState({ name: '', start: '09:00', end: '10:00' });
   const [isAddingCustom, setIsAddingCustom] = useState(false);
 
   useEffect(() => {
@@ -89,7 +90,21 @@ export default function Onboarding() {
       setSelectedFriction(selectedFriction.filter(f => f !== type));
     } else {
       setSelectedFriction([...selectedFriction, type]);
+      const preset = FRICTION_PRESETS.find(p => p.type === type);
+      if (preset && !frictionConfigs[type]) {
+        setFrictionConfigs({
+          ...frictionConfigs,
+          [type]: { start: preset.defaultStart, end: preset.defaultEnd }
+        });
+      }
     }
+  };
+
+  const updateFrictionTime = (type: string, start: string, end: string) => {
+    setFrictionConfigs({
+      ...frictionConfigs,
+      [type]: { start, end }
+    });
   };
 
   const handleFinish = () => {
@@ -100,23 +115,24 @@ export default function Onboarding() {
       
       const points = selectedFriction.map(type => {
         const preset = FRICTION_PRESETS.find(p => p.type === type);
+        const config = frictionConfigs[type] || { start: preset?.defaultStart || '09:00', end: preset?.defaultEnd || '10:00' };
         return {
           id: Math.random().toString(36).substring(7),
           type: type,
           label: preset?.label || type,
-          startTime: preset?.defaultStart || '09:00',
-          endTime: preset?.defaultEnd || '10:00',
+          startTime: config.start,
+          endTime: config.end,
           days: [1, 2, 3, 4, 5]
         };
       });
 
-      if (customFrictionName) {
+      if (customFrictionData.name) {
         points.push({
           id: Math.random().toString(36).substring(7),
           type: 'custom',
-          label: customFrictionName,
-          startTime: '09:00',
-          endTime: '10:00',
+          label: customFrictionData.name,
+          startTime: customFrictionData.start,
+          endTime: customFrictionData.end,
           days: [1, 2, 3, 4, 5]
         });
       }
@@ -371,23 +387,52 @@ export default function Onboarding() {
               return (
                 <div
                   key={preset.type}
-                  onClick={() => toggleFriction(preset.type)}
-                  className={`flex items-start gap-4 p-5 rounded-3xl transition-all cursor-pointer text-left border-2 ${isSelected
+                  className={`flex flex-col gap-4 p-5 rounded-3xl transition-all text-left border-2 ${isSelected
                     ? `border-accent bg-accent/5 shadow-neo-in`
-                    : 'border-transparent shadow-neo-out hover:border-accent/10'
+                    : 'border-transparent shadow-neo-out hover:border-accent/10 cursor-pointer'
                     }`}
                 >
-                  <div className={`p-3 rounded-2xl ${isSelected ? 'bg-accent text-white' : 'bg-foreground/5 text-foreground/40'}`}>
-                    <Icon size={24} />
+                  <div 
+                    className="flex items-start gap-4"
+                    onClick={() => toggleFriction(preset.type)}
+                  >
+                    <div className={`p-3 rounded-2xl ${isSelected ? 'bg-accent text-white' : 'bg-foreground/5 text-foreground/40'}`}>
+                      <Icon size={24} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className={`font-bold uppercase tracking-wider text-sm ${isSelected ? 'text-accent' : 'text-foreground'}`}>
+                        {preset.label}
+                      </h3>
+                      <p className="text-xs text-foreground/40 font-medium leading-relaxed mt-1">
+                        {preset.description}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className={`font-bold uppercase tracking-wider text-sm ${isSelected ? 'text-accent' : 'text-foreground'}`}>
-                      {preset.label}
-                    </h3>
-                    <p className="text-xs text-foreground/40 font-medium leading-relaxed mt-1">
-                      {preset.description}
-                    </p>
-                  </div>
+
+                  {isSelected && (
+                    <div className="grid grid-cols-2 gap-3 pt-3 border-t border-accent/10 animate-in slide-in-from-top-2 duration-300">
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-black uppercase text-accent/60 px-1">Starts</label>
+                        <input
+                          type="time"
+                          value={frictionConfigs[preset.type]?.start || preset.defaultStart}
+                          onChange={(e) => updateFrictionTime(preset.type, e.target.value, frictionConfigs[preset.type]?.end || preset.defaultEnd)}
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-full bg-card py-2 px-3 rounded-xl shadow-neo-in focus:outline-none font-black text-xs text-accent"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-black uppercase text-accent/60 px-1">Ends</label>
+                        <input
+                          type="time"
+                          value={frictionConfigs[preset.type]?.end || preset.defaultEnd}
+                          onChange={(e) => updateFrictionTime(preset.type, frictionConfigs[preset.type]?.start || preset.defaultStart, e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-full bg-card py-2 px-3 rounded-xl shadow-neo-in focus:outline-none font-black text-xs text-accent"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -403,22 +448,51 @@ export default function Onboarding() {
                   ADD CUSTOM CATEGORY
                 </button>
               ) : (
-                <div className="bg-foreground/[0.02] rounded-3xl p-5 border border-accent/20 space-y-3 animate-in zoom-in duration-300">
+                <div className="bg-foreground/[0.02] rounded-3xl p-6 border border-accent/20 space-y-4 animate-in zoom-in duration-300">
                   <div className="flex items-center justify-between">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-accent">Custom Friction Type</label>
-                    <button onClick={() => { setIsAddingCustom(false); setCustomFrictionName(''); }} className="text-foreground/30 hover:text-red-500">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-accent">Custom Friction Category</label>
+                    <button onClick={() => { setIsAddingCustom(false); setCustomFrictionData({ name: '', start: '09:00', end: '10:00' }); }} className="text-foreground/30 hover:text-red-500">
                       <XIcon size={16} />
                     </button>
                   </div>
-                  <input
-                    autoFocus
-                    type="text"
-                    placeholder="e.g. Walking the dog, Evening chores..."
-                    value={customFrictionName}
-                    onChange={(e) => setCustomFrictionName(e.target.value)}
-                    className="w-full bg-card py-3 px-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-bold text-sm"
-                  />
-                  <p className="text-[10px] font-medium text-foreground/40 italic">You can set specific times in your profile later.</p>
+                  
+                  <div className="space-y-2">
+                    <input
+                      autoFocus
+                      type="text"
+                      placeholder="e.g. Walking the dog, Evening chores..."
+                      value={customFrictionData.name}
+                      onChange={(e) => setCustomFrictionData({ ...customFrictionData, name: e.target.value })}
+                      className="w-full bg-card py-4 px-5 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-bold text-base"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2 text-left block">Starts</label>
+                      <div className="relative group/time">
+                        <input
+                          type="time"
+                          value={customFrictionData.start}
+                          onChange={(e) => setCustomFrictionData({ ...customFrictionData, start: e.target.value })}
+                          className="w-full bg-card py-3 px-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-black text-sm text-accent border border-transparent focus:border-accent/20"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2 text-left block">Ends</label>
+                      <div className="relative group/time">
+                        <input
+                          type="time"
+                          value={customFrictionData.end}
+                          onChange={(e) => setCustomFrictionData({ ...customFrictionData, end: e.target.value })}
+                          className="w-full bg-card py-3 px-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-black text-sm text-accent border border-transparent focus:border-accent/20"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-[10px] font-medium text-foreground/40 italic">You can add more and refine times in your profile later.</p>
                 </div>
               )}
             </div>
