@@ -168,8 +168,8 @@ export default function Home() {
 
   // Word of the Day probability: 70% if interested in languages, 30% otherwise
   const [wordOfDayRoll] = useState(() => Math.random());
-  const showWordOfDay = interests.includes('languages') 
-    ? wordOfDayRoll < 0.7 
+  const showWordOfDay = interests.includes('languages')
+    ? wordOfDayRoll < 0.7
     : wordOfDayRoll < 0.3;
   const frictionPoints = useUserStore(state => state.frictionPoints);
   const [activeFriction, setActiveFriction] = useState<FrictionPoint | null>(null);
@@ -482,7 +482,12 @@ export default function Home() {
               <h2 className="text-5xl md:text-6xl font-black text-white tracking-tighter capitalize animate-in fade-in slide-in-from-bottom-4 duration-700">
                 {wordOfTheDay.answer}
               </h2>
-
+              {/* Definition */}
+              <div className="border-l-2 border-accent/40 pl-4">
+                <p className="text-white/40 text-lg font-medium italic leading-relaxed">
+                  {wordOfTheDay.definition}
+                </p>
+              </div>
               {/* Sentence — split on blank, render word as accent span */}
               <p className="text-white/60 font-medium text-base md:text-lg leading-relaxed">
                 {wordOfTheDay.question.split('______').map((part, i, arr) => (
@@ -495,12 +500,7 @@ export default function Home() {
                 ))}
               </p>
 
-              {/* Definition */}
-              <div className="border-l-2 border-accent/40 pl-4">
-                <p className="text-white/40 text-sm font-medium italic leading-relaxed">
-                  {wordOfTheDay.definition}
-                </p>
-              </div>
+
             </div>
           </div>
         ) : currentQuote ? (
@@ -523,9 +523,8 @@ export default function Home() {
                   return (
                     <span
                       key={i}
-                      className={`text-2xl md:text-4xl font-black leading-tight tracking-tighter animate-in fade-in slide-in-from-bottom-2 duration-700 fill-mode-both hover:scale-110 transition-all cursor-default ${
-                        isKeyword ? 'text-accent shadow-accent/20' : 'text-white'
-                      }`}
+                      className={`text-2xl md:text-4xl font-black leading-tight tracking-tighter animate-in fade-in slide-in-from-bottom-2 duration-700 fill-mode-both hover:scale-110 transition-all cursor-default ${isKeyword ? 'text-accent shadow-accent/20' : 'text-white'
+                        }`}
                       style={{ animationDelay: `${i * 70}ms` }}
                     >
                       {word}
