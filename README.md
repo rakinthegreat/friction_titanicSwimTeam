@@ -20,12 +20,6 @@ By automatically detecting friction moments, such as when you are idle at home o
 
 WaitLess utilizes a **Neumorphic design system** to keep the interface exceptionally simple and distraction-free. By using soft shadows and subtle depth instead of loud colors and complex gradients, the app creates a calm, tactile environment that keeps the user focused on the task at hand. This "soft UI" approach reduces cognitive load, ensuring that the app itself never becomes a point of unnecessary digital friction.
 
-## App Logo
-
-<br/>
-<br/>
-<br/>
-
 ## Core Features
 
 ### Automatic Detection & Friction Periods
@@ -33,6 +27,7 @@ WaitLess utilizes a **Neumorphic design system** to keep the interface exception
 *   **Recurring Friction**: Set specific daily or weekly time blocks (e.g., "Bedtime Procrastination" or "Morning Commute").
 *   **Custom Friction**: Quickly add one-off friction blocks for immediate focus needs.
 *   **Native Alerts**: Receive system notifications (Android & Web) the moment a friction period begins or ends.
+*   **Privacy-First Design**: Optional permission tracking with no data uploaded to servers.
 
 ### AI-Powered Personalization
 *   **Tailored Suggestions**: The platform analyzes your interests and behavior, offering personalized learning paths and productivity tips using efficient algorithms and AI models.
