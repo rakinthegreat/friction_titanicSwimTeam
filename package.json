@@ -16,6 +16,7 @@
     "@capacitor/geolocation": "^8.2.0",
     "@capacitor/ios": "^8.3.1",
     "@capacitor/keyboard": "^8.0.3",
+    "@capacitor/local-notifications": "^8.0.2",
     "@capacitor/push-notifications": "^8.0.3",
     "@capgo/capacitor-social-login": "^8.3.20",
     "@google/generative-ai": "^0.24.1",

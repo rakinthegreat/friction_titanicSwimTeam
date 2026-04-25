@@ -166,7 +166,7 @@ export default function Home() {
         <WeatherWidget />
 
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-accent-secondary rounded-[2.5rem] p-6 text-white space-y-6 shadow-[8px_8px_20px_rgba(0,0,0,0.15),-4px_-4px_15px_rgba(0,0,0,0.05)] ring-1 ring-black/5 col-span-1 md:col-span-2 overflow-hidden relative group">
+          <div className="bg-accent rounded-[2.5rem] p-6 text-white space-y-6 shadow-[8px_8px_20px_rgba(0,0,0,0.15),-4px_-4px_15px_rgba(0,0,0,0.05)] ring-1 ring-black/5 col-span-1 md:col-span-2 overflow-hidden relative group">
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
               <Hourglass size={120} />
             </div>
@@ -217,7 +217,7 @@ export default function Home() {
                           ]);
                           setSelectedDuration(mins);
                         }}
-                        className="rounded-2xl px-6 py-4 font-black transition-all bg-accent-secondary shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105 [@media(orientation:landscape)]:flex-1"
+                        className="rounded-2xl px-6 py-4 font-black transition-all bg-accent shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105 [@media(orientation:landscape)]:flex-1"
                       >
                         {mins}m
                       </button>
@@ -261,7 +261,7 @@ export default function Home() {
                           ]);
                           setSelectedDuration(mins);
                         }}
-                        className="rounded-2xl px-6 py-4 font-black transition-all bg-accent-secondary shadow-[6px_6px_12px_rgba(0,0,0,0.2),2px_2px_4px_rgba(0,0,0,0.1)] hover:scale-105 [@media(orientation:landscape)]:flex-1"
+                        className="rounded-2xl px-6 py-4 font-black transition-all bg-accent shadow-[6px_6px_12px_rgba(0,0,0,0.2),2px_2px_4px_rgba(0,0,0,0.1)] hover:scale-105 [@media(orientation:landscape)]:flex-1"
                       >
                         {mins}m
                       </button>
@@ -354,7 +354,7 @@ export default function Home() {
 
               <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
                 <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Daily Streak</p>
-                <p className="text-5xl font-black text-accent-secondary">{stats.streakDays}<span className="text-xl font-bold text-foreground/20 ml-2 italic">days</span></p>
+                <p className="text-5xl font-black text-accent">{stats.streakDays}<span className="text-xl font-bold text-foreground/20 ml-2 italic">days</span></p>
               </div>
             </>
           )}

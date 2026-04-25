@@ -1,17 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useUserStore } from '@/store/userStore';
+import { useAutoBackup } from '@/hooks/useAutoBackup';
 
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
   const pathname = usePathname();
   const uid = useUserStore((state) => state.uid);
   const _hasHydrated = useUserStore((state) => state._hasHydrated);
+
+  // Global daily auto-backup scheduler
+  useAutoBackup();
 
   useEffect(() => {
     // Listen for auth state changes to keep Zustand in sync with Firebase

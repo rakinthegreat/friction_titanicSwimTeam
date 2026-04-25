@@ -3,7 +3,7 @@
 import { useUserStore } from "@/store/userStore";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useFirebaseAuth } from "@/hooks/useFirebaseAuth";
-import { LogOut, ArrowLeft, CloudUpload, Settings2, Check, X, Laptop, History, Puzzle, Languages, FlaskConical, Brain, Leaf, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Trophy, Search, X as XIcon } from "lucide-react";
+import { LogOut, ArrowLeft, CloudUpload, Settings2, Check, X, Laptop, History, Puzzle, Languages, FlaskConical, Brain, Leaf, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Trophy, Search, X as XIcon, Clock, Bell, BellOff } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ALL_LANGUAGES } from "@/lib/languages";
@@ -37,10 +37,10 @@ export default function Profile() {
   const setVideoGenres = useUserStore((state) => state.setVideoGenres);
   const setPreferredLanguages = useUserStore((state) => state.setPreferredLanguages);
   const [mounted, setMounted] = useState(false);
-  
+
   const [isEditingInterests, setIsEditingInterests] = useState(false);
   const [tempInterests, setTempInterests] = useState<string[]>(interests);
-  
+
   const [isEditingVideoGenres, setIsEditingVideoGenres] = useState(false);
   const [tempVideoGenres, setTempVideoGenres] = useState<string[]>(videoGenres || []);
 
@@ -49,15 +49,24 @@ export default function Profile() {
   const [languageSearch, setLanguageSearch] = useState('');
 
   const lastBackupDate = useUserStore((state) => state.lastBackupDate);
+  const autoBackupTime = useUserStore((state) => state.autoBackupTime);
+  const setAutoBackupTime = useUserStore((state) => state.setAutoBackupTime);
   const syncWithFirebase = useUserStore((state) => state.syncWithFirebase);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncSuccess, setSyncSuccess] = useState(false);
+  const [pendingBackupTime, setPendingBackupTime] = useState<string>('');
+  const [isEditingBackupTime, setIsEditingBackupTime] = useState(false);
   const setNavigationSource = useUserStore((state) => state.setNavigationSource);
 
   useEffect(() => {
     setMounted(true);
     setNavigationSource('profile');
   }, [setNavigationSource]);
+
+  useEffect(() => {
+    // Sync the pending input with whatever is already saved
+    if (autoBackupTime) setPendingBackupTime(autoBackupTime);
+  }, [autoBackupTime]);
 
   const handleToggleInterest = (id: string) => {
     if (tempInterests.includes(id)) {
@@ -85,6 +94,19 @@ export default function Profile() {
     } finally {
       setIsSyncing(false);
     }
+  };
+
+  const handleSaveBackupTime = () => {
+    if (pendingBackupTime) {
+      setAutoBackupTime(pendingBackupTime);
+    }
+    setIsEditingBackupTime(false);
+  };
+
+  const handleClearBackupTime = () => {
+    setAutoBackupTime(null);
+    setPendingBackupTime('');
+    setIsEditingBackupTime(false);
   };
 
   const handleToggleVideoGenre = (id: string) => {
@@ -122,7 +144,7 @@ export default function Profile() {
   return (
     <main className="min-h-screen bg-background p-6 md:p-12 max-w-5xl mx-auto space-y-12">
       <header className="flex justify-between items-center">
-        <Link 
+        <Link
           href="/"
           className="p-4 bg-card rounded-2xl shadow-neo-out hover:scale-105 active:scale-95 transition-all group"
         >
@@ -171,7 +193,7 @@ export default function Profile() {
         <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-2">
             <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Interests & Focus</p>
-            <button 
+            <button
               onClick={() => {
                 setTempInterests(interests);
                 setIsEditingInterests(!isEditingInterests);
@@ -195,7 +217,7 @@ export default function Profile() {
                       className={`flex flex-col items-center justify-center p-4 rounded-2xl transition-all cursor-pointer ${isSelected
                         ? 'shadow-neo-in text-accent'
                         : 'shadow-neo-out text-foreground/40 hover:scale-[1.02]'
-                      }`}
+                        }`}
                     >
                       <Icon size={24} className="mb-2" />
                       <span className="font-bold text-[10px] uppercase tracking-wider">{opt.label}</span>
@@ -226,7 +248,7 @@ export default function Profile() {
         <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-2">
             <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Video Interests</p>
-            <button 
+            <button
               onClick={() => {
                 setTempVideoGenres(videoGenres || []);
                 setIsEditingVideoGenres(!isEditingVideoGenres);
@@ -250,7 +272,7 @@ export default function Profile() {
                       className={`flex flex-col items-center justify-center p-4 rounded-2xl transition-all cursor-pointer ${isSelected
                         ? 'shadow-neo-in text-accent'
                         : 'shadow-neo-out text-foreground/40 hover:scale-[1.02]'
-                      }`}
+                        }`}
                     >
                       <Icon size={24} className="mb-2" />
                       <span className="font-bold text-[10px] uppercase tracking-wider">{opt.label}</span>
@@ -277,11 +299,11 @@ export default function Profile() {
             </div>
           )}
         </div>
-        
+
         <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 flex flex-col justify-between md:col-span-2">
           <div className="flex justify-between items-center mb-2">
             <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Content Language</p>
-            <button 
+            <button
               onClick={() => {
                 setTempLanguages(preferredLanguages || []);
                 setIsEditingLanguages(!isEditingLanguages);
@@ -297,8 +319,8 @@ export default function Profile() {
             <div className="space-y-6 animate-in fade-in zoom-in duration-300">
               <div className="relative group">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-accent transition-colors" size={20} />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Search languages..."
                   value={languageSearch}
                   onChange={(e) => setLanguageSearch(e.target.value)}
@@ -403,8 +425,8 @@ export default function Profile() {
                       </td>
                       <td className="py-4 px-2 text-center">
                         <span className="font-black text-xs text-accent">
-                          {s.averageTime > 60 
-                            ? `${Math.floor(s.averageTime / 60)}m ${Math.round(s.averageTime % 60)}s` 
+                          {s.averageTime > 60
+                            ? `${Math.floor(s.averageTime / 60)}m ${Math.round(s.averageTime % 60)}s`
                             : `${Math.round(s.averageTime)}s`}
                         </span>
                       </td>
@@ -425,7 +447,7 @@ export default function Profile() {
       </div>
 
       <div className="flex justify-center">
-        <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 w-full max-w-2xl group">
+        <div className="bg-card rounded-[2.5rem] p-8 space-y-6 shadow-neo-out border border-white/5 w-full max-w-2xl group">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
               <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Cloud Backup</p>
@@ -435,14 +457,84 @@ export default function Profile() {
               <CloudUpload size={24} />
             </div>
           </div>
-          
+
+          {/* Last backup info */}
           <div className="bg-foreground/5 p-4 rounded-2xl space-y-1">
             <p className="text-[10px] font-black text-foreground/40 uppercase tracking-tighter">Last Backup</p>
             <p className="text-xs font-bold">{lastBackupDate ? new Date(lastBackupDate).toLocaleString() : 'Never'}</p>
           </div>
-          
+
+          {/* Auto-backup scheduler — only visible when signed in */}
+          {uid && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock size={14} className="text-foreground/40" />
+                  <p className="text-[10px] font-black text-foreground/40 uppercase tracking-tighter">Daily Auto-Backup</p>
+                </div>
+                {autoBackupTime && !isEditingBackupTime && (
+                  <span className="flex items-center gap-1 px-3 py-1 bg-accent/10 text-accent rounded-full text-[10px] font-black">
+                    <Bell size={10} />
+                    {/* Format to 12-hour display */}
+                    {(() => {
+                      const [hh, mm] = autoBackupTime.split(':').map(Number);
+                      const period = hh >= 12 ? 'PM' : 'AM';
+                      const h12 = hh % 12 || 12;
+                      return `${h12}:${String(mm).padStart(2, '0')} ${period}`;
+                    })()}
+                  </span>
+                )}
+              </div>
+
+              {isEditingBackupTime ? (
+                <div className="space-y-3 animate-in fade-in zoom-in duration-200">
+                  <div className="flex items-center gap-3">
+                    <input
+                      id="auto-backup-time"
+                      type="time"
+                      value={pendingBackupTime}
+                      onChange={(e) => setPendingBackupTime(e.target.value)}
+                      className="flex-1 bg-card py-3 px-4 rounded-2xl shadow-neo-in focus:outline-none font-black text-sm text-accent tracking-wider"
+                    />
+                    <button
+                      onClick={handleSaveBackupTime}
+                      disabled={!pendingBackupTime}
+                      className="p-3 bg-accent text-white rounded-2xl shadow-neo-out active:shadow-neo-in active:scale-95 transition-all disabled:opacity-40"
+                    >
+                      <Check size={18} />
+                    </button>
+                    <button
+                      onClick={() => setIsEditingBackupTime(false)}
+                      className="p-3 bg-card rounded-2xl shadow-neo-out active:shadow-neo-in active:scale-95 transition-all text-foreground/40"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+                  {autoBackupTime && (
+                    <button
+                      onClick={handleClearBackupTime}
+                      className="w-full py-3 rounded-2xl font-black text-xs text-red-400 bg-red-500/5 shadow-neo-out hover:scale-[1.01] active:scale-95 active:shadow-neo-in transition-all flex items-center justify-center gap-2"
+                    >
+                      <BellOff size={14} />
+                      DISABLE AUTO-BACKUP
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsEditingBackupTime(true)}
+                  className="w-full py-3 rounded-2xl font-black text-xs text-foreground/50 bg-foreground/5 shadow-neo-out hover:scale-[1.01] active:scale-95 active:shadow-neo-in transition-all flex items-center justify-center gap-2"
+                >
+                  <Clock size={14} />
+                  {autoBackupTime ? 'CHANGE BACKUP TIME' : 'SET DAILY BACKUP TIME'}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Manual sync / sign-in CTA */}
           {!uid ? (
-            <button 
+            <button
               onClick={signInWithGoogle}
               disabled={isLoading}
               className="w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all"
@@ -450,14 +542,14 @@ export default function Profile() {
               {isLoading ? 'Connecting...' : 'Sign in to Backup'}
             </button>
           ) : (
-            <button 
+            <button
               onClick={handleSync}
               disabled={isSyncing}
               className={`w-full py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2 ${
-                syncSuccess 
-                  ? 'bg-card text-green-500 shadow-neo-in scale-[0.98]' 
+                syncSuccess
+                  ? 'bg-card text-green-500 shadow-neo-in scale-[0.98]'
                   : 'bg-card text-accent shadow-neo-out hover:scale-[1.02] active:scale-[0.98]'
-              }`}
+                }`}
             >
               {isSyncing ? (
                 <>
