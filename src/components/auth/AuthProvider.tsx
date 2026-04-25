@@ -5,7 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useUserStore } from '@/store/userStore';
 import { useAutoBackup } from '@/hooks/useAutoBackup';
-
+import { WaitLessSensors } from '@/lib/native-bridge';
 import { usePathname } from 'next/navigation';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -15,6 +15,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Global daily auto-backup scheduler
   useAutoBackup();
+
+  useEffect(() => {
+    // Trigger native plugin initialization (loads Sensors/Activity Recognition)
+    if (_hasHydrated) {
+      WaitLessSensors.getStationaryStatus().catch(console.error);
+    }
+  }, [_hasHydrated]);
 
   useEffect(() => {
     // Listen for auth state changes to keep Zustand in sync with Firebase
