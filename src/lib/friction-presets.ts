@@ -1,0 +1,68 @@
+import { Coffee, Car, Briefcase, Clock, Timer, Bed, Sun, ShoppingCart, Utensils, Zap } from 'lucide-react';
+
+export const FRICTION_PRESETS = [
+  {
+    type: 'commute_morning',
+    label: 'Morning Commute',
+    description: 'Fresh but idle time while traveling to work/school.',
+    icon: Car,
+    defaultStart: '08:00',
+    defaultEnd: '09:00',
+  },
+  {
+    type: 'commute_evening',
+    label: 'Evening Commute',
+    description: 'Decompressing after a long day in transit.',
+    icon: Car,
+    defaultStart: '17:00',
+    defaultEnd: '18:30',
+  },
+  {
+    type: 'boring_work',
+    label: 'Meeting Gaps',
+    description: 'Short, unproductive gaps between tasks or boring meetings.',
+    icon: Briefcase,
+    defaultStart: '11:00',
+    defaultEnd: '12:00',
+  },
+  {
+    type: 'standing_in_line',
+    label: 'Daily Queues',
+    description: 'Waiting at the grocery, bank, or for public transport.',
+    icon: ShoppingCart,
+    defaultStart: '16:00',
+    defaultEnd: '16:30',
+  },
+  {
+    type: 'bedtime_doomscroll',
+    label: 'Bedtime Procrastination',
+    description: 'Mindlessly scrolling when you should be sleeping.',
+    icon: Bed,
+    defaultStart: '23:00',
+    defaultEnd: '00:00',
+  },
+  {
+    type: 'morning_sluggish',
+    label: 'Morning Sluggishness',
+    description: 'Struggling to start the day or lingering in bed.',
+    icon: Sun,
+    defaultStart: '07:00',
+    defaultEnd: '08:00',
+  },
+  {
+    type: 'meal_break_solo',
+    label: 'Solo Meal Breaks',
+    description: 'Eating alone and feeling the urge to scroll.',
+    icon: Utensils,
+    defaultStart: '13:00',
+    defaultEnd: '14:00',
+  },
+  {
+    type: 'laundry_wait',
+    label: 'Chore Idle Time',
+    description: 'Waiting for laundry, cooking, or other household tasks.',
+    icon: Zap,
+    defaultStart: '19:00',
+    defaultEnd: '20:00',
+  },
+];

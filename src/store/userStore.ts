@@ -30,6 +30,15 @@ interface GameStats {
   averageTime: number;
 }
 
+export interface FrictionPoint {
+  id: string;
+  type: string; // e.g., "Commute", "Boring Work", "Standing in Line"
+  label: string; // User-defined or preset label
+  startTime: string; // "HH:MM"
+  endTime: string; // "HH:MM"
+  days: number[]; // 0-6 (Sun-Sat)
+}
+
 interface UserState {
   uid: string | null;
   interests: string[];
@@ -43,6 +52,7 @@ interface UserState {
     highScores: Record<string, number>;
   };
   gameStats: Record<string, GameStats>;
+  frictionPoints: FrictionPoint[];
   preferences: {
     darkMode: boolean;
     blockDoomscrolling: boolean;
@@ -102,6 +112,9 @@ interface UserState {
   recordGameResult: (gameId: string, result: 'win' | 'loss' | 'quit', timeSpentSeconds: number) => void;
   setDarkMode: (enabled: boolean) => void;
   setShowDevTiles: (enabled: boolean) => void;
+  setFrictionPoints: (points: FrictionPoint[]) => void;
+  addFrictionPoint: (point: Omit<FrictionPoint, 'id'>) => void;
+  removeFrictionPoint: (id: string) => void;
 
   // Philosophy Actions
   completePhilosophyConcept: (name: string) => void;
@@ -158,6 +171,7 @@ export const useUserStore = create<UserState>()(
         highScores: {},
       },
       gameStats: {},
+      frictionPoints: [],
       preferences: {
         darkMode: false,
         blockDoomscrolling: true,
@@ -299,6 +313,21 @@ export const useUserStore = create<UserState>()(
       setShowDevTiles: (enabled) =>
         set((state) => ({
           preferences: { ...state.preferences, showDevTiles: enabled },
+        })),
+
+      setFrictionPoints: (points) => set({ frictionPoints: points }),
+
+      addFrictionPoint: (point) =>
+        set((state) => ({
+          frictionPoints: [
+            ...state.frictionPoints,
+            { ...point, id: Math.random().toString(36).substring(7) },
+          ],
+        })),
+
+      removeFrictionPoint: (id) =>
+        set((state) => ({
+          frictionPoints: state.frictionPoints.filter((p) => p.id !== id),
         })),
 
       completePhilosophyConcept: (name) =>
@@ -542,6 +571,7 @@ export const useUserStore = create<UserState>()(
           englishReviewWords: mergedEnglish,
           dailyCompletedActivities: mergedDailyActivities,
           lastCompletedDate: mergedLastCompletedDate,
+          frictionPoints: remoteData.frictionPoints || state.frictionPoints,
           lastBackupDate: now
         });
 
@@ -564,6 +594,7 @@ export const useUserStore = create<UserState>()(
           englishReviewWords: mergedEnglish,
           dailyCompletedActivities: mergedDailyActivities,
           lastCompletedDate: mergedLastCompletedDate,
+          frictionPoints: state.frictionPoints,
           lastBackupDate: now,
         };
 

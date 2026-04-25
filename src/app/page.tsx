@@ -14,6 +14,8 @@ import { VideoRecommendation } from "@/components/recreation/VideoRecommendation
 import { INITIAL_QUOTES } from "@/lib/quotes";
 import { generateQuotes } from "@/app/quotes/actions";
 import { Capacitor } from '@capacitor/core';
+import { FrictionPoint } from "@/store/userStore";
+import { FRICTION_PRESETS } from "@/lib/friction-presets";
 
 export default function Home() {
   const router = useRouter();
@@ -37,6 +39,20 @@ export default function Home() {
   const currentQuote = useUserStore(state => state.currentQuote);
   const setQuotePool = useUserStore(state => state.setQuotePool);
   const refreshQuote = useUserStore(state => state.refreshQuote);
+  const frictionPoints = useUserStore(state => state.frictionPoints);
+  const [activeFriction, setActiveFriction] = useState<FrictionPoint | null>(null);
+
+  useEffect(() => {
+    const checkFriction = () => {
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const active = frictionPoints.find(p => p.startTime <= timeStr && p.endTime >= timeStr);
+      setActiveFriction(active || null);
+    };
+    checkFriction();
+    const interval = setInterval(checkFriction, 60000);
+    return () => clearInterval(interval);
+  }, [frictionPoints]);
 
   useEffect(() => {
     if (!_hasHydrated) return;
@@ -144,6 +160,14 @@ export default function Home() {
           <div className="space-y-2">
             <p className="text-accent font-medium uppercase tracking-widest text-sm">Dashboard</p>
             <h1 className="text-5xl font-extrabold tracking-tight">WaitLess</h1>
+            {activeFriction && (
+              <div className="flex items-center gap-2 animate-in fade-in slide-in-from-left-4 duration-700">
+                <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                <p className="text-[10px] font-black uppercase tracking-widest text-foreground/40 italic">
+                  Currently in: <span className="text-accent">{activeFriction.label}</span>
+                </p>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-3">
             {Capacitor.getPlatform() === 'android' && (

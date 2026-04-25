@@ -7,6 +7,8 @@ import { LogOut, ArrowLeft, CloudUpload, Settings2, Check, X, Laptop, History, P
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ALL_LANGUAGES } from "@/lib/languages";
+import { FRICTION_PRESETS } from "@/lib/friction-presets";
+import { FrictionPoint } from "@/store/userStore";
 
 const INTEREST_OPTIONS = [
   { id: 'tech', label: 'Technology', icon: Laptop },
@@ -57,6 +59,16 @@ export default function Profile() {
   const [pendingBackupTime, setPendingBackupTime] = useState<string>('');
   const [isEditingBackupTime, setIsEditingBackupTime] = useState(false);
   const setNavigationSource = useUserStore((state) => state.setNavigationSource);
+  const frictionPoints = useUserStore((state) => state.frictionPoints);
+  const setFrictionPoints = useUserStore((state) => state.setFrictionPoints);
+  const removeFrictionPoint = useUserStore((state) => state.removeFrictionPoint);
+  const addFrictionPoint = useUserStore((state) => state.addFrictionPoint);
+
+  const [isAddingFriction, setIsAddingFriction] = useState(false);
+  const [isCreatingCustomFriction, setIsCreatingCustomFriction] = useState(false);
+  const [customFriction, setCustomFriction] = useState({ label: '', start: '09:00', end: '10:00' });
+  const [editingFrictionId, setEditingFrictionId] = useState<string | null>(null);
+  const [tempFrictionTime, setTempFrictionTime] = useState({ start: '', end: '' });
 
   useEffect(() => {
     setMounted(true);
@@ -138,6 +150,43 @@ export default function Profile() {
   const filteredLanguages = ALL_LANGUAGES.filter(lang =>
     lang.label.toLowerCase().includes(languageSearch.toLowerCase())
   );
+
+  const handleUpdateFrictionTime = (id: string) => {
+    const updated = frictionPoints.map(p => 
+      p.id === id ? { ...p, startTime: tempFrictionTime.start, endTime: tempFrictionTime.end } : p
+    );
+    setFrictionPoints(updated);
+    setEditingFrictionId(null);
+  };
+
+  const handleAddPresetFriction = (type: string) => {
+    const preset = FRICTION_PRESETS.find(p => p.type === type);
+    if (preset) {
+      addFrictionPoint({
+        type: preset.type,
+        label: preset.label,
+        startTime: preset.defaultStart,
+        endTime: preset.defaultEnd,
+        days: [1, 2, 3, 4, 5]
+      });
+    }
+    setIsAddingFriction(false);
+  };
+
+  const handleCreateCustomFriction = () => {
+    if (customFriction.label) {
+      addFrictionPoint({
+        type: 'custom',
+        label: customFriction.label,
+        startTime: customFriction.start,
+        endTime: customFriction.end,
+        days: [1, 2, 3, 4, 5]
+      });
+      setCustomFriction({ label: '', start: '09:00', end: '10:00' });
+      setIsCreatingCustomFriction(false);
+      setIsAddingFriction(false);
+    }
+  };
 
   if (!mounted) return null;
 
@@ -384,6 +433,178 @@ export default function Profile() {
                   </span>
                 );
               }) : <p className="text-foreground/40 text-sm">No languages selected.</p>}
+            </div>
+          )}
+        </div>
+
+        <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 flex flex-col justify-between md:col-span-2">
+          <div className="flex justify-between items-center mb-2">
+            <div className="space-y-1">
+              <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Recurring Friction</p>
+              <h3 className="text-lg font-black uppercase">Your Idle Schedules</h3>
+            </div>
+            <button
+              onClick={() => {
+                setIsAddingFriction(!isAddingFriction);
+                setIsCreatingCustomFriction(false);
+              }}
+              className={`p-2 rounded-xl shadow-neo-out transition-all ${isAddingFriction ? 'text-red-500' : 'text-accent'}`}
+            >
+              {isAddingFriction ? <X size={18} /> : <Settings2 size={18} />}
+            </button>
+          </div>
+
+          {isAddingFriction ? (
+            <div className="space-y-6 animate-in fade-in zoom-in duration-300">
+              <div className="flex justify-between items-center">
+                <p className="text-xs font-bold text-foreground/40 italic">
+                  {isCreatingCustomFriction ? 'Define your custom idle period:' : 'Select a friction type or create your own:'}
+                </p>
+                <button
+                  onClick={() => setIsCreatingCustomFriction(!isCreatingCustomFriction)}
+                  className="text-[10px] font-black uppercase tracking-widest text-accent hover:underline"
+                >
+                  {isCreatingCustomFriction ? '← Back to Presets' : '+ Create Custom'}
+                </button>
+              </div>
+
+              {isCreatingCustomFriction ? (
+                <div className="bg-foreground/[0.02] rounded-3xl p-6 border border-accent/20 space-y-4 shadow-neo-in animate-in slide-in-from-right-4 duration-300">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2">Label</label>
+                    <input
+                      type="text"
+                      placeholder="e.g., Morning Walk, Game Breaks..."
+                      value={customFriction.label}
+                      onChange={(e) => setCustomFriction({ ...customFriction, label: e.target.value })}
+                      className="w-full bg-card py-3 px-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-bold text-sm"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2">Start</label>
+                      <input
+                        type="time"
+                        value={customFriction.start}
+                        onChange={(e) => setCustomFriction({ ...customFriction, start: e.target.value })}
+                        className="w-full bg-card py-3 px-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-bold text-sm"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-tighter text-foreground/40 px-2">End</label>
+                      <input
+                        type="time"
+                        value={customFriction.end}
+                        onChange={(e) => setCustomFriction({ ...customFriction, end: e.target.value })}
+                        className="w-full bg-card py-3 px-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-bold text-sm"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleCreateCustomFriction}
+                    disabled={!customFriction.label}
+                    className="w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out active:shadow-neo-in active:scale-95 transition-all disabled:opacity-50 mt-2"
+                  >
+                    CREATE CATEGORY
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {FRICTION_PRESETS.filter(p => !frictionPoints.some(fp => fp.type === p.type)).map((preset) => {
+                  const Icon = preset.icon;
+                  return (
+                    <button
+                      key={preset.type}
+                      onClick={() => handleAddPresetFriction(preset.type)}
+                      className="flex items-center gap-4 p-4 bg-card rounded-2xl shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all text-left group"
+                    >
+                      <div className="p-3 bg-accent/10 text-accent rounded-xl group-hover:bg-accent group-hover:text-white transition-colors">
+                        <Icon size={20} />
+                      </div>
+                      <span className="font-black text-xs uppercase tracking-wider">{preset.label}</span>
+                    </button>
+                  );
+                })}
+                </div>
+              )}
+              {FRICTION_PRESETS.length === frictionPoints.length && (
+                <p className="text-center text-foreground/30 font-bold py-4">All presets added!</p>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {frictionPoints.length > 0 ? frictionPoints.map((point) => {
+                const preset = FRICTION_PRESETS.find(p => p.type === point.type);
+                const Icon = preset?.icon || Clock;
+                const isEditing = editingFrictionId === point.id;
+
+                return (
+                  <div key={point.id} className="relative group bg-foreground/[0.02] rounded-3xl p-5 border border-foreground/5 hover:border-accent/10 transition-all">
+                    <div className="flex items-start justify-between">
+                      <div className="flex gap-4">
+                        <div className="p-3 bg-card rounded-2xl shadow-neo-out text-accent">
+                          <Icon size={20} />
+                        </div>
+                        <div className="space-y-1">
+                          <h4 className="font-black text-sm uppercase tracking-tight">{point.label}</h4>
+                          {isEditing ? (
+                            <div className="flex items-center gap-2 mt-2">
+                              <input
+                                type="time"
+                                value={tempFrictionTime.start}
+                                onChange={(e) => setTempFrictionTime({ ...tempFrictionTime, start: e.target.value })}
+                                className="bg-card text-[10px] font-black p-1 rounded-md shadow-neo-in focus:outline-none"
+                              />
+                              <span className="text-[10px] opacity-20">to</span>
+                              <input
+                                type="time"
+                                value={tempFrictionTime.end}
+                                onChange={(e) => setTempFrictionTime({ ...tempFrictionTime, end: e.target.value })}
+                                className="bg-card text-[10px] font-black p-1 rounded-md shadow-neo-in focus:outline-none"
+                              />
+                            </div>
+                          ) : (
+                            <p className="text-xs font-bold text-foreground/40">
+                              {point.startTime} — {point.endTime}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => {
+                            if (isEditing) {
+                              handleUpdateFrictionTime(point.id);
+                            } else {
+                              setEditingFrictionId(point.id);
+                              setTempFrictionTime({ start: point.startTime, end: point.endTime });
+                            }
+                          }}
+                          className="p-2 bg-card rounded-xl shadow-neo-out text-accent hover:scale-110 active:scale-95 transition-all"
+                        >
+                          {isEditing ? <Check size={14} /> : <Settings2 size={14} />}
+                        </button>
+                        <button
+                          onClick={() => removeFrictionPoint(point.id)}
+                          className="p-2 bg-card rounded-xl shadow-neo-out text-red-500 hover:scale-110 active:scale-95 transition-all"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }) : (
+                <div className="col-span-full py-8 text-center bg-foreground/[0.02] rounded-3xl border border-dashed border-foreground/10">
+                  <p className="text-foreground/30 font-bold italic text-sm">No idle schedules defined yet.</p>
+                  <button
+                    onClick={() => setIsAddingFriction(true)}
+                    className="text-xs text-accent font-black uppercase tracking-widest mt-2 hover:underline"
+                  >
+                    + Add Your First Friction Point
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -1,8 +1,9 @@
-import { Laptop, History, Puzzle, Languages, FlaskConical, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Search, X as XIcon, Brain, Sun, Moon, ArrowRight } from 'lucide-react';
+import { Laptop, History, Puzzle, Languages, FlaskConical, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Search, X as XIcon, Brain, Sun, Moon, ArrowRight, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useUserStore } from '@/store/userStore';
 import { Button } from './ui/Button';
 import { ALL_LANGUAGES } from '@/lib/languages';
+import { FRICTION_PRESETS } from '@/lib/friction-presets';
 
 const INTEREST_OPTIONS = [
   { id: 'tech', label: 'Technology', icon: Laptop },
@@ -33,6 +34,11 @@ export default function Onboarding() {
   const setPreferredLanguages = useUserStore((state) => state.setPreferredLanguages);
   const darkMode = useUserStore((state) => state.preferences.darkMode);
   const setDarkMode = useUserStore((state) => state.setDarkMode);
+  const setFrictionPoints = useUserStore((state) => state.setFrictionPoints);
+
+  const [selectedFriction, setSelectedFriction] = useState<string[]>([]);
+  const [customFrictionName, setCustomFrictionName] = useState('');
+  const [isAddingCustom, setIsAddingCustom] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -73,6 +79,16 @@ export default function Onboarding() {
       setStep(2);
     } else if (step === 2 && videoSelected.length >= 1) {
       setStep(3);
+    } else if (step === 3 && languagesSelected.length >= 1) {
+      setStep(4);
+    }
+  };
+
+  const toggleFriction = (type: string) => {
+    if (selectedFriction.includes(type)) {
+      setSelectedFriction(selectedFriction.filter(f => f !== type));
+    } else {
+      setSelectedFriction([...selectedFriction, type]);
     }
   };
 
@@ -81,6 +97,31 @@ export default function Onboarding() {
       setInterests(selected);
       setVideoGenres(videoSelected);
       setPreferredLanguages(languagesSelected);
+      
+      const points = selectedFriction.map(type => {
+        const preset = FRICTION_PRESETS.find(p => p.type === type);
+        return {
+          id: Math.random().toString(36).substring(7),
+          type: type,
+          label: preset?.label || type,
+          startTime: preset?.defaultStart || '09:00',
+          endTime: preset?.defaultEnd || '10:00',
+          days: [1, 2, 3, 4, 5]
+        };
+      });
+
+      if (customFrictionName) {
+        points.push({
+          id: Math.random().toString(36).substring(7),
+          type: 'custom',
+          label: customFrictionName,
+          startTime: '09:00',
+          endTime: '10:00',
+          days: [1, 2, 3, 4, 5]
+        });
+      }
+
+      setFrictionPoints(points);
     }
   };
 
@@ -303,12 +344,99 @@ export default function Onboarding() {
               Back
             </Button>
             <Button
-              onClick={handleFinish}
+              onClick={handleNext}
               disabled={languagesSelected.length < 1}
               variant="primary"
               className={`flex-1 py-5 text-xl font-black shadow-neo-out ${languagesSelected.length < 1 ? 'opacity-50' : 'active:shadow-neo-in active:scale-95'}`}
             >
-              {languagesSelected.length < 1 ? "Select at least 1" : "Let's Go"}
+              Next Step
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {step === 4 && (
+        <div className="max-w-2xl w-full text-center space-y-12 animate-in slide-in-from-right-8 duration-500">
+          <div className="space-y-4">
+            <h1 className="text-4xl font-black tracking-tight">Identify the Gaps.</h1>
+            <p className="text-foreground/50 text-lg font-medium">
+              Where do you feel the most "friction" or wasted time? Select all that apply.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {FRICTION_PRESETS.map((preset) => {
+              const Icon = preset.icon;
+              const isSelected = selectedFriction.includes(preset.type);
+              return (
+                <div
+                  key={preset.type}
+                  onClick={() => toggleFriction(preset.type)}
+                  className={`flex items-start gap-4 p-5 rounded-3xl transition-all cursor-pointer text-left border-2 ${isSelected
+                    ? `border-accent bg-accent/5 shadow-neo-in`
+                    : 'border-transparent shadow-neo-out hover:border-accent/10'
+                    }`}
+                >
+                  <div className={`p-3 rounded-2xl ${isSelected ? 'bg-accent text-white' : 'bg-foreground/5 text-foreground/40'}`}>
+                    <Icon size={24} />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className={`font-bold uppercase tracking-wider text-sm ${isSelected ? 'text-accent' : 'text-foreground'}`}>
+                      {preset.label}
+                    </h3>
+                    <p className="text-xs text-foreground/40 font-medium leading-relaxed mt-1">
+                      {preset.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+            
+            {/* Custom Option */}
+            <div className="md:col-span-2">
+              {!isAddingCustom ? (
+                <button
+                  onClick={() => setIsAddingCustom(true)}
+                  className="w-full flex items-center justify-center gap-2 p-4 rounded-3xl border-2 border-dashed border-foreground/10 text-foreground/40 font-bold hover:border-accent/20 hover:text-accent transition-all"
+                >
+                  <Plus size={18} />
+                  ADD CUSTOM CATEGORY
+                </button>
+              ) : (
+                <div className="bg-foreground/[0.02] rounded-3xl p-5 border border-accent/20 space-y-3 animate-in zoom-in duration-300">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-accent">Custom Friction Type</label>
+                    <button onClick={() => { setIsAddingCustom(false); setCustomFrictionName(''); }} className="text-foreground/30 hover:text-red-500">
+                      <XIcon size={16} />
+                    </button>
+                  </div>
+                  <input
+                    autoFocus
+                    type="text"
+                    placeholder="e.g. Walking the dog, Evening chores..."
+                    value={customFrictionName}
+                    onChange={(e) => setCustomFrictionName(e.target.value)}
+                    className="w-full bg-card py-3 px-4 rounded-2xl shadow-neo-out focus:shadow-neo-in focus:outline-none transition-all font-bold text-sm"
+                  />
+                  <p className="text-[10px] font-medium text-foreground/40 italic">You can set specific times in your profile later.</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="pt-4 flex gap-4">
+            <Button
+              onClick={() => setStep(3)}
+              className={`py-5 px-8 font-black shadow-lg bg-background border border-accent/10 hover:bg-accent/5 !text-accent`}
+            >
+              Back
+            </Button>
+            <Button
+              onClick={handleFinish}
+              variant="primary"
+              className={`flex-1 py-5 text-xl font-black shadow-neo-out active:shadow-neo-in active:scale-95`}
+            >
+              Finish Setup
             </Button>
           </div>
         </div>
