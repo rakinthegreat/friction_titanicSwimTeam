@@ -50,13 +50,14 @@ export default function WordLessPage() {
   };
 
   return (
-    <main className="min-h-screen bg-background p-6">
-      <header className="max-w-md mx-auto mb-8 flex items-center justify-between">
+    <main className="min-h-screen bg-background p-0">
+      <header className="max-w-full mx-auto p-4 flex items-center justify-between">
         <div className="flex items-center">
           <BackButton href="/" className="text-accent" />
-          <h1 className="text-2xl font-bold ml-4">WordLess</h1>
+
+          <h1 className="text-3xl font-bold ml-14">WordLess</h1>
         </div>
-        <button 
+        <button
           onClick={() => setIsTutorialOpen(true)}
           className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent transition-all active:scale-95"
         >
@@ -64,15 +65,15 @@ export default function WordLessPage() {
         </button>
       </header>
 
-      <GameTutorial 
+      <GameTutorial
         title="WordLess"
         steps={TUTORIAL_STEPS}
         isOpen={isTutorialOpen}
         onClose={() => setIsTutorialOpen(false)}
       />
 
-      <div className="max-w-md mx-auto">
-        <Card className="p-8 shadow-neo-out min-h-[400px] flex flex-col justify-center">
+      <div className="max-w-full mx-auto px-0">
+        <Card className="p-[2px] sm:p-8 shadow-neo-out min-h-[400px] flex flex-col justify-start border-none sm:border-solid rounded-none sm:rounded-[2.5rem]">
           {loading ? (
             <div className="flex flex-col items-center justify-center space-y-4 animate-pulse">
               <div className="w-12 h-12 bg-accent/20 rounded-full" />
