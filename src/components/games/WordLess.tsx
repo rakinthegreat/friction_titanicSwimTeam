@@ -107,6 +107,17 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
     return () => window.removeEventListener('keydown', onKeyPress);
   }, [onKeyPress]);
 
+  const [showVirtualKeyboard, setShowVirtualKeyboard] = useState(false);
+
+  useEffect(() => {
+    const ua = navigator.userAgent.toLowerCase();
+    const isAndroid = ua.includes('android');
+    const isCapacitor = typeof window !== 'undefined' && !!(window as any).Capacitor;
+    const isCapEnv = process.env.NEXT_PUBLIC_IS_CAPACITOR === 'true';
+    
+    setShowVirtualKeyboard(isAndroid || isCapacitor || isCapEnv);
+  }, []);
+
   const getLetterStatus = (letter: string, guess: string, index: number) => {
     const target = targetWord.toUpperCase();
     if (target[index] === letter) return 'correct';
@@ -214,22 +225,24 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
         })}
       </div>
 
-      {/* Virtual Keyboard */}
-      <div className="w-full flex flex-col gap-2 mt-4">
-        {KEYS.map((row, i) => (
-          <div key={i} className="flex justify-center gap-1.5 w-full">
-            {row.map(key => (
-              <button
-                key={key}
-                onClick={() => handleInput(key)}
-                className={getKeyClass(key)}
-              >
-                {key === 'BACKSPACE' ? <Delete size={16} /> : key}
-              </button>
-            ))}
-          </div>
-        ))}
-      </div>
+      {/* Virtual Keyboard - Only on Android/Capacitor */}
+      {showVirtualKeyboard && (
+        <div className="w-full flex flex-col gap-2 mt-4 animate-in slide-in-from-bottom-4 duration-500">
+          {KEYS.map((row, i) => (
+            <div key={i} className="flex justify-center gap-1.5 w-full">
+              {row.map(key => (
+                <button
+                  key={key}
+                  onClick={() => handleInput(key)}
+                  className={getKeyClass(key)}
+                >
+                  {key === 'BACKSPACE' ? <Delete size={16} /> : key}
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
 
       {status !== 'playing' && (
         <div className="text-center animate-bounce">
