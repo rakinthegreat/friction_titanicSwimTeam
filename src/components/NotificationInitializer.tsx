@@ -36,26 +36,17 @@ export const NotificationInitializer = () => {
       const currentDay = now.getDay(); // 0 = Sun … 6 = Sat
       const today = now.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
-      // DEBUG LOG
-      console.log(`[FrictionCheck] Checking at ${currentTime} (Day: ${currentDay}). Points: ${frictionPoints.length}`);
-
       for (const point of frictionPoints) {
-        console.log(`  - Checking point: ${point.label} | Days: [${point.days.join(',')}] | Start: ${point.startTime} | End: ${point.endTime}`);
-
         // Only fire on the configured days
         if (!point.days.includes(currentDay)) {
-          console.log(`    SKIPPED: Day ${currentDay} not in [${point.days.join(',')}]`);
           continue;
         }
 
         // Fire at startTime
         if (point.startTime === currentTime) {
-          console.log(`    MATCH START! firedRef has key? ${firedRef.current.has(`${point.id}-start-${today}`)}`);
           const key = `${point.id}-start-${today}`;
           if (!firedRef.current.has(key)) {
             firedRef.current.add(key);
-
-            console.log(`[FrictionTime] Triggered start: ${point.label} (${point.startTime})`);
 
             const title = `🕐 Friction time: ${point.label}`;
             const body = `Your "${point.label}" block just started — make the most of it!`;

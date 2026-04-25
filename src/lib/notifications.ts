@@ -93,7 +93,6 @@ export const NotificationService = {
           await LocalNotifications.createChannel({ id: 'general', name: 'General', importance: 4 });
         }
         await LocalNotifications.schedule({ notifications });
-        console.log(`[NativeNotifications] Scheduled ${notifications.length} friction alerts.`);
       }
     } catch (e) {
       console.error('Failed to schedule native notifications', e);
