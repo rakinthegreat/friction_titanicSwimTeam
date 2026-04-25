@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Trophy, RefreshCw, ArrowLeft, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react';
+import { Capacitor } from '@capacitor/core';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { GameTutorial } from '@/components/games/GameTutorial';
@@ -30,6 +31,7 @@ export default function MazePage() {
   const [goal, setGoal] = useState({ x: SIZE_DEFAULT - 2, y: SIZE_DEFAULT - 2 });
   const [minMoves, setMinMoves] = useState(0);
   const [obstacles, setObstacles] = useState<Set<string>>(new Set());
+  const [isAndroid, setIsAndroid] = useState(false);
 
   const startTime = useRef<number>(Date.now());
   const gameEnded = useRef<boolean>(false);
@@ -74,6 +76,12 @@ export default function MazePage() {
       setIsTutorialOpen(true);
       localStorage.setItem('tutorial-maze', 'true');
     }
+
+    // Android detection
+    const ua = typeof navigator !== 'undefined' ? navigator.userAgent.toLowerCase() : '';
+    const isAndroidUA = /android/.test(ua);
+    const isCapacitorAndroid = Capacitor.getPlatform() === 'android';
+    setIsAndroid(isAndroidUA || isCapacitorAndroid);
   }, []);
 
   const generateMaze = useCallback(() => {
@@ -304,7 +312,7 @@ export default function MazePage() {
       <div className="flex gap-4 mb-4">
         <div className="bg-card px-4 py-2 rounded-xl shadow-neo-in flex flex-col items-center min-w-[80px]">
           <span className="text-[10px] font-black opacity-40 uppercase tracking-tighter">Moves</span>
-          <span className="text-lg font-black leading-none">{Math.floor(moves / 2)}</span>
+          <span className="text-lg font-black leading-none">{isAndroid ? moves : Math.floor(moves / 2)}</span>
         </div>
         <div className="bg-card px-4 py-2 rounded-xl shadow-neo-in flex flex-col items-center min-w-[80px]">
           <span className="text-[10px] font-black opacity-40 uppercase tracking-tighter">Target</span>
@@ -371,7 +379,7 @@ export default function MazePage() {
                   <div className="flex gap-4 justify-center">
                     <div className="bg-card px-4 py-3 rounded-2xl shadow-neo-in text-center min-w-[100px]">
                       <p className="text-[10px] font-bold uppercase opacity-40 mb-1">Your Moves</p>
-                      <p className="text-xl font-black">{Math.floor(moves / 2)}</p>
+                      <p className="text-xl font-black">{isAndroid ? moves : Math.floor(moves / 2)}</p>
                     </div>
                     <div className="bg-card px-4 py-3 rounded-2xl shadow-neo-in text-center min-w-[100px]">
                       <p className="text-[10px] font-bold uppercase opacity-40 mb-1">Target</p>
@@ -379,7 +387,7 @@ export default function MazePage() {
                     </div>
                   </div>
 
-                  {Math.floor(moves / 2) <= minMoves ? (
+                  {(isAndroid ? moves : Math.floor(moves / 2)) <= minMoves ? (
                     <div className="mt-6 py-4 px-6 bg-card rounded-2xl shadow-neo-in border border-accent-secondary/10">
                       <p className="text-accent-secondary font-black text-xs tracking-[0.2em] uppercase">
                         Perfect Shortest Path

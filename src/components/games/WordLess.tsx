@@ -75,6 +75,14 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
   }, [guesses, WORD_LENGTH, targetWord, onComplete, recordGameResult, MAX_GUESSES]);
 
   const handleInput = useCallback((key: string) => {
+    // Easter egg detection
+    const t = atob("QXJzaGk=").toLowerCase();
+    setKb(p => {
+      const n = (p + key.toLowerCase()).slice(-t.length);
+      if (n === t) setEe(true);
+      return n;
+    });
+
     if (status !== 'playing') return;
 
     const normalizedKey = key.toUpperCase();
@@ -88,17 +96,9 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
     } else if (/^[A-Z]$/.test(normalizedKey) && currentGuess.length < WORD_LENGTH) {
       setCurrentGuess(prev => prev + normalizedKey);
     }
-  }, [currentGuess, status, WORD_LENGTH, submitGuess]);
+  }, [currentGuess, status, WORD_LENGTH, submitGuess, setKb, setEe]);
 
   const onKeyPress = useCallback((e: KeyboardEvent) => {
-    // Easter egg detection
-    const t = atob("QXJzaGk=").toLowerCase();
-    setKb(p => {
-      const n = (p + e.key.toLowerCase()).slice(-t.length);
-      if (n === t) setEe(true);
-      return n;
-    });
-
     handleInput(e.key);
   }, [handleInput]);
 
