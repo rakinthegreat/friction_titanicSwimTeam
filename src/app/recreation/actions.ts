@@ -70,82 +70,6 @@ export async function getDynamicSearchQueries(
   }
 }
 
-export async function fetchYouTubeVideos(queries: string[], type: 'search' | 'channel' = 'search') {
-  const API_KEY = process.env.YT_API;
-  if (!API_KEY) throw new Error("YT_API key not configured");
-
-  console.log(`[YT API] Fetching ${type} pool for:`, queries);
-  const allVideos: any[] = [];
-  
-  try {
-    // Quota Optimization: Batch queries into groups of 5 to save units
-    // Each search request costs 100 units regardless of results count (up to 50)
-    const batchSize = type === 'channel' ? 10 : 3;
-    const batchedQueries: string[] = [];
-    
-    for (let i = 0; i < queries.length; i += batchSize) {
-      const batch = queries.slice(i, i + batchSize);
-      batchedQueries.push(batch.join(' | '));
-    }
-
-    for (const q of batchedQueries) {
-      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${type === 'channel' ? 20 : 10}&q=${encodeURIComponent(q)}&type=video&relevanceLanguage=en&order=${type === 'channel' ? 'date' : 'relevance'}&key=${API_KEY}`;
-      
-      console.log(`[YT API] Requesting: ${url}`);
-      const res = await fetch(url);
-      const data = await res.json();
-      
-      if (data.error) {
-        console.error(`[YT API] Error:`, data.error.message);
-        if (data.error.message.includes('quota')) break; // Stop if quota hit
-        continue;
-      }
-
-      if (data.items) {
-        console.log(`[YT API] Found ${data.items.length} items for batch: ${q}`);
-        data.items.forEach((item: any) => {
-          allVideos.push({
-            id: item.id.videoId,
-            title: item.snippet.title,
-            thumbnail: item.snippet.thumbnails.high.url,
-            creator: item.snippet.channelTitle,
-            description: item.snippet.description
-          });
-        });
-      }
-    }
-    
-    if (allVideos.length === 0) return [];
-
-    // Get durations and filter
-    const videoIds = allVideos.map(v => v.id).slice(0, 50); // API limit is 50
-    const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=${videoIds.join(',')}&key=${API_KEY}`;
-    const detailsRes = await fetch(detailsUrl);
-    const detailsData = await detailsRes.json();
-
-    const processedVideos: any[] = [];
-    if (detailsData.items) {
-      detailsData.items.forEach((item: any) => {
-        const duration = parseISO8601Duration(item.contentDetails.duration);
-        if (duration >= 60) {
-          processedVideos.push({
-            id: item.id,
-            title: item.snippet.title,
-            thumbnail: item.snippet.thumbnails.high.url,
-            creator: item.snippet.channelTitle,
-            url: `https://www.youtube.com/watch?v=${item.id}`,
-            duration: duration,
-            description: item.snippet.description
-          });
-        }
-      });
-    }
-    return processedVideos;
-  } catch (error) {
-    console.error("YouTube fetch failed:", error);
-    return [];
-  }
-}
 
 async function fetchChannelVideosScraping(handle: string) {
   try {
@@ -354,8 +278,3 @@ export async function getRecommendedVideos(
   }
 }
 
-function parseISO8601Duration(duration: string): number {
-  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-  if (!match) return 0;
-  return (parseInt(match[1] || '0') * 3600) + (parseInt(match[2] || '0') * 60) + parseInt(match[3] || '0');
-}
