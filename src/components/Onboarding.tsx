@@ -27,7 +27,7 @@ export default function Onboarding() {
   const [videoSelected, setVideoSelected] = useState<string[]>([]);
   const [languagesSelected, setLanguagesSelected] = useState<string[]>(['english']);
   const [languageSearch, setLanguageSearch] = useState('');
-  
+
   const setInterests = useUserStore((state) => state.setInterests);
   const setVideoGenres = useUserStore((state) => state.setVideoGenres);
   const setPreferredLanguages = useUserStore((state) => state.setPreferredLanguages);
@@ -84,7 +84,7 @@ export default function Onboarding() {
     }
   };
 
-  const filteredLanguages = ALL_LANGUAGES.filter(lang => 
+  const filteredLanguages = ALL_LANGUAGES.filter(lang =>
     lang.label.toLowerCase().includes(languageSearch.toLowerCase())
   );
 
@@ -93,10 +93,10 @@ export default function Onboarding() {
       {step === 0 && (
         <div className="max-w-2xl w-full text-left space-y-10 animate-in fade-in slide-in-from-left-8 duration-1000">
           <div className="space-y-1">
-            <p className={`font-black uppercase tracking-[0.4em] text-xs ${darkMode ? 'text-accent-secondary' : 'text-accent'}`}>Welcome to</p>
+            <p className={`font-black uppercase tracking-[0.4em] text-xs text-accent`}>Welcome to</p>
             <h1 className="text-7xl md:text-8xl font-black tracking-tighter text-foreground leading-[0.9]">WaitLess.</h1>
           </div>
-          
+
           <p className="text-foreground/60 text-xl font-medium leading-relaxed max-w-md">
             Turn life's friction into focused productivity. Reclaim your waiting time with curated learning and activities.
           </p>
@@ -104,20 +104,20 @@ export default function Onboarding() {
           <div className="space-y-4 pt-4">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/40">Choose your theme</p>
             <div className="flex gap-4 max-w-md">
-              <button 
+              <button
                 onClick={() => setDarkMode(false)}
-                className={`flex-1 p-6 rounded-[2rem] border-2 transition-all text-left group ${!darkMode ? 'border-accent bg-accent/5' : 'border-transparent bg-card shadow-neo-out hover:border-accent/20'}`}
+                className={`flex-1 p-6 rounded-[2rem] border-2 transition-all text-left group ${!darkMode ? 'border-accent bg-accent/5' : 'border-transparent bg-accent-secondary/5 shadow-neo-out hover:border-accent/20'}`}
               >
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors ${!darkMode ? 'bg-accent text-white' : 'bg-foreground/5 text-foreground/40'}`}>
                   <Sun size={20} />
                 </div>
                 <span className="font-black uppercase tracking-widest text-xs">Light</span>
               </button>
-              <button 
+              <button
                 onClick={() => setDarkMode(true)}
-                className={`flex-1 p-6 rounded-[2rem] border-2 transition-all text-left group ${darkMode ? 'border-accent-secondary bg-accent-secondary/5' : 'border-transparent bg-card shadow-neo-out hover:border-accent/20'}`}
+                className={`flex-1 p-6 rounded-[2rem] border-2 transition-all text-left group ${darkMode ? 'border-accent bg-accent/5' : 'border-transparent bg-accent-secondary/5 shadow-neo-out hover:border-accent/20'}`}
               >
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors ${darkMode ? 'bg-accent-secondary text-white' : 'bg-foreground/5 text-foreground/40'}`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors ${darkMode ? 'bg-accent text-white' : 'bg-foreground/5 text-foreground/40'}`}>
                   <Moon size={20} />
                 </div>
                 <span className="font-black uppercase tracking-widest text-xs">Dark</span>
@@ -128,7 +128,7 @@ export default function Onboarding() {
           <div className="pt-2">
             <Button
               onClick={() => setStep(1)}
-              variant={darkMode ? 'secondary' : 'primary'}
+              variant="primary"
               className="max-w-md w-full py-6 shadow-lg active:scale-95 transition-all rounded-[2rem] flex items-center justify-center gap-4 group"
             >
               <span className="text-4xl font-black tracking-tighter">
@@ -158,7 +158,7 @@ export default function Onboarding() {
                   key={interest.id}
                   onClick={() => toggleInterest(interest.id)}
                   className={`flex flex-col items-center justify-center py-8 rounded-3xl transition-all cursor-pointer ${isSelected
-                    ? `shadow-neo-in ${darkMode ? 'text-accent-secondary' : 'text-accent'} scale-95`
+                    ? `shadow-neo-in text-accent scale-95`
                     : 'shadow-neo-out text-foreground/60 hover:scale-[1.02]'
                     }`}
                 >
@@ -172,14 +172,14 @@ export default function Onboarding() {
           <div className="pt-8 flex gap-4">
             <Button
               onClick={() => setStep(0)}
-              className={`py-5 px-8 font-black shadow-lg bg-card border border-accent/10 hover:bg-accent/5 ${darkMode ? '!text-accent-secondary' : '!text-accent'}`}
+              className={`py-5 px-8 font-black shadow-lg bg-background border border-accent/10 hover:bg-accent/5 !text-accent`}
             >
               Back
             </Button>
             <Button
               onClick={handleNext}
               disabled={selected.length < 2}
-              variant={darkMode ? 'secondary' : 'primary'}
+              variant="primary"
               className={`flex-1 py-5 text-xl font-black shadow-neo-out ${selected.length < 2 ? 'opacity-50' : 'active:shadow-neo-in active:scale-95'}`}
             >
               {selected.length < 2
@@ -208,7 +208,7 @@ export default function Onboarding() {
                   key={genre.id}
                   onClick={() => toggleVideoGenre(genre.id)}
                   className={`flex flex-col items-center justify-center py-8 rounded-3xl transition-all cursor-pointer ${isSelected
-                    ? `shadow-neo-in ${darkMode ? 'text-accent-secondary' : 'text-accent'} scale-95`
+                    ? `shadow-neo-in text-accent scale-95`
                     : 'shadow-neo-out text-foreground/60 hover:scale-[1.02]'
                     }`}
                 >
@@ -222,14 +222,14 @@ export default function Onboarding() {
           <div className="pt-8 flex gap-4">
             <Button
               onClick={() => setStep(1)}
-              className={`py-5 px-8 font-black shadow-lg bg-card border border-accent/10 hover:bg-accent/5 ${darkMode ? '!text-accent-secondary' : '!text-accent'}`}
+              className={`py-5 px-8 font-black shadow-lg bg-background border border-accent/10 hover:bg-accent/5 !text-accent`}
             >
               Back
             </Button>
             <Button
               onClick={handleNext}
               disabled={videoSelected.length < 1}
-              variant={darkMode ? 'secondary' : 'primary'}
+              variant="primary"
               className={`flex-1 py-5 text-xl font-black shadow-neo-out ${videoSelected.length < 1 ? 'opacity-50' : 'active:shadow-neo-in active:scale-95'}`}
             >
               Next Step
@@ -249,8 +249,8 @@ export default function Onboarding() {
 
           <div className="relative group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-accent transition-colors" size={20} />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search languages..."
               value={languageSearch}
               onChange={(e) => setLanguageSearch(e.target.value)}
@@ -263,7 +263,7 @@ export default function Onboarding() {
               {languagesSelected.map(id => {
                 const lang = ALL_LANGUAGES.find(l => l.id === id);
                 return (
-                  <div key={id} className={`px-4 py-2 ${darkMode ? 'bg-accent-secondary/10 text-accent-secondary' : 'bg-accent/10 text-accent'} rounded-full text-xs font-black flex items-center gap-2 animate-in zoom-in duration-300`}>
+                  <div key={id} className={`px-4 py-2 bg-accent/10 text-accent rounded-full text-xs font-black flex items-center gap-2 animate-in zoom-in duration-300`}>
                     {lang?.label}
                     <XIcon size={14} className="cursor-pointer" onClick={() => toggleLanguage(id)} />
                   </div>
@@ -281,7 +281,7 @@ export default function Onboarding() {
                     key={lang.id}
                     onClick={() => toggleLanguage(lang.id)}
                     className={`flex items-center justify-between p-4 rounded-2xl transition-all cursor-pointer ${isSelected
-                      ? `${darkMode ? 'bg-accent-secondary' : 'bg-accent'} text-white scale-[0.98]`
+                      ? `bg-accent text-white scale-[0.98]`
                       : 'hover:bg-foreground/5 text-foreground/60'
                       }`}
                   >
@@ -298,14 +298,14 @@ export default function Onboarding() {
           <div className="pt-4 flex gap-4">
             <Button
               onClick={() => setStep(2)}
-              className={`py-5 px-8 font-black shadow-lg bg-card border border-accent/10 hover:bg-accent/5 ${darkMode ? '!text-accent-secondary' : '!text-accent'}`}
+              className={`py-5 px-8 font-black shadow-lg bg-background border border-accent/10 hover:bg-accent/5 !text-accent`}
             >
               Back
             </Button>
             <Button
               onClick={handleFinish}
               disabled={languagesSelected.length < 1}
-              variant={darkMode ? 'secondary' : 'primary'}
+              variant="primary"
               className={`flex-1 py-5 text-xl font-black shadow-neo-out ${languagesSelected.length < 1 ? 'opacity-50' : 'active:shadow-neo-in active:scale-95'}`}
             >
               {languagesSelected.length < 1 ? "Select at least 1" : "Let's Go"}
