@@ -1,62 +1,25 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import { Button } from '@/components/ui/Button';
+import { ArrowLeft } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[var(--background)] p-6 text-center">
-      {/* Background Glows */}
-      <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-[600px] h-[600px] bg-accent-secondary/10 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="relative z-10 flex max-w-2xl flex-col items-center bg-card/30 backdrop-blur-xl border border-white/10 p-12 rounded-[3rem] shadow-2xl">
-        {/* Illustration Container */}
-        <div className="relative mb-8 aspect-square w-full max-w-[400px] animate-float drop-shadow-2xl">
-          <Image
-            src="/404-bg.png"
-            alt="404 Not Found Illustration"
-            fill
-            className="object-contain"
-            priority
-          />
+    <main className="min-h-screen flex items-center justify-center bg-background p-6">
+      <div className="text-center space-y-8 max-w-md animate-in fade-in zoom-in duration-500">
+        <div className="space-y-2">
+          <h1 className="text-8xl font-black italic tracking-tighter text-accent/20">404</h1>
+          <h2 className="text-3xl font-black uppercase tracking-tight">Page Not Found</h2>
+          <p className="text-foreground/40 font-medium">
+            It looks like this path is a bit of a friction point itself. Let's get you back on track.
+          </p>
         </div>
 
-        <div className="space-y-8">
-          <div className="space-y-3">
-            <h1 className="text-5xl font-black tracking-tight text-foreground sm:text-6xl">
-              Lost in the Abyss?
-            </h1>
-            <p className="mx-auto max-w-[450px] text-lg text-foreground/70 leading-relaxed">
-              We couldn't find the page you're looking for. It might have drifted away into the digital void.
-            </p>
-          </div>
-
-          <div className="flex flex-col items-center justify-center gap-6 pt-4 sm:flex-row">
-            <Link href="/" passHref>
-              <Button 
-                size="lg" 
-                className="group relative px-12 py-8 text-xl rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-xl shadow-accent/30 bg-accent text-white"
-              >
-                <span>Return Home</span>
-              </Button>
-            </Link>
-            
-            <Link href="/dashboard" passHref>
-              <Button 
-                variant="outline"
-                size="lg" 
-                className="px-12 py-8 text-xl rounded-2xl transition-all hover:bg-foreground/5 border-foreground/10 text-foreground/80"
-              >
-                Dashboard
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Subtle 404 text background */}
-        <span className="absolute -top-24 left-1/2 -translate-x-1/2 text-[18rem] font-bold text-foreground/[0.02] select-none pointer-events-none -z-10">
-          404
-        </span>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-3 px-8 py-4 bg-card rounded-2xl shadow-neo-out hover:shadow-neo-in hover:scale-95 active:scale-90 transition-all group border border-white/5"
+        >
+          <ArrowLeft className="w-5 h-5 text-accent group-hover:-translate-x-1 transition-transform" />
+          <span className="font-black uppercase tracking-widest text-sm">Return Home</span>
+        </Link>
       </div>
     </main>
   );
