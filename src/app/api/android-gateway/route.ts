@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { generateQuotes } from '@/app/quotes/actions';
 import { getRecommendedVideos } from '@/app/recreation/actions';
 import { generateCrossword } from '@/app/games/crosswords/actions';
+import { generateConcepts, getPhilosophyFeedback } from '@/app/learn/philosophy/actions';
+import { generateScienceConcepts, getScienceFeedback } from '@/app/learn/science/actions';
+import { generateChallenge } from '@/app/activities/challenges/actions';
 
 export async function POST(request: Request) {
   try {
@@ -11,17 +14,54 @@ export async function POST(request: Request) {
 
     switch (action) {
       case 'generateQuotes':
-        const quotesResult = await generateQuotes();
-        return NextResponse.json(quotesResult);
+        return NextResponse.json(await generateQuotes());
 
       case 'getRecommendedVideos':
-        const { interests, videoGenres, context, history, preferredLanguages } = payload;
-        const videosResult = await getRecommendedVideos(interests, videoGenres, context, history, preferredLanguages);
-        return NextResponse.json(videosResult);
+        return NextResponse.json(await getRecommendedVideos(
+          payload.interests, 
+          payload.videoGenres, 
+          payload.context, 
+          payload.history, 
+          payload.preferredLanguages
+        ));
 
       case 'generateCrossword':
-        const crosswordResult = await generateCrossword();
-        return NextResponse.json(crosswordResult);
+        return NextResponse.json(await generateCrossword());
+
+      case 'generateConcepts':
+        return NextResponse.json(await generateConcepts(payload.interests, payload.exclude));
+
+      case 'getPhilosophyFeedback':
+        return NextResponse.json(await getPhilosophyFeedback(
+          payload.conceptName, 
+          payload.conceptText, 
+          payload.question, 
+          payload.userAnswer
+        ));
+
+      case 'generateScienceConcepts':
+        return NextResponse.json(await generateScienceConcepts(payload.interests, payload.exclude));
+
+      case 'getScienceFeedback':
+        return NextResponse.json(await getScienceFeedback(
+          payload.conceptName, 
+          payload.conceptText, 
+          payload.question, 
+          payload.userAnswer
+        ));
+
+      case 'generateChallenge':
+        return NextResponse.json(await generateChallenge(payload.context, payload.previousChallenges));
+
+      // Placeholder handlers for non-existent actions to keep the gateway "ready"
+      case 'getChallengeFeedback':
+        return NextResponse.json({ success: false, feedback: "Feedback system coming soon." });
+      
+      case 'generatePhilosophyLesson':
+        return NextResponse.json({ success: false, error: "Lesson generation coming soon." });
+      
+      case 'generateScienceLesson':
+        return NextResponse.json({ success: false, error: "Lesson generation coming soon." });
 
       default:
         return NextResponse.json({ error: `Unknown action: ${action}` }, { status: 400 });
@@ -32,5 +72,4 @@ export async function POST(request: Request) {
   }
 }
 
-// Ensure this route is not cached
 export const dynamic = 'force-dynamic';
