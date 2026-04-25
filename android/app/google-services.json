@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1028176432829",
+    "project_id": "waitless-friction",
+    "storage_bucket": "waitless-friction.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028176432829:android:cf368625f667d24a61f1d4",
+        "android_client_info": {
+          "package_name": "com.waitless.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1028176432829-m99gqfbpdd453s6n4pevgptkeqo0ac6h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.waitless.app",
+            "certificate_hash": "4ce16961581e49edd0ecb506a09d6c7b7a50fc8d"
+          }
+        },
+        {
+          "client_id": "1028176432829-ui4qb6gvan6g6te7l4qg8l49dtcr4lu0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAI1FNxQdE1HJxWdof2zAHX6uPvQDsHEjg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1028176432829-ui4qb6gvan6g6te7l4qg8l49dtcr4lu0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
