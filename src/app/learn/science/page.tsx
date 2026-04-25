@@ -36,10 +36,6 @@ export default function ScienceModule() {
 
   React.useEffect(() => {
     setMounted(true);
-    const state = useUserStore.getState();
-    const completed = state.completedScienceConcepts || [];
-    const allConcepts = [...concepts, ...(state.customScienceConcepts || [])];
-    setSessionConcepts(allConcepts.filter(c => !completed.includes(c.concept_name)));
   }, []);
 
   const lessonData = useMemo(() => {
@@ -126,6 +122,11 @@ export default function ScienceModule() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <button
               onClick={() => {
+                const state = useUserStore.getState();
+                const completed = state.completedScienceConcepts || [];
+                const allConcepts = [...concepts, ...(state.customScienceConcepts || [])];
+                setSessionConcepts(allConcepts.filter(c => !completed.includes(c.concept_name)));
+                
                 setCurrentIndex(0);
                 setCurrentSessionMCQs([]);
                 setViewMode('learn');
@@ -138,7 +139,7 @@ export default function ScienceModule() {
                 </div>
                 <div>
                   <h2 className="text-3xl font-black mb-2">Start Discovery</h2>
-                  <p className="text-foreground/60 font-bold">Explore 10 scientific concepts tailored to your interests.</p>
+                  <p className="text-foreground/60 font-bold">Explore 3 scientific concepts tailored to your interests.</p>
                 </div>
               </div>
             </button>
@@ -280,7 +281,7 @@ export default function ScienceModule() {
           </h1>
           <p className="text-foreground/70 text-lg font-medium max-w-md">
             {isGenerating
-              ? "Our AI is analyzing the scientific landscape to bring you 5 brand new discoveries."
+              ? "Our AI is analyzing the scientific landscape to bring you 3 brand new discoveries."
               : "You've explored every concept in our current lab. You're a true scientific pioneer!"}
           </p>
           {error && <p className="text-red-500 font-bold mt-4">{error}</p>}

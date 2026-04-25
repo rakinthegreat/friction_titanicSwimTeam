@@ -3,7 +3,7 @@
 import OpenAI from 'openai';
 
 const SYSTEM_PROMPT = `You are an expert philosophy curator for an educational app.
-Your task is to generate exactly 5 new, unique, and advanced philosophical concepts.
+Your task is to generate exactly 3 new, unique, and advanced philosophical concepts.
 
 IMPORTANT REQUIREMENTS:
 1. Return ONLY a valid JSON array.
@@ -50,7 +50,7 @@ const client = new OpenAI({
 export async function generateConcepts(interests: string[] = [], exclude: string[] = []) {
   try {
     console.log("Generating philosophy concepts...");
-    let userPrompt = "Generate 5 advanced philosophical concepts.";
+    let userPrompt = "Generate 3 advanced philosophical concepts.";
     if (interests && interests.length > 0) {
       userPrompt += ` Try to relate some of the concepts to these user interests if possible: ${interests.join(', ')}. However, prioritize deep, classic philosophical concepts over forced relations.`;
     }
@@ -96,7 +96,7 @@ export async function generateConcepts(interests: string[] = [], exclude: string
         throw new Error('Parsed data is not an array.');
       }
 
-      return { success: true, concepts: concepts.slice(0, 5) };
+      return { success: true, concepts: concepts.slice(0, 3) };
     } catch (parseError) {
       console.error("JSON Parse Error:", fullContent);
       throw new Error("Failed to parse AI response as valid JSON.");

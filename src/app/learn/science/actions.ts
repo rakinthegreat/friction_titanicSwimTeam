@@ -3,7 +3,7 @@
 import OpenAI from 'openai';
 
 const SYSTEM_PROMPT = `You are an expert science curator for an educational app.
-Your task is to generate exactly 5 new, unique, and advanced scientific concepts across various fields (Physics, Biology, Chemistry, Astronomy, etc.).
+Your task is to generate exactly 3 new, unique, and advanced scientific concepts across various fields (Physics, Biology, Chemistry, Astronomy, etc.).
 
 IMPORTANT REQUIREMENTS:
 1. Return ONLY a valid JSON array.
@@ -50,7 +50,7 @@ const client = new OpenAI({
 export async function generateScienceConcepts(interests: string[] = [], exclude: string[] = []) {
     try {
         console.log("Generating science concepts...");
-        let userPrompt = "Generate 5 advanced scientific concepts.";
+        let userPrompt = "Generate 3 advanced scientific concepts.";
         if (interests && interests.length > 0) {
             userPrompt += ` Try to relate some of the concepts to these user interests if possible: ${interests.join(', ')}. However, prioritize deep, fascinating science over forced relations.`;
         }
@@ -96,7 +96,7 @@ export async function generateScienceConcepts(interests: string[] = [], exclude:
               throw new Error('Parsed data is not an array.');
           }
 
-          return { success: true, concepts: concepts.slice(0, 5) };
+          return { success: true, concepts: concepts.slice(0, 3) };
         } catch (parseError) {
           console.error("JSON Parse Error:", fullContent);
           throw new Error("Failed to parse AI response as valid JSON.");
