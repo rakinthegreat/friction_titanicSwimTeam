@@ -22,6 +22,11 @@ export const NotificationInitializer = () => {
     NotificationService.requestPermission().catch(console.error);
   }, []);
 
+  // Native background scheduling
+  useEffect(() => {
+    NotificationService.scheduleFrictionNotifications(frictionPoints);
+  }, [frictionPoints]);
+
   useEffect(() => {
     const check = () => {
       const now = new Date();

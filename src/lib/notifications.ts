@@ -1,5 +1,6 @@
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Capacitor } from '@capacitor/core';
+import { FrictionPoint } from '@/store/userStore';
 
 /**
  * General-purpose notification service.
@@ -24,7 +25,7 @@ export const NotificationService = {
           await LocalNotifications.createChannel({ id: 'general', name: 'General', importance: 4 });
         }
         await LocalNotifications.schedule({
-          notifications: [{ title, body, id: Date.now(), channelId: 'general', schedule: { at: new Date(Date.now() + 100) } }]
+          notifications: [{ title, body, id: Math.floor(Math.random() * 1000000), channelId: 'general', schedule: { at: new Date(Date.now() + 100) } }]
         });
       } else {
         // Web: try browser Notification API
@@ -36,4 +37,66 @@ export const NotificationService = {
       console.error('Notification failed', e);
     }
   },
+
+  scheduleFrictionNotifications: async (points: FrictionPoint[]) => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    try {
+      // 1. Cancel all previous notifications to avoid duplicates
+      const pending = await LocalNotifications.getPending();
+      if (pending.notifications.length > 0) {
+        await LocalNotifications.cancel(pending);
+      }
+
+      const notifications: any[] = [];
+      let idCounter = 1;
+
+      points.forEach(point => {
+        const [startH, startM] = point.startTime.split(':').map(Number);
+        const [endH, endM] = point.endTime.split(':').map(Number);
+
+        point.days.forEach(day => {
+          // Capacitor weekday: 1 (Sun) to 7 (Sat)
+          // Our day: 0 (Sun) to 6 (Sat)
+          const capacitorDay = day + 1;
+
+          // Start notification
+          notifications.push({
+            id: idCounter++,
+            title: `🕐 Friction time: ${point.label}`,
+            body: `Your "${point.label}" block just started — make the most of it!`,
+            channelId: 'general',
+            schedule: {
+              on: { weekday: capacitorDay, hour: startH, minute: startM },
+              repeats: true,
+              allowWhileIdle: true
+            }
+          });
+
+          // End notification
+          notifications.push({
+            id: idCounter++,
+            title: `✅ Friction time ending: ${point.label}`,
+            body: `Your "${point.label}" block is wrapping up. Great job staying productive!`,
+            channelId: 'general',
+            schedule: {
+              on: { weekday: capacitorDay, hour: endH, minute: endM },
+              repeats: true,
+              allowWhileIdle: true
+            }
+          });
+        });
+      });
+
+      if (notifications.length > 0) {
+        if (Capacitor.getPlatform() === 'android') {
+          await LocalNotifications.createChannel({ id: 'general', name: 'General', importance: 4 });
+        }
+        await LocalNotifications.schedule({ notifications });
+        console.log(`[NativeNotifications] Scheduled ${notifications.length} friction alerts.`);
+      }
+    } catch (e) {
+      console.error('Failed to schedule native notifications', e);
+    }
+  }
 };
