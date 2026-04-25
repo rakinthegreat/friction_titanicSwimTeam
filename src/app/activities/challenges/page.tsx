@@ -1,15 +1,18 @@
 'use client';
 
 import { useUserStore } from "@/store/userStore";
+import { BackButton } from "@/components/ui/BackButton";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ArrowLeft, MapPin, Accessibility, Timer, CheckCircle2, History, Send, Loader2, Sparkles, UserCircle, Zap } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { generateChallenge } from "./actions";
 
 type Step = 'context' | 'loading' | 'active' | 'reflect' | 'summary';
 
 export default function ChallengesPage() {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<Step>('context');
   const [location, setLocation] = useState('');
@@ -20,7 +23,7 @@ export default function ChallengesPage() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [reflection, setReflection] = useState('');
   const [isDoneDisabled, setIsDoneDisabled] = useState(true);
-  
+
   const addRealLifeChallenge = useUserStore(state => state.addRealLifeChallenge);
   const completeRealLifeChallenge = useUserStore(state => state.completeRealLifeChallenge);
   const history = useUserStore(state => state.realLifeChallenges);
@@ -38,15 +41,15 @@ export default function ChallengesPage() {
   const handleStartChallenge = async () => {
     if (!location || !posture) return;
     setStep('loading');
-    
+
     const result = await generateChallenge({ location, posture, vibe, energy }, history);
-    
+
     if (result.success && result.challenge) {
       const challengeData = result.challenge;
       setCurrentChallenge(challengeData);
       setTimeLeft(challengeData.estimatedTime);
       setIsDoneDisabled(true);
-      
+
       const id = addRealLifeChallenge({
         challenge: challengeData.challenge,
         context: { location, posture, vibe, energy },
@@ -88,10 +91,7 @@ export default function ChallengesPage() {
     <main className="min-h-screen p-8 max-w-4xl mx-auto space-y-12 animate-in fade-in duration-1000">
       <header className="flex justify-between items-start">
         <div className="space-y-2">
-          <Link href="/activities" className="inline-flex items-center text-accent hover:text-accent/80 font-medium uppercase tracking-widest text-sm transition-colors mb-2">
-            <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Activities
-          </Link>
+          <BackButton href="/" className="text-accent" />
           <h1 className="text-5xl font-extrabold tracking-tight">Real-Life <span className="text-accent italic">Challenge</span></h1>
           <p className="text-foreground/60 font-medium">Break the digital wall and interact with the world.</p>
         </div>
@@ -107,16 +107,15 @@ export default function ChallengesPage() {
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {[
-                  'Vehicle', 'Crowded Place', 'Open Space', 
-                  'Cafe / Shop', 'Waiting Room', 'Home', 
+                  'Vehicle', 'Crowded Place', 'Open Space',
+                  'Cafe / Shop', 'Waiting Room', 'Home',
                   'Work / Office', 'Nature / Park', 'Transit Hub'
                 ].map((loc) => (
                   <button
                     key={loc}
                     onClick={() => setLocation(loc)}
-                    className={`py-5 px-3 rounded-3xl font-black text-[10px] uppercase tracking-wider transition-all ${
-                      location === loc ? 'bg-accent text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
-                    }`}
+                    className={`py-5 px-3 rounded-3xl font-black text-[10px] uppercase tracking-wider transition-all ${location === loc ? 'bg-accent text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
+                      }`}
                   >
                     {loc}
                   </button>
@@ -133,9 +132,8 @@ export default function ChallengesPage() {
                   <button
                     key={p}
                     onClick={() => setPosture(p)}
-                    className={`py-6 px-4 rounded-3xl font-black text-sm uppercase tracking-wider transition-all ${
-                      posture === p ? 'bg-accent-secondary text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
-                    }`}
+                    className={`py-6 px-4 rounded-3xl font-black text-sm uppercase tracking-wider transition-all ${posture === p ? 'bg-accent-secondary text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
+                      }`}
                   >
                     {p}
                   </button>
@@ -153,9 +151,8 @@ export default function ChallengesPage() {
                     <button
                       key={v}
                       onClick={() => setVibe(v)}
-                      className={`py-4 px-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all ${
-                        vibe === v ? 'bg-accent text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
-                      }`}
+                      className={`py-4 px-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all ${vibe === v ? 'bg-accent text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
+                        }`}
                     >
                       {v}
                     </button>
@@ -172,9 +169,8 @@ export default function ChallengesPage() {
                     <button
                       key={e}
                       onClick={() => setEnergy(e)}
-                      className={`py-4 px-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all ${
-                        energy === e ? 'bg-accent-secondary text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
-                      }`}
+                      className={`py-4 px-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all ${energy === e ? 'bg-accent-secondary text-white shadow-neo-in' : 'bg-background text-foreground/40 shadow-neo-out hover:scale-105'
+                        }`}
                     >
                       {e}
                     </button>
@@ -238,11 +234,10 @@ export default function ChallengesPage() {
             <button
               onClick={handleComplete}
               disabled={isDoneDisabled}
-              className={`w-full py-6 rounded-3xl font-black text-xl shadow-neo-out transition-all ${
-                isDoneDisabled 
-                ? 'bg-background text-foreground/20 grayscale cursor-not-allowed' 
-                : 'bg-green-500 text-white hover:scale-[1.02] active:scale-95'
-              }`}
+              className={`w-full py-6 rounded-3xl font-black text-xl shadow-neo-out transition-all ${isDoneDisabled
+                  ? 'bg-background text-foreground/20 grayscale cursor-not-allowed'
+                  : 'bg-green-500 text-white hover:scale-[1.02] active:scale-95'
+                }`}
             >
               {isDoneDisabled ? 'STAY FOCUSED...' : 'DONE!'}
             </button>
@@ -257,7 +252,7 @@ export default function ChallengesPage() {
               </h2>
               <p className="text-foreground/60 font-medium text-lg">How did it feel? (Optional log for your history)</p>
             </div>
-            
+
             <textarea
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
@@ -276,8 +271,12 @@ export default function ChallengesPage() {
         )}
 
         {step === 'summary' && (
-          <div className="py-10 flex flex-col items-center justify-center space-y-8 animate-in zoom-in duration-500 text-center">
-            <div className="w-24 h-24 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center">
+          <div className="w-full max-w-2xl bg-[#0f0f0f] rounded-[3rem] p-12 text-center space-y-10 shadow-2xl relative border border-white/5 overflow-hidden animate-in zoom-in duration-700">
+            <div className="absolute top-6 left-6">
+              <BackButton href="/" className="text-accent" />
+            </div>
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-accent/10 rounded-full blur-[80px]" />
+            <div className="w-24 h-24 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto">
               <CheckCircle2 size={48} />
             </div>
             <div className="space-y-2">
@@ -286,19 +285,13 @@ export default function ChallengesPage() {
                 You've successfully reclaimed a moment from the digital world.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 w-full">
+            <div className="flex flex-col sm:flex-row gap-6">
               <button
-                onClick={() => setStep('context')}
-                className="flex-1 py-5 bg-background text-accent rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all"
+                onClick={resetChallenge}
+                className="w-full py-5 bg-card text-foreground/50 rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest"
               >
                 ANOTHER ONE?
               </button>
-              <Link
-                href="/activities"
-                className="flex-1 py-5 bg-accent text-white rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center"
-              >
-                FINISH SESSION
-              </Link>
             </div>
           </div>
         )}

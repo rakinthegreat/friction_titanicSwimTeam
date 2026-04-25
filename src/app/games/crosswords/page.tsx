@@ -7,6 +7,7 @@ import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, HelpCircle } from 'lucide-react';
 import { GameTutorial } from '@/components/games/GameTutorial';
+import { BackButton } from '@/components/ui/BackButton';
 
 const TUTORIAL_STEPS = [
   "Tap a cell to focus it. Tap again to change direction (Across vs Down).",
@@ -30,22 +31,17 @@ export default function CrosswordsPage() {
 
   const handleComplete = (xp: number) => {
     updateStats(xp);
-    router.push('/games');
+    router.push('/');
   };
 
   return (
     <main className="min-h-screen bg-background p-6">
       <header className="max-w-xl mx-auto mb-8 flex items-center justify-between">
         <div className="flex items-center">
-          <button 
-            onClick={() => router.push('/games')}
-            className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent transition-all active:scale-95"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
+          <BackButton href="/" className="text-accent" />
           <h1 className="text-2xl font-bold tracking-tight italic uppercase ml-4">Crosswords</h1>
         </div>
-        <button 
+        <button
           onClick={() => setIsTutorialOpen(true)}
           className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent transition-all active:scale-95"
         >
@@ -53,7 +49,7 @@ export default function CrosswordsPage() {
         </button>
       </header>
 
-      <GameTutorial 
+      <GameTutorial
         title="Crosswords"
         steps={TUTORIAL_STEPS}
         isOpen={isTutorialOpen}

@@ -131,7 +131,7 @@ export const ACTIVITIES: ActivityDefinition[] = [
     icon: BookOpen,
     color: 'text-accent',
     minTime: 3,
-    maxTime: 15,
+    maxTime: 30,
     interests: ['languages'],
     scalable: true
   },
@@ -157,7 +157,7 @@ export const ACTIVITIES: ActivityDefinition[] = [
     icon: FlaskConical,
     color: 'text-accent',
     minTime: 5,
-    maxTime: 25,
+    maxTime: 30,
     interests: ['science', 'tech'],
     scalable: true
   },
@@ -170,7 +170,7 @@ export const ACTIVITIES: ActivityDefinition[] = [
     icon: HelpCircle,
     color: 'text-accent',
     minTime: 5,
-    maxTime: 10,
+    maxTime: 30,
     interests: ['history', 'tech', 'science', 'philosophy'],
   },
   // LIFE

@@ -4,8 +4,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useUserStore } from '@/store/userStore';
-import { 
-  ArrowLeft, RotateCcw, 
+import {
+  ArrowLeft, RotateCcw,
   Laptop, Cpu, Smartphone, Radio,
   History, Landmark, Shield, Scroll,
   Puzzle, Lightbulb, Dna, Binary,
@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { GameTutorial } from '@/components/games/GameTutorial';
+import { BackButton } from '@/components/ui/BackButton';
 
 const TUTORIAL_STEPS = [
   "Tap a card to flip it and reveal its hidden icon.",
@@ -180,7 +181,7 @@ export default function MemoryMatchPage() {
           if (matchedBoard.every(c => c.isMatched) && !gameEnded.current) {
             setIsWon(true);
             updateStats(10, 'memory-match');
-            
+
             gameEnded.current = true;
             const timeSpent = (Date.now() - startTime.current) / 1000;
             recordGameResult('memory-match', 'win', timeSpent);
@@ -204,16 +205,10 @@ export default function MemoryMatchPage() {
     <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center">
-          <button 
-            onClick={() => router.push('/games')}
-            className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent transition-all active:scale-95"
-            aria-label="Back to games"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
+          <BackButton href="/" className="text-accent" />
           <h1 className="text-2xl font-bold ml-4">Memory Match</h1>
         </div>
-        <button 
+        <button
           onClick={() => setIsTutorialOpen(true)}
           className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent transition-all active:scale-95"
         >
@@ -221,14 +216,19 @@ export default function MemoryMatchPage() {
         </button>
       </div>
 
-      <GameTutorial 
+      <GameTutorial
         title="Memory Match"
         steps={TUTORIAL_STEPS}
         isOpen={isTutorialOpen}
         onClose={() => setIsTutorialOpen(false)}
       />
 
-      <Card className="flex flex-col items-center justify-start p-6 sm:p-8">
+      <Card className="flex flex-col items-center justify-start p-6 sm:p-8 relative">
+        {isWon && (
+          <div className="absolute top-4 left-4">
+            <BackButton href="/" className="text-accent" />
+          </div>
+        )}
         <div className="w-full grid grid-cols-3 items-center mb-8 px-2">
           <div className="text-sm font-bold uppercase tracking-widest text-foreground/40 text-left">
             Moves: <span className="text-foreground">{moves}</span>
@@ -274,7 +274,7 @@ export default function MemoryMatchPage() {
           })}
         </div>
 
-        <Button 
+        <Button
           variant={isWon ? "primary" : "outline"}
           onClick={initGame}
           className="w-full max-w-[200px]"

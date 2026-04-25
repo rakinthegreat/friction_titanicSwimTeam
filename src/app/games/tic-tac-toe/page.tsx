@@ -7,6 +7,7 @@ import { ArrowLeft, RotateCcw, HelpCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { GameTutorial } from '@/components/games/GameTutorial';
+import { BackButton } from '@/components/ui/BackButton';
 
 const TUTORIAL_STEPS = [
   "Tap an empty square to place your 'X'.",
@@ -41,7 +42,7 @@ export default function TicTacToePage() {
       setIsTutorialOpen(true);
       localStorage.setItem('tutorial-tictactoe', 'true');
     }
-    
+
     // Start game on mount
     recordGameStart('tictactoe');
     startTime.current = Date.now();
@@ -72,10 +73,10 @@ export default function TicTacToePage() {
       [0, 4, 8], [2, 4, 6]
     ];
     for (let i = 0; i < lines.length; i++) {
-        const [a, b, c] = lines[i];
-        if (board[a] === player && board[b] === player && board[c] === null) return c;
-        if (board[a] === player && board[c] === player && board[b] === null) return b;
-        if (board[b] === player && board[c] === player && board[a] === null) return a;
+      const [a, b, c] = lines[i];
+      if (board[a] === player && board[b] === player && board[c] === null) return c;
+      if (board[a] === player && board[c] === player && board[b] === null) return b;
+      if (board[b] === player && board[c] === player && board[a] === null) return a;
     }
     return null;
   }
@@ -83,12 +84,12 @@ export default function TicTacToePage() {
   const makeAIMove = () => {
     // 1. Try to win
     let move = findWinningMove('O');
-    
+
     // 2. Block 'X' from winning
     if (move === null) {
       move = findWinningMove('X');
     }
-    
+
     // 3. Pick random empty square
     if (move === null) {
       const emptyIndices = board.map((val, idx) => val === null ? idx : null).filter(val => val !== null) as number[];
@@ -124,14 +125,14 @@ export default function TicTacToePage() {
     const newBoard = [...board];
     newBoard[index] = isXNext ? 'X' : 'O';
     setBoard(newBoard);
-    
+
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
       setWinner(newWinner);
       if (newWinner === 'X') {
         updateStats(5, 'tictactoe');
       }
-      
+
       if (!gameEnded.current) {
         gameEnded.current = true;
         const timeSpent = (Date.now() - startTime.current) / 1000;
@@ -162,16 +163,10 @@ export default function TicTacToePage() {
     <div className="min-h-screen p-6 flex flex-col max-w-md mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center">
-          <button 
-            onClick={() => router.push('/games')}
-            className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent transition-all active:scale-95"
-            aria-label="Back to games"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
+          <BackButton href="/" className="text-accent" />
           <h1 className="text-2xl font-bold ml-4">Tic-Tac-Toe</h1>
         </div>
-        <button 
+        <button
           onClick={() => setIsTutorialOpen(true)}
           className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent transition-all active:scale-95"
         >
@@ -179,23 +174,28 @@ export default function TicTacToePage() {
         </button>
       </div>
 
-      <GameTutorial 
+      <GameTutorial
         title="Tic-Tac-Toe"
         steps={TUTORIAL_STEPS}
         isOpen={isTutorialOpen}
         onClose={() => setIsTutorialOpen(false)}
       />
 
-      <Card className="flex flex-col items-center justify-start p-6 sm:p-8">
+      <Card className="flex flex-col items-center justify-start p-6 sm:p-8 relative">
+        {winner && (
+          <div className="absolute top-4 left-4">
+            <BackButton href="/" className="text-accent" />
+          </div>
+        )}
         <div className="mb-8 text-2xl font-black min-h-[40px] flex items-center justify-center">
           <div className={`transition-all duration-300 ${winner ? 'scale-125 text-accent animate-bounce' : 'text-foreground/40 text-sm uppercase tracking-widest'}`}>
-            {winner === 'Draw' 
-              ? "IT'S A DRAW!" 
+            {winner === 'Draw'
+              ? "IT'S A DRAW!"
               : winner === 'X'
                 ? "YOU WON!"
                 : winner === 'O'
                   ? "AI WON!"
-                : `Your Turn: ${isXNext ? 'X' : 'O'}`}
+                  : `Your Turn: ${isXNext ? 'X' : 'O'}`}
           </div>
         </div>
 
@@ -221,7 +221,7 @@ export default function TicTacToePage() {
           ))}
         </div>
 
-        <Button 
+        <Button
           variant={winner ? "primary" : "outline"}
           onClick={resetGame}
           className="w-full max-w-[200px]"

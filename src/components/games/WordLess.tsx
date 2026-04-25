@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/Button';
 import { PartyPopper, Heart, Delete } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
+import { BackButton } from '@/components/ui/BackButton';
 
 interface WordLessProps {
   onComplete: (xp: number) => void;
@@ -193,7 +194,12 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
   };
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-500 w-full max-w-sm mx-auto">
+    <div className="flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-500 w-full max-w-sm mx-auto relative">
+      {status !== 'playing' && (
+        <div className="absolute -top-16 -left-8">
+          <BackButton href="/" className="text-accent" />
+        </div>
+      )}
       <div className="text-center space-y-2">
         <h2 className="text-3xl font-black italic tracking-tighter">WordLess</h2>
         <p className="text-foreground/40 font-bold uppercase tracking-[0.2em] text-[10px]">Guess the {WORD_LENGTH}-letter word</p>

@@ -7,6 +7,7 @@ import { Trophy, RefreshCw, ArrowLeft, ChevronUp, ChevronDown, ChevronLeft, Chev
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { GameTutorial } from '@/components/games/GameTutorial';
+import { BackButton } from '@/components/ui/BackButton';
 
 const TUTORIAL_STEPS = [
   "Navigate through the maze to reach the trophy icon.",
@@ -33,7 +34,7 @@ export default function MazePage() {
   const startTime = useRef<number>(Date.now());
   const gameEnded = useRef<boolean>(false);
 
-  const calculateShortestPath = (grid: number[][], start: {x: number, y: number}, target: {x: number, y: number}, obstacleSet: Set<string>) => {
+  const calculateShortestPath = (grid: number[][], start: { x: number, y: number }, target: { x: number, y: number }, obstacleSet: Set<string>) => {
     const queue: [number, number, number][] = [[start.x, start.y, 0]];
     const visited = new Set<string>();
     visited.add(`${start.x},${start.y}`);
@@ -62,7 +63,7 @@ export default function MazePage() {
 
   const [won, setWon] = useState(false);
   const [moves, setMoves] = useState(0);
-  
+
   const dragStart = useRef<{ x: number, y: number } | null>(null);
   const isDragging = useRef(false);
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
@@ -105,13 +106,13 @@ export default function MazePage() {
         newMaze[ny][nx] = 0;
         newMaze[py][px] = 0;
         stack.push([nx, ny]);
-        
+
         // Add deep branches
         if (neighbors.length > 1 && Math.random() > 0.4) {
-           const [snx, sny, spx, spy] = neighbors[1];
-           newMaze[sny][snx] = 0;
-           newMaze[spy][spx] = 0;
-           stack.push([snx, sny]);
+          const [snx, sny, spx, spy] = neighbors[1];
+          newMaze[sny][snx] = 0;
+          newMaze[spy][spx] = 0;
+          stack.push([snx, sny]);
         }
       } else {
         stack.pop();
@@ -125,10 +126,10 @@ export default function MazePage() {
       const ry = Math.floor(Math.random() * (size - 2)) + 1;
       if (newMaze[ry][rx] === 1) {
         let corridors = 0;
-        if (newMaze[ry-1][rx] === 0) corridors++;
-        if (newMaze[ry+1][rx] === 0) corridors++;
-        if (newMaze[ry][rx-1] === 0) corridors++;
-        if (newMaze[ry][rx+1] === 0) corridors++;
+        if (newMaze[ry - 1][rx] === 0) corridors++;
+        if (newMaze[ry + 1][rx] === 0) corridors++;
+        if (newMaze[ry][rx - 1] === 0) corridors++;
+        if (newMaze[ry][rx + 1] === 0) corridors++;
         if (corridors >= 2) newMaze[ry][rx] = 0;
       }
     }
@@ -138,12 +139,12 @@ export default function MazePage() {
     for (let i = 0; i < 5; i++) {
       let dx = Math.floor(Math.random() * (size - 6)) + 3;
       let dy = Math.floor(Math.random() * (size - 6)) + 3;
-      
+
       if (newMaze[dy][dx] === 0) {
         // Find a direction that's currently a wall
-        const dirs = [[0,1], [0,-1], [1,0], [-1,0]];
+        const dirs = [[0, 1], [0, -1], [1, 0], [-1, 0]];
         const d = dirs[Math.floor(Math.random() * 4)];
-        
+
         // Carve 3-4 blocks deep in that direction
         for (let j = 1; j <= 4; j++) {
           const nx = dx + d[0] * j;
@@ -163,16 +164,16 @@ export default function MazePage() {
       attempts++;
       const ox = Math.floor(Math.random() * (size - 2)) + 1;
       const oy = Math.floor(Math.random() * (size - 2)) + 1;
-      
-      const isReserved = (Math.abs(ox - 1) <= 1 && Math.abs(oy - 1) <= 1) || 
-                         (Math.abs(ox - (size-2)) <= 1 && Math.abs(oy - (size-2)) <= 1);
-      
+
+      const isReserved = (Math.abs(ox - 1) <= 1 && Math.abs(oy - 1) <= 1) ||
+        (Math.abs(ox - (size - 2)) <= 1 && Math.abs(oy - (size - 2)) <= 1);
+
       if (newMaze[oy][ox] === 0 && !isReserved && !newObstacles.has(`${ox},${oy}`)) {
         // Validation: Ensure at least one path still exists
         const testObstacles = new Set(newObstacles);
         testObstacles.add(`${ox},${oy}`);
-        const testShortest = calculateShortestPath(newMaze, {x: 1, y: 1}, {x: size - 2, y: size - 2}, testObstacles);
-        
+        const testShortest = calculateShortestPath(newMaze, { x: 1, y: 1 }, { x: size - 2, y: size - 2 }, testObstacles);
+
         if (testShortest > 0) {
           newObstacles.add(`${ox},${oy}`);
           obstacleCount++;
@@ -180,7 +181,7 @@ export default function MazePage() {
       }
     }
 
-    const shortest = calculateShortestPath(newMaze, {x: 1, y: 1}, {x: size - 2, y: size - 2}, newObstacles);
+    const shortest = calculateShortestPath(newMaze, { x: 1, y: 1 }, { x: size - 2, y: size - 2 }, newObstacles);
     setMinMoves(shortest);
     setMaze(newMaze);
     setObstacles(newObstacles);
@@ -219,7 +220,7 @@ export default function MazePage() {
 
   const movePlayer = useCallback((dx: number, dy: number) => {
     if (won) return;
-    
+
     setPlayer((prev) => {
       const nx = prev.x + dx;
       const ny = prev.y + dy;
@@ -231,7 +232,7 @@ export default function MazePage() {
           setWon(true);
           updateStats(3);
           useUserStore.getState().completeActivity('maze');
-          
+
           gameEnded.current = true;
           const timeSpent = (Date.now() - startTime.current) / 1000;
           recordGameResult('maze', 'win', timeSpent);
@@ -256,10 +257,10 @@ export default function MazePage() {
 
     const dx = x - lastPos.current.x;
     const dy = y - lastPos.current.y;
-    
+
     // Calculate cell size roughly based on the maze container
     // We'll use a fixed threshold of ~15-20px for a responsive feel
-    const threshold = 18; 
+    const threshold = 18;
 
     if (Math.abs(dx) > threshold) {
       movePlayer(dx > 0 ? 1 : -1, 0);
@@ -290,11 +291,9 @@ export default function MazePage() {
   return (
     <main className="min-h-screen bg-background p-6 flex flex-col items-center select-none overflow-hidden touch-none">
       <header className="w-full max-w-md flex justify-between items-center mb-8">
-        <button onClick={() => router.push('/games')} className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent">
-          <ArrowLeft size={24} />
-        </button>
+        <BackButton href="/" className="text-accent" />
         <h1 className="text-2xl font-black italic tracking-tighter text-foreground/80">MAZE SOLVER</h1>
-        <button 
+        <button
           onClick={() => setIsTutorialOpen(true)}
           className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent"
         >
@@ -313,7 +312,7 @@ export default function MazePage() {
         </div>
       </div>
 
-      <GameTutorial 
+      <GameTutorial
         title="Maze Solver"
         steps={TUTORIAL_STEPS}
         isOpen={isTutorialOpen}
@@ -321,7 +320,7 @@ export default function MazePage() {
       />
 
       <div className="w-full max-w-md space-y-12">
-        <div 
+        <div
           className="relative group"
           onTouchStart={(e) => handleStart(e.touches[0].clientX, e.touches[0].clientY)}
           onTouchMove={(e) => handleMove(e.touches[0].clientX, e.touches[0].clientY)}
@@ -334,19 +333,18 @@ export default function MazePage() {
           <Card className="p-2 aspect-square flex items-center justify-center bg-foreground/5 border border-foreground/10 overflow-hidden shadow-none cursor-move transition-colors hover:bg-foreground/[0.07]">
             <div className={`grid w-full h-full gap-0`} style={{ gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))` }}>
               {maze.map((row, y) => row.map((cell, x) => (
-                <div 
-                  key={`${x}-${y}`} 
-                  className={`aspect-square transition-all duration-75 ${
-                    cell === 1 
-                      ? 'bg-foreground' 
-                      : (x === player.x && y === player.y) 
-                        ? 'bg-accent z-10 scale-100 ring-1 ring-accent/30' 
+                <div
+                  key={`${x}-${y}`}
+                  className={`aspect-square transition-all duration-75 ${cell === 1
+                      ? 'bg-foreground'
+                      : (x === player.x && y === player.y)
+                        ? 'bg-accent z-10 scale-100 ring-1 ring-accent/30'
                         : (x === goal.x && y === goal.y)
                           ? 'bg-accent-secondary animate-pulse ring-1 ring-accent-secondary/30'
                           : obstacles.has(`${x},${y}`)
                             ? 'bg-foreground/40 flex items-center justify-center'
                             : 'bg-transparent'
-                  }`}
+                    }`}
                 >
                   {obstacles.has(`${x},${y}`) && (
                     <div className="w-[45%] h-[45%] bg-foreground/60 rounded-sm rotate-45" />
@@ -355,18 +353,21 @@ export default function MazePage() {
               )))}
             </div>
           </Card>
-          
+
           {/* Overlay for feedback */}
           {won && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-background/80 backdrop-blur-md rounded-[2.5rem] animate-in fade-in zoom-in duration-500">
-              <div className="p-8 rounded-[3rem] bg-card shadow-neo-out flex flex-col items-center space-y-6 max-w-[85%] border border-white/10">
+              <div className="relative p-8 rounded-[3rem] bg-card shadow-neo-out flex flex-col items-center space-y-6 max-w-[85%] border border-white/10">
+                <div className="absolute top-4 left-4">
+                  <BackButton href="/" className="text-accent" />
+                </div>
                 <div className="w-20 h-20 bg-accent/20 rounded-full flex items-center justify-center">
                   <Trophy className="w-12 h-12 text-accent" />
                 </div>
                 <div className="text-center">
                   <h2 className="text-3xl font-black italic tracking-tighter mb-2">MAZE CLEARED</h2>
                   <p className="text-foreground/40 font-bold text-sm tracking-widest uppercase mb-4">You found the exit!</p>
-                  
+
                   <div className="flex gap-4 justify-center">
                     <div className="bg-card px-4 py-3 rounded-2xl shadow-neo-in text-center min-w-[100px]">
                       <p className="text-[10px] font-bold uppercase opacity-40 mb-1">Your Moves</p>
@@ -391,8 +392,8 @@ export default function MazePage() {
                           Optimization Required
                         </p>
                       </div>
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         onClick={resetPlayer}
                         className="w-full py-3 text-xs font-black tracking-[0.2em] uppercase shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all border-accent/20 text-accent"
                       >
@@ -409,7 +410,7 @@ export default function MazePage() {
             </div>
           )}
         </div>
-        
+
         <div className="text-center space-y-4">
           <p className="text-xs font-black text-foreground/20 uppercase tracking-[0.2em] italic">
             Swipe to Move

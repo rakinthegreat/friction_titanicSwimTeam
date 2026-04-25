@@ -7,6 +7,7 @@ import { ArrowLeft, RotateCcw, HelpCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { GameTutorial } from '@/components/games/GameTutorial';
+import { BackButton } from '@/components/ui/BackButton';
 
 const TUTORIAL_STEPS = [
   "Slide the tiles in any direction (Up, Down, Left, Right).",
@@ -25,12 +26,12 @@ export default function Game2048Page() {
   const [bestScore, setBestScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [hasWon, setHasWon] = useState(false);
-  const [variations, setVariations] = useState<{r: number, ox: number, oy: number}[]>([]);
-  const [lastNewPos, setLastNewPos] = useState<{r: number, c: number} | null>(null);
+  const [variations, setVariations] = useState<{ r: number, ox: number, oy: number }[]>([]);
+  const [lastNewPos, setLastNewPos] = useState<{ r: number, c: number } | null>(null);
   const updateStats = useUserStore((state) => state.updateStats);
   const recordGameStart = useUserStore((state) => state.recordGameStart);
   const recordGameResult = useUserStore((state) => state.recordGameResult);
-  
+
   const touchStart = useRef<{ x: number, y: number } | null>(null);
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
   const startTime = useRef<number>(Date.now());
@@ -100,7 +101,7 @@ export default function Game2048Page() {
     }
   }, [score, bestScore]);
 
-  const addRandomTile = (currentGrid: Grid): { grid: Grid, newPos: {r: number, c: number} | null } => {
+  const addRandomTile = (currentGrid: Grid): { grid: Grid, newPos: { r: number, c: number } | null } => {
     const emptyCells = [];
     for (let r = 0; r < 4; r++) {
       for (let c = 0; c < 4; c++) {
@@ -161,7 +162,7 @@ export default function Game2048Page() {
         }
       }
       while (mergedRow.length < 4) mergedRow.push(0);
-      
+
       if (newGrid[r].join(',') !== mergedRow.join(',')) moved = true;
       newGrid[r] = mergedRow;
     }
@@ -175,7 +176,7 @@ export default function Game2048Page() {
       setGrid(finalGrid);
       setLastNewPos(newPos);
       setScore(currentScore);
-      
+
       if (hasWon && !gameEnded.current) {
         gameEnded.current = true;
         const timeSpent = (Date.now() - startTime.current) / 1000;
@@ -190,7 +191,7 @@ export default function Game2048Page() {
           const timeSpent = (Date.now() - startTime.current) / 1000;
           recordGameResult('2048', hasWon ? 'win' : 'loss', timeSpent);
         }
-      }   
+      }
     }
   }, [grid, gameOver, score, updateStats, hasWon, recordGameResult]);
 
@@ -217,7 +218,7 @@ export default function Game2048Page() {
     const handleTStart = (e: TouchEvent) => {
       // Don't prevent default if we're clicking a button or link
       if ((e.target as HTMLElement).closest('button, a')) return;
-      
+
       // Prevent scrolling/ghosting
       if (e.cancelable) e.preventDefault();
       touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
@@ -264,7 +265,7 @@ export default function Game2048Page() {
     window.addEventListener('touchend', handleTEnd, { passive: false });
     window.addEventListener('mousedown', handleMDown);
     window.addEventListener('mouseup', handleMUp);
-    
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('touchstart', handleTStart);
@@ -295,13 +296,7 @@ export default function Game2048Page() {
     <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-xl mx-auto">
       <div className="flex items-center justify-between mb-8 touch-auto relative z-50">
         <div className="flex items-center">
-          <button
-            onClick={() => router.push('/games')}
-            className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent transition-all active:scale-95"
-            aria-label="Back to games"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
+          <BackButton href="/" className="text-accent" />
           <h1 className="text-2xl font-bold ml-4">2048</h1>
         </div>
         <button
@@ -316,7 +311,7 @@ export default function Game2048Page() {
         title="2048"
         steps={TUTORIAL_STEPS}
         isOpen={isTutorialOpen}
-        onClose={() => setIsTutorialOpen(false)} 
+        onClose={() => setIsTutorialOpen(false)}
       />
 
       <div className="flex justify-center gap-4 mb-8">
@@ -338,7 +333,7 @@ export default function Game2048Page() {
             const r = Math.floor(i / 4);
             const c = i % 4;
             const isLatest = lastNewPos?.r === r && lastNewPos?.c === c;
-            
+
             return (
               <div
                 key={i}
@@ -362,6 +357,9 @@ export default function Game2048Page() {
           {/* Overlays */}
           {(gameOver || hasWon) && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm rounded-[2.5rem] animate-in fade-in zoom-in duration-300">
+              <div className="absolute top-4 left-4">
+                <BackButton href="/" className="text-accent" />
+              </div>
               <h2 className="text-4xl font-black mb-6 text-accent">
                 {hasWon ? 'You Win!' : 'Game Over'}
               </h2>

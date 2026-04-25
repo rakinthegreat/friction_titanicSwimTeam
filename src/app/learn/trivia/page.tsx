@@ -11,6 +11,7 @@ import geographyData from '@/stored-data/geography.json';
 import bangladeshData from '@/stored-data/bangladesh.json';
 import internationalData from '@/stored-data/international.json';
 import { useUserStore } from '@/store/userStore';
+import { BackButton } from '@/components/ui/BackButton';
 
 type Category = 'bangladesh' | 'international' | 'geography' | null;
 
@@ -29,7 +30,7 @@ const DESERTS = ["Sahara Desert", "Arabian Desert", "Gobi Desert", "Kalahari Des
 
 export default function TriviaPage() {
   const router = useRouter();
-  const updateStats = useUserStore((state) => state.updateStats);
+  const recordGameResult = useUserStore((state) => state.recordGameResult);
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'results'>('menu');
   const [category, setCategory] = useState<Category>(null);
 
@@ -203,13 +204,7 @@ export default function TriviaPage() {
       {gameState === 'menu' ? (
         <>
           <div className="w-full flex items-center mb-8">
-            <button
-              onClick={() => router.push('/learn')}
-              className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent-secondary transition-all active:scale-95"
-              aria-label="Back to Hub"
-            >
-              <ArrowLeft className="w-6 h-6" />
-            </button>
+            <BackButton href="/" className="text-accent-secondary" />
           </div>
 
           <div className="flex-1 flex flex-col items-center justify-center space-y-12 py-12">
@@ -310,7 +305,10 @@ export default function TriviaPage() {
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col justify-center items-center space-y-12 py-12 animate-in zoom-in-95 duration-700">
+        <div className="flex-1 flex flex-col justify-center items-center space-y-12 py-12 animate-in zoom-in-95 duration-700 relative">
+          <div className="absolute top-0 left-0">
+            <BackButton href="/" className="text-accent-secondary" />
+          </div>
           <div className="w-40 h-40 bg-accent-secondary/20 text-accent-secondary rounded-[3rem] flex items-center justify-center shadow-neo-out border-4 border-accent-secondary/10 relative overflow-hidden">
             <Trophy className="w-20 h-20 animate-bounce" />
             <Star className="absolute top-4 right-4 w-8 h-8 text-yellow-500/50 animate-pulse" />
@@ -326,15 +324,9 @@ export default function TriviaPage() {
           <div className="flex flex-col sm:flex-row gap-6 w-full max-w-md">
             <button
               onClick={resetGame}
-              className="flex-1 py-6 px-8 rounded-[2rem] bg-accent-secondary text-white font-black text-2xl shadow-neo-out hover:scale-105 active:scale-95 transition-all"
+              className="w-full py-6 px-8 rounded-[2rem] bg-accent-secondary text-white font-black text-2xl shadow-neo-out hover:scale-105 active:scale-95 transition-all"
             >
               Try Again
-            </button>
-            <button
-              onClick={() => router.push('/learn')}
-              className="flex-1 py-6 px-8 rounded-[2rem] bg-card text-foreground/50 font-black text-2xl shadow-neo-out hover:scale-105 active:scale-95 transition-all"
-            >
-              Finish
             </button>
           </div>
         </div>
