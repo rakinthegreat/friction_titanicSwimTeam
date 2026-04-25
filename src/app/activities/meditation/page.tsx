@@ -7,6 +7,8 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ArrowLeft, Leaf, Play, Pause, Volume2, VolumeX, RotateCcw, CheckCircle2, Sparkles, Compass } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { NotificationService } from "@/lib/notifications";
+
 
 const CALM_MUSIC_FILES = ["/music1.mp3"];
 const CALM_MUSIC_URL = CALM_MUSIC_FILES[Math.floor(Math.random() * CALM_MUSIC_FILES.length)];
@@ -110,9 +112,17 @@ export default function MeditationPage() {
     }
   }, [musicEnabled, isActive]);
 
-  const handleStart = () => {
+  const handleStart = async () => {
+    // Request permission on start if not already granted
+    await NotificationService.requestPermission();
+    
+    NotificationService.sendNotification(
+      "Meditation Started",
+      "Breathe deeply and find your center. We'll notify you when the session is over."
+    );
     setIsActive(true);
   };
+
 
   const handlePause = () => {
     setIsActive(false);
@@ -128,6 +138,12 @@ export default function MeditationPage() {
     completeActivity('meditation');
     updateStats(Math.floor(selectedDuration / 60));
     setStep('complete');
+    
+    NotificationService.sendNotification(
+      "Session Complete",
+      "You've completed your meditation. Take this peace with you into your next task."
+    );
+    
     if (audioRef.current) audioRef.current.pause();
   };
 
@@ -204,8 +220,9 @@ export default function MeditationPage() {
                     setTimeLeft(d);
                     setCurrentMindfulnessText(MINDFULNESS_TEXTS[Math.floor(Math.random() * MINDFULNESS_TEXTS.length)]);
                     setStep('timer');
-                    setIsActive(true); // Start automatically
+                    handleStart(); // Use handleStart to trigger notification/permission
                   }}
+
                   className="p-6 bg-card rounded-[2rem] shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all group border border-white/5"
                 >
                   <p className="text-accent font-black text-2xl mb-1">{d / 60} MIN</p>
