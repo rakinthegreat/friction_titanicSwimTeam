@@ -293,19 +293,15 @@ export default function Home() {
               </div>
           </div>
 
-          {preferences.showDevTiles && (
-            <>
-              <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
-                <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Time Reclaimed</p>
-                <p className="text-5xl font-black text-accent">{Math.floor(stats.totalMinutesSaved)}<span className="text-xl font-bold text-foreground/20 ml-2 italic">mins</span></p>
-              </div>
+          <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
+            <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Time Reclaimed</p>
+            <p className="text-5xl font-black text-accent">{Math.floor(stats.totalMinutesSaved)}<span className="text-xl font-bold text-foreground/20 ml-2 italic">mins</span></p>
+          </div>
 
-              <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
-                <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Daily Streak</p>
-                <p className="text-5xl font-black text-accent">{stats.streakDays}<span className="text-xl font-bold text-foreground/20 ml-2 italic">days</span></p>
-              </div>
-            </>
-          )}
+          <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
+            <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Daily Streak</p>
+            <p className="text-5xl font-black text-accent">{stats.streakDays}<span className="text-xl font-bold text-foreground/20 ml-2 italic">days</span></p>
+          </div>
         </section>
         {showWordOfDay && wordData ? (
           /* ── Word of the Day (synced) ── */
@@ -373,53 +369,7 @@ export default function Home() {
           </div>
         ) : null}
 
-        {preferences.showDevTiles && (
-          <>
-            <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Link href="/learn" className="group">
-                <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-transparent group-hover:border-accent/20 transition-all group-hover:-translate-y-1 h-full">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-2xl font-black">Learning</h3>
-                    <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center text-accent group-hover:scale-110 transition-transform">
-                      <ArrowRight className="w-6 h-6" />
-                    </div>
-                  </div>
-                  <p className="text-foreground/80 font-medium">Interactive lessons</p>
-                </div>
-              </Link>
-              <Link href="/activities" className="group">
-                <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-transparent group-hover:border-accent-secondary/20 transition-all group-hover:-translate-y-1 h-full">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-2xl font-black">Activities</h3>
-                    <div className="w-12 h-12 bg-accent-secondary/10 rounded-full flex items-center justify-center text-accent-secondary group-hover:scale-110 transition-transform">
-                      <Sparkles className="w-6 h-6" />
-                    </div>
-                  </div>
-                  <p className="text-foreground/80 font-medium">Real-world practices</p>
-                </div>
-              </Link>
-              <Link href="/games" className="group">
-                <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-transparent group-hover:border-accent/20 transition-all group-hover:-translate-y-1 h-full">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-2xl font-black">Games</h3>
-                    <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center text-accent group-hover:scale-110 transition-transform">
-                      <Gamepad2 className="w-6 h-6" />
-                    </div>
-                  </div>
-                  <p className="text-foreground/80 font-medium">Offline puzzles</p>
-                </div>
-              </Link>
-            </section>
 
-            <VideoRecommendation
-              interests={interests}
-              videoGenres={videoGenres}
-              preferredLanguages={preferredLanguages}
-              dailyCompleted={dailyCompleted}
-              updateStats={updateStats}
-            />
-          </>
-        )}
       </div>
     </main>
   );
