@@ -41,7 +41,7 @@ export default function RootLayout({
           <SessionTimer />
           {children}
         </AuthProvider>
-        <DevBar />
+        {process.env.NODE_ENV !== 'production' && <DevBar />}
       </body>
     </html>
   );
