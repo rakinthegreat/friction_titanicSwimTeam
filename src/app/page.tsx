@@ -166,7 +166,11 @@ export default function Home() {
     return vocabData[idx] as { question: string; answer: string; definition: string };
   })();
 
-  const showWordOfDay = interests.includes('languages');
+  // Word of the Day probability: 70% if interested in languages, 30% otherwise
+  const [wordOfDayRoll] = useState(() => Math.random());
+  const showWordOfDay = interests.includes('languages') 
+    ? wordOfDayRoll < 0.7 
+    : wordOfDayRoll < 0.3;
   const frictionPoints = useUserStore(state => state.frictionPoints);
   const [activeFriction, setActiveFriction] = useState<FrictionPoint | null>(null);
 
