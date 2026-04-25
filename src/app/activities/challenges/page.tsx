@@ -85,6 +85,16 @@ export default function ChallengesPage() {
     setStep('summary');
   };
 
+  const resetChallenge = () => {
+    setStep('context');
+    setLocation('');
+    setPosture('');
+    setVibe('Introverted');
+    setEnergy('Chill');
+    setCurrentChallenge(null);
+    setReflection('');
+  };
+
   if (!mounted) return null;
 
   return (

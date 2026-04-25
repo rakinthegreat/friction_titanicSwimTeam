@@ -48,7 +48,8 @@ interface UserState {
     blockDoomscrolling: boolean;
     showDevTiles: boolean;
   };
-  navigationSource: 'home' | 'profile';
+  navigationSource: 'home' | 'profile' | 'learn' | 'games' | 'activities';
+  navigationHistory: string[];
 
   // Philosophy
   completedPhilosophyConcepts: string[];
@@ -73,6 +74,7 @@ interface UserState {
   dailyCompletedActivities: string[];
   lastCompletedDate: string | null;
   lastBackupDate: string | null;
+  autoBackupTime: string | null; // "HH:MM" 24-hour format, null = disabled
   realLifeChallenges: Array<{
     id: string;
     challenge: string;
@@ -131,6 +133,7 @@ interface UserState {
 
   completeActivity: (id: string) => void;
   setNavigationSource: (source: 'home' | 'profile' | 'learn' | 'games' | 'activities') => void;
+  setAutoBackupTime: (time: string | null) => void;
   syncWithFirebase: () => Promise<void>;
   setQuotePool: (quotes: string[]) => void;
   refreshQuote: () => void;
@@ -178,11 +181,13 @@ export const useUserStore = create<UserState>()(
       dailyCompletedActivities: [],
       lastCompletedDate: null,
       lastBackupDate: null,
+      autoBackupTime: null,
       realLifeChallenges: [],
       quotePool: [],
       currentQuote: null,
       lastQuoteUpdate: 0,
       navigationSource: 'home',
+      navigationHistory: [],
 
       setInterests: (interests) => set({ interests }),
       setVideoGenres: (genres) => set({ videoGenres: genres }),
@@ -407,6 +412,8 @@ export const useUserStore = create<UserState>()(
         }),
 
       setNavigationSource: (source) => set({ navigationSource: source, navigationHistory: [] }),
+
+      setAutoBackupTime: (time) => set({ autoBackupTime: time }),
 
       setQuotePool: (quotes) => set({ quotePool: quotes }),
       
