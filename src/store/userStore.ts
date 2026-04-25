@@ -509,6 +509,15 @@ export const useUserStore = create<UserState>()(
         const mergedCompletedPhil = Array.from(new Set([...state.completedPhilosophyConcepts, ...(remoteData.completedPhilosophyConcepts || [])]));
         const mergedCompletedSci = Array.from(new Set([...state.completedScienceConcepts, ...(remoteData.completedScienceConcepts || [])]));
 
+        // Friction Points Merging (ID-based)
+        const mergeFriction = (local: FrictionPoint[], remote: FrictionPoint[]) => {
+          const map = new Map<string, FrictionPoint>();
+          remote.forEach(p => map.set(p.id, p));
+          local.forEach(p => map.set(p.id, p));
+          return Array.from(map.values());
+        };
+        const mergedFrictionPoints = mergeFriction(state.frictionPoints, remoteData.frictionPoints || []);
+
         const mergeCustom = (local: any[], remote: any[]) => {
           const map = new Map<string, any>();
           remote.forEach(c => map.set(c.name || c.title || c.concept_name, c));
@@ -571,7 +580,7 @@ export const useUserStore = create<UserState>()(
           englishReviewWords: mergedEnglish,
           dailyCompletedActivities: mergedDailyActivities,
           lastCompletedDate: mergedLastCompletedDate,
-          frictionPoints: remoteData.frictionPoints || state.frictionPoints,
+          frictionPoints: mergedFrictionPoints,
           lastBackupDate: now
         });
 
@@ -594,7 +603,7 @@ export const useUserStore = create<UserState>()(
           englishReviewWords: mergedEnglish,
           dailyCompletedActivities: mergedDailyActivities,
           lastCompletedDate: mergedLastCompletedDate,
-          frictionPoints: state.frictionPoints,
+          frictionPoints: mergedFrictionPoints,
           lastBackupDate: now,
         };
 
