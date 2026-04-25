@@ -7,6 +7,7 @@ import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, HelpCircle } from 'lucide-react';
 import { GameTutorial } from '@/components/games/GameTutorial';
+import { BackButton } from '@/components/ui/BackButton';
 
 const TUTORIAL_STEPS = [
   "Guess the hidden 5-letter word in 6 tries.",
@@ -45,19 +46,14 @@ export default function WordLessPage() {
 
   const handleComplete = (xp: number) => {
     updateStats(5);
-    router.push('/games');
+    router.push('/');
   };
 
   return (
     <main className="min-h-screen bg-background p-6">
       <header className="max-w-md mx-auto mb-8 flex items-center justify-between">
         <div className="flex items-center">
-          <button
-            onClick={() => router.push('/games')}
-            className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent transition-all active:scale-95"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
+          <BackButton href="/" className="text-accent" />
           <h1 className="text-2xl font-bold ml-4">WordLess</h1>
         </div>
         <button 

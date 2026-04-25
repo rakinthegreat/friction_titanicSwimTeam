@@ -9,6 +9,7 @@ import { Brain, Trophy } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { concepts } from './topics';
 import { useUserStore } from '@/store/userStore';
+import { BackButton } from '@/components/ui/BackButton';
 import { generateConcepts } from './actions';
 import { Loader2, BookOpen, History, Sparkles, ChevronLeft, Calendar, ArrowLeft } from 'lucide-react';
 
@@ -110,17 +111,7 @@ export default function PhilosophyModule() {
     return (
       <main className="min-h-screen max-w-4xl mx-auto p-6 flex flex-col animate-in fade-in duration-700">
         <div className="w-full flex items-center mb-8">
-          <button
-            onClick={() => {
-              setCurrentIndex(0);
-              setCurrentSessionMCQs([]);
-              router.push('/learn');
-            }}
-            className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent-secondary transition-all active:scale-95"
-            aria-label="Back to Hub"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
+          <BackButton href="/" className="text-accent-secondary" />
         </div>
 
         <div className="flex-1 flex flex-col justify-center space-y-12">

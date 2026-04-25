@@ -7,6 +7,7 @@ import { Timer, Zap, Trophy, RefreshCw, ArrowLeft, Plus, Minus, HelpCircle } fro
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/store/userStore';
 import { GameTutorial } from '@/components/games/GameTutorial';
+import { BackButton } from '@/components/ui/BackButton';
 
 const TUTORIAL_STEPS = [
   "You'll be presented with a mathematical equation.",
@@ -173,9 +174,7 @@ export default function RapidMathPage() {
   return (
     <main className="min-h-screen bg-background p-6 flex flex-col items-center">
       <header className="w-full max-w-md flex justify-between items-center mb-12">
-        <button onClick={() => router.push('/games')} className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent">
-          <ArrowLeft size={24} />
-        </button>
+        <BackButton href="/" className="text-accent" />
         <h1 className="text-2xl font-black italic tracking-tighter">RAPID MATH</h1>
         <div className="w-12" />
       </header>
@@ -247,38 +246,40 @@ export default function RapidMathPage() {
         )}
 
         {gameState === 'finished' && (
-          <Card className="p-12 text-center space-y-8 shadow-neo-out animate-in zoom-in duration-500 rounded-[3rem] border border-white/10 backdrop-blur-md">
-            <div className="w-24 h-24 bg-accent/20 rounded-full flex items-center justify-center mx-auto shadow-neo-in">
-              <Trophy size={48} className="text-accent" />
+          <div className="relative">
+            <div className="absolute -top-12 -left-4">
+              <BackButton href="/" className="text-accent" />
             </div>
-
-            <div className="space-y-2">
-              <p className="text-accent font-black uppercase tracking-widest text-sm italic">Blitz Finished</p>
-              <h2 className="text-7xl font-black italic tracking-tighter text-foreground/90">{score}</h2>
-              <p className="text-foreground/40 font-bold uppercase tracking-widest text-[10px]">equations solved</p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-[2rem] shadow-neo-in border border-accent/5">
-                <p className="text-[10px] font-black text-accent/40 uppercase tracking-widest mb-1">Session</p>
-                <p className="text-3xl font-black text-accent">{score}</p>
+            <Card className="p-12 text-center space-y-8 shadow-neo-out animate-in zoom-in duration-500 rounded-[3rem] border border-white/10 backdrop-blur-md">
+              <div className="w-24 h-24 bg-accent/20 rounded-full flex items-center justify-center mx-auto shadow-neo-in">
+                <Trophy size={48} className="text-accent" />
               </div>
-              <div className="bg-card p-6 rounded-[2rem] shadow-neo-in border border-accent-secondary/5">
-                <p className="text-[10px] font-black text-accent-secondary/40 uppercase tracking-widest mb-1">Record</p>
-                <p className="text-3xl font-black text-accent-secondary">{score > persistentHighScore ? score : persistentHighScore}</p>
-              </div>
-            </div>
 
-            <div className="flex gap-4 pt-4">
-              <Button onClick={startGame} className="flex-1 py-5 text-lg font-black italic tracking-widest shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all">
-                <RefreshCw size={24} className="mr-2" />
-                Retry
-              </Button>
-              <Button onClick={() => router.push('/games')} className="font-black shadow-neo-out flex-1 py-5 text-lg font-black italic tracking-widest shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all bg-card border border-foreground/5 text-foreground/80">
-                <span className='text-gray-600 font-black text-[20px]'>Done</span>
-              </Button>
-            </div>
-          </Card>
+              <div className="space-y-2">
+                <p className="text-accent font-black uppercase tracking-widest text-sm italic">Blitz Finished</p>
+                <h2 className="text-7xl font-black italic tracking-tighter text-foreground/90">{score}</h2>
+                <p className="text-foreground/40 font-bold uppercase tracking-widest text-[10px]">equations solved</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div className="bg-card p-6 rounded-[2rem] shadow-neo-in border border-accent/5">
+                  <p className="text-[10px] font-black text-accent/40 uppercase tracking-widest mb-1">Session</p>
+                  <p className="text-3xl font-black text-accent">{score}</p>
+                </div>
+                <div className="bg-card p-6 rounded-[2rem] shadow-neo-in border border-accent-secondary/5">
+                  <p className="text-[10px] font-black text-accent-secondary/40 uppercase tracking-widest mb-1">Record</p>
+                  <p className="text-3xl font-black text-accent-secondary">{score > persistentHighScore ? score : persistentHighScore}</p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <Button onClick={startGame} className="w-full py-5 text-lg font-black italic tracking-widest shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all">
+                  <RefreshCw size={24} className="mr-2" />
+                  Retry
+                </Button>
+              </div>
+            </Card>
+          </div>
         )}
       </div>
     </main>

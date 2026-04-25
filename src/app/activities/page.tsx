@@ -11,6 +11,11 @@ import { useUserStore } from '@/store/userStore';
 export default function ActivitiesDirectoryPage() {
   const router = useRouter();
   const navigationSource = useUserStore((state) => state.navigationSource);
+  const setNavigationSource = useUserStore((state) => state.setNavigationSource);
+
+  React.useEffect(() => {
+    setNavigationSource('activities');
+  }, [setNavigationSource]);
 
   const modules = [
     {

@@ -7,10 +7,15 @@ import { ArrowLeft, Hash, Grid3X3, Type, BrainCircuit, Blocks, HelpCircle, Zap, 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUserStore } from '@/store/userStore';
+import { BackButton } from '@/components/ui/BackButton';
 
 export default function GamesDirectoryPage() {
   const router = useRouter();
-  const navigationSource = useUserStore((state) => state.navigationSource);
+  const setNavigationSource = useUserStore((state) => state.setNavigationSource);
+
+  React.useEffect(() => {
+    setNavigationSource('games');
+  }, [setNavigationSource]);
 
   const games = [
     {
@@ -83,13 +88,7 @@ export default function GamesDirectoryPage() {
     <main className="min-h-screen p-6 sm:p-8 max-w-4xl mx-auto space-y-12 animate-in fade-in duration-700">
       <header className="flex justify-between items-center">
         <div className="flex items-center">
-          <button
-            onClick={() => router.push(navigationSource === 'profile' ? '/profile' : '/')}
-            className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors mr-2"
-            aria-label="Back to home"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
+          <BackButton href="/" className="text-accent" />
           <div className="space-y-1">
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Mini-Games</h1>
           </div>

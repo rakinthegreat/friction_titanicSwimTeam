@@ -7,6 +7,7 @@ import { ArrowLeft, RotateCcw, Delete, HelpCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { generateSudoku, findConflicts, SudokuBoard } from '@/lib/sudoku';
 import { GameTutorial } from '@/components/games/GameTutorial';
+import { BackButton } from '@/components/ui/BackButton';
 
 const TUTORIAL_STEPS = [
   "Fill the 9x9 grid with numbers 1-9.",
@@ -62,7 +63,7 @@ export default function SudokuPage() {
   const handleNumberInput = (num: number | null) => {
     if (!selectedCell || isWon) return;
     const { r, c } = selectedCell;
-    
+
     // Cannot edit initial clues
     if (initialBoard[r][c] !== null) return;
 
@@ -83,11 +84,11 @@ export default function SudokuPage() {
   };
 
   if (isLoading) {
-     return (
-       <div className="min-h-screen flex items-center justify-center p-6">
-         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
-       </div>
-     );
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
+      </div>
+    );
   }
 
   // To highlight same numbers
@@ -97,16 +98,10 @@ export default function SudokuPage() {
     <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-lg mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center">
-          <button 
-            onClick={() => router.push('/games')}
-            className="p-3 rounded-2xl bg-transparent text-accent transition-all active:scale-95 hover:bg-foreground/5"
-            aria-label="Back to games"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
+          <BackButton href="/" className="text-accent" />
           <h1 className="text-2xl font-bold ml-4">Sudoku</h1>
         </div>
-        <button 
+        <button
           onClick={() => setIsTutorialOpen(true)}
           className="p-3 rounded-2xl bg-transparent text-accent transition-all active:scale-95 hover:bg-foreground/5"
         >
@@ -114,14 +109,19 @@ export default function SudokuPage() {
         </button>
       </div>
 
-      <GameTutorial 
+      <GameTutorial
         title="Sudoku"
         steps={TUTORIAL_STEPS}
         isOpen={isTutorialOpen}
         onClose={() => setIsTutorialOpen(false)}
       />
 
-      <Card className="flex flex-col items-center justify-start p-4 sm:p-8">
+      <Card className="flex flex-col items-center justify-start p-6 sm:p-8 relative">
+        {isWon && (
+          <div className="absolute top-4 left-4">
+            <BackButton href="/" className="text-accent" />
+          </div>
+        )}
         {/* Win Message */}
         <div className="mb-4 h-6 flex items-center justify-center w-full">
           {isWon && (
@@ -132,18 +132,18 @@ export default function SudokuPage() {
         </div>
 
         {/* Board */}
-        <div 
+        <div
           className="relative mb-8 w-full max-w-[340px] select-none p-1 rounded-2xl bg-black/5"
-          style={{ 
+          style={{
             border: '4px solid var(--foreground)',
             boxShadow: 'inset 8px 8px 16px rgba(163, 177, 198, 0.4), inset -8px -8px 16px rgba(255, 255, 255, 0.8)'
           }}
         >
-          <div 
+          <div
             className="grid grid-cols-3 gap-0 overflow-hidden rounded-xl"
-            style={{ 
+            style={{
               backgroundColor: 'rgba(0, 0, 0, 0.3)', // Deeper contrast for lines in light mode
-              border: '1.5px solid var(--foreground)' 
+              border: '1.5px solid var(--foreground)'
             }}
           >
             {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((blockIndex) => {
@@ -151,8 +151,8 @@ export default function SudokuPage() {
               const startC = (blockIndex % 3) * 3;
 
               return (
-                <div 
-                  key={blockIndex} 
+                <div
+                  key={blockIndex}
                   className="grid grid-cols-3 gap-[1px]"
                   style={{ border: '1.5px solid var(--foreground)' }}
                 >
@@ -160,7 +160,7 @@ export default function SudokuPage() {
                     const r = startR + Math.floor(cellIndex / 3);
                     const c = startC + (cellIndex % 3);
                     const cell = board[r]?.[c];
-                    
+
                     const isSelected = selectedCell?.r === r && selectedCell?.c === c;
                     const isInitial = initialBoard[r]?.[c] !== null;
                     const isConflict = conflicts.some(conf => conf.row === r && conf.col === c);
@@ -172,8 +172,8 @@ export default function SudokuPage() {
                         onClick={() => handleCellClick(r, c)}
                         className={`
                           aspect-square flex items-center justify-center text-xl font-bold cursor-pointer transition-all duration-200 relative
-                          ${isInitial 
-                            ? 'bg-black/10 dark:bg-white/10 text-foreground font-black' 
+                          ${isInitial
+                            ? 'bg-black/10 dark:bg-white/10 text-foreground font-black'
                             : 'bg-card text-accent font-medium'}
                           ${isSameNumber ? '!bg-accent/20 dark:!bg-accent/30 !text-accent' : ''}
                           ${isSelected ? '!bg-accent !text-white z-10 shadow-lg scale-105 rounded-sm' : ''}
@@ -183,7 +183,7 @@ export default function SudokuPage() {
                       >
                         {cell}
                         {isInitial && (
-                           <div className="absolute top-0.5 right-1 w-1 h-1 rounded-full bg-foreground/20" />
+                          <div className="absolute top-0.5 right-1 w-1 h-1 rounded-full bg-foreground/20" />
                         )}
                       </div>
                     );
@@ -196,27 +196,27 @@ export default function SudokuPage() {
 
         {/* Mobile Number Pad */}
         <div className="grid grid-cols-5 gap-2 sm:gap-3 w-full max-w-[340px] mb-8">
-           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-             <button
-               key={num}
-               onClick={() => handleNumberInput(num)}
-               disabled={!selectedCell || initialBoard[selectedCell.r][selectedCell.c] !== null || isWon}
-               className="aspect-[4/3] rounded-xl bg-card shadow-neo-out active:shadow-neo-in active:scale-95 disabled:opacity-50 disabled:shadow-none flex items-center justify-center text-xl font-bold text-foreground transition-all"
-             >
-               {num}
-             </button>
-           ))}
-           <button
-             onClick={() => handleNumberInput(null)}
-             disabled={!selectedCell || initialBoard[selectedCell.r][selectedCell.c] !== null || isWon}
-             className="aspect-[4/3] rounded-xl bg-card shadow-neo-out active:shadow-neo-in active:scale-95 disabled:opacity-50 disabled:shadow-none flex items-center justify-center text-red-500 transition-all"
-             aria-label="Clear cell"
-           >
-             <Delete className="w-6 h-6" />
-           </button>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+            <button
+              key={num}
+              onClick={() => handleNumberInput(num)}
+              disabled={!selectedCell || initialBoard[selectedCell.r][selectedCell.c] !== null || isWon}
+              className="aspect-[4/3] rounded-xl bg-card shadow-neo-out active:shadow-neo-in active:scale-95 disabled:opacity-50 disabled:shadow-none flex items-center justify-center text-xl font-bold text-foreground transition-all"
+            >
+              {num}
+            </button>
+          ))}
+          <button
+            onClick={() => handleNumberInput(null)}
+            disabled={!selectedCell || initialBoard[selectedCell.r][selectedCell.c] !== null || isWon}
+            className="aspect-[4/3] rounded-xl bg-card shadow-neo-out active:shadow-neo-in active:scale-95 disabled:opacity-50 disabled:shadow-none flex items-center justify-center text-red-500 transition-all"
+            aria-label="Clear cell"
+          >
+            <Delete className="w-6 h-6" />
+          </button>
         </div>
 
-        <Button 
+        <Button
           variant={isWon ? "primary" : "outline"}
           onClick={startNewGame}
           className="w-full max-w-[200px]"

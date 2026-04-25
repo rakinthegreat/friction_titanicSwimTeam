@@ -130,7 +130,7 @@ interface UserState {
   completeRealLifeChallenge: (id: string, experience?: string) => void;
 
   completeActivity: (id: string) => void;
-  setNavigationSource: (source: 'home' | 'profile') => void;
+  setNavigationSource: (source: 'home' | 'profile' | 'learn' | 'games' | 'activities') => void;
   syncWithFirebase: () => Promise<void>;
   setQuotePool: (quotes: string[]) => void;
   refreshQuote: () => void;
@@ -406,7 +406,7 @@ export const useUserStore = create<UserState>()(
           };
         }),
 
-      setNavigationSource: (source) => set({ navigationSource: source }),
+      setNavigationSource: (source) => set({ navigationSource: source, navigationHistory: [] }),
 
       setQuotePool: (quotes) => set({ quotePool: quotes }),
       

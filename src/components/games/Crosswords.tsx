@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Trophy, HelpCircle, Loader2, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getDailyCrossword } from '@/lib/dailyCrossword';
 import { useUserStore } from '@/store/userStore';
+import { BackButton } from '@/components/ui/BackButton';
 
 interface Cell {
   letter: string;
@@ -558,18 +559,14 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
           )}
 
           {isRevealed && (
-            <div className="bg-accent-secondary/10 p-4 rounded-xl border border-accent-secondary/20 space-y-3 animate-in fade-in slide-in-from-top-2 duration-500">
+            <div className="bg-accent-secondary/10 p-4 rounded-xl border border-accent-secondary/20 space-y-3 animate-in fade-in slide-in-from-top-2 duration-500 relative">
+              <div className="absolute top-2 right-2">
+                <BackButton href="/" className="text-accent-secondary p-1" />
+              </div>
               <div className="flex items-center gap-2 text-accent-secondary font-black text-[10px] uppercase tracking-widest">
                 <HelpCircle size={14} /> Solution Revealed
               </div>
               <p className="text-[10px] text-foreground/60 font-medium leading-tight">Study the grid above to learn today's answers. Try again tomorrow for a fresh challenge!</p>
-              <Button 
-                onClick={() => onComplete(0)} 
-                variant="outline"
-                className="w-full py-2 text-[8px] font-black tracking-widest uppercase border-accent-secondary/20 text-accent-secondary hover:bg-accent-secondary/5"
-              >
-                Exit Game
-              </Button>
             </div>
           )}
           
@@ -604,7 +601,10 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
 
       {won && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-background/20 backdrop-blur-sm animate-in fade-in duration-500">
-          <Card className="w-full max-w-xs p-8 text-center space-y-6 shadow-2xl border-2 border-accent/20">
+          <Card className="w-full max-w-xs p-8 text-center space-y-6 shadow-2xl border-2 border-accent/20 relative">
+            <div className="absolute top-4 left-4">
+              <BackButton href="/" className="text-accent" />
+            </div>
             <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto text-white">
               <Trophy size={32} />
             </div>

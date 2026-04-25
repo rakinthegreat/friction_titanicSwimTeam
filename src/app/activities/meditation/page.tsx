@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useUserStore } from "@/store/userStore";
+import { BackButton } from '@/components/ui/BackButton';
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ArrowLeft, Leaf, Play, Pause, Volume2, VolumeX, RotateCcw, CheckCircle2, Sparkles, Compass } from "lucide-react";
 import Link from "next/link";
@@ -152,7 +153,7 @@ export default function MeditationPage() {
             </p>
           </div>
           <button
-            onClick={() => router.push('/activities')}
+            onClick={() => router.push('/')}
             className="w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
             CONTINUE
@@ -169,10 +170,7 @@ export default function MeditationPage() {
       <div className="max-w-3xl mx-auto space-y-12">
         <header className="flex justify-between items-start">
           <div className="space-y-2">
-            <Link href="/activities" className="inline-flex items-center text-accent hover:text-accent/80 font-medium uppercase tracking-widest text-sm transition-colors mb-2">
-              <ArrowLeft className="w-4 h-4 mr-1" />
-              Back to Activities
-            </Link>
+            <BackButton href="/" className="text-accent" />
             <h1 className="text-5xl font-extrabold tracking-tight">Meditation</h1>
           </div>
           <ThemeToggle />

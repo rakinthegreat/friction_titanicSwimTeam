@@ -185,13 +185,36 @@ export default function Home() {
                         key={mins}
                         onClick={() => {
                           const pool = ACTIVITIES.filter(a => a.minTime <= mins && a.maxTime >= mins && (a.interests.some(i => interests.includes(i)) || interests.length === 0 || a.type === 'life'));
-                          const lifePool = pool.filter(a => a.type === 'life' && !dailyCompleted.includes(a.id));
-                          const gamePool = pool.filter(a => a.type === 'game' && !dailyCompleted.includes(a.id));
-                          const learnPool = pool.filter(a => a.type === 'learn' && !dailyCompleted.includes(a.id));
-                          const finalLife = lifePool.length > 0 ? lifePool : pool.filter(a => a.type === 'life');
-                          const finalGame = gamePool.length >= 2 ? gamePool : pool.filter(a => a.type === 'game');
-                          const finalLearn = learnPool.length >= 2 ? learnPool : pool.filter(a => a.type === 'learn');
-                          setSuggestions([...[...finalLife].sort(() => 0.5 - Math.random()).slice(0, 1), ...[...finalGame].sort(() => 0.5 - Math.random()).slice(0, 3), ...[...finalLearn].sort(() => 0.5 - Math.random()).slice(0, 3)]);
+                          
+                          const lifePool = [...pool.filter(a => a.type === 'life')].sort((a, b) => {
+                            const aDone = dailyCompleted.includes(a.id);
+                            const bDone = dailyCompleted.includes(b.id);
+                            if (aDone && !bDone) return 1;
+                            if (!aDone && bDone) return -1;
+                            return 0.5 - Math.random();
+                          });
+
+                          const gamePool = [...pool.filter(a => a.type === 'game')].sort((a, b) => {
+                            const aDone = dailyCompleted.includes(a.id);
+                            const bDone = dailyCompleted.includes(b.id);
+                            if (aDone && !bDone) return 1;
+                            if (!aDone && bDone) return -1;
+                            return 0.5 - Math.random();
+                          });
+
+                          const learnPool = [...pool.filter(a => a.type === 'learn')].sort((a, b) => {
+                            const aDone = dailyCompleted.includes(a.id);
+                            const bDone = dailyCompleted.includes(b.id);
+                            if (aDone && !bDone) return 1;
+                            if (!aDone && bDone) return -1;
+                            return 0.5 - Math.random();
+                          });
+
+                          setSuggestions([
+                            ...lifePool.slice(0, 1),
+                            ...gamePool.slice(0, 3),
+                            ...learnPool.slice(0, 3)
+                          ]);
                           setSelectedDuration(mins);
                         }}
                         className="rounded-2xl px-6 py-4 font-black transition-all bg-accent-secondary shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105 [@media(orientation:landscape)]:flex-1"
@@ -206,13 +229,36 @@ export default function Home() {
                         key={mins}
                         onClick={() => {
                           const pool = ACTIVITIES.filter(a => a.minTime <= mins && a.maxTime >= mins && (a.interests.some(i => interests.includes(i)) || interests.length === 0 || a.type === 'life'));
-                          const lifePool = pool.filter(a => a.type === 'life' && !dailyCompleted.includes(a.id));
-                          const gamePool = pool.filter(a => a.type === 'game' && !dailyCompleted.includes(a.id));
-                          const learnPool = pool.filter(a => a.type === 'learn' && !dailyCompleted.includes(a.id));
-                          const finalLife = lifePool.length > 0 ? lifePool : pool.filter(a => a.type === 'life');
-                          const finalGame = gamePool.length >= 2 ? gamePool : pool.filter(a => a.type === 'game');
-                          const finalLearn = learnPool.length >= 2 ? learnPool : pool.filter(a => a.type === 'learn');
-                          setSuggestions([...[...finalLife].sort(() => 0.5 - Math.random()).slice(0, 1), ...[...finalGame].sort(() => 0.5 - Math.random()).slice(0, 3), ...[...finalLearn].sort(() => 0.5 - Math.random()).slice(0, 3)]);
+                          
+                          const lifePool = [...pool.filter(a => a.type === 'life')].sort((a, b) => {
+                            const aDone = dailyCompleted.includes(a.id);
+                            const bDone = dailyCompleted.includes(b.id);
+                            if (aDone && !bDone) return 1;
+                            if (!aDone && bDone) return -1;
+                            return 0.5 - Math.random();
+                          });
+
+                          const gamePool = [...pool.filter(a => a.type === 'game')].sort((a, b) => {
+                            const aDone = dailyCompleted.includes(a.id);
+                            const bDone = dailyCompleted.includes(b.id);
+                            if (aDone && !bDone) return 1;
+                            if (!aDone && bDone) return -1;
+                            return 0.5 - Math.random();
+                          });
+
+                          const learnPool = [...pool.filter(a => a.type === 'learn')].sort((a, b) => {
+                            const aDone = dailyCompleted.includes(a.id);
+                            const bDone = dailyCompleted.includes(b.id);
+                            if (aDone && !bDone) return 1;
+                            if (!aDone && bDone) return -1;
+                            return 0.5 - Math.random();
+                          });
+
+                          setSuggestions([
+                            ...lifePool.slice(0, 1),
+                            ...gamePool.slice(0, 3),
+                            ...learnPool.slice(0, 3)
+                          ]);
                           setSelectedDuration(mins);
                         }}
                         className="rounded-2xl px-6 py-4 font-black transition-all bg-accent-secondary shadow-[6px_6px_12px_rgba(0,0,0,0.2),2px_2px_4px_rgba(0,0,0,0.1)] hover:scale-105 [@media(orientation:landscape)]:flex-1"
