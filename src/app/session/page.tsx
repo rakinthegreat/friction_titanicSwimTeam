@@ -2,7 +2,7 @@
 
 import { useUserStore } from "@/store/userStore";
 import { useEffect, useState } from "react";
-import { ChevronRight, PlayCircle, ShieldCheck } from "lucide-react";
+import { ChevronRight, PlayCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ACTIVITIES, buildSuggestions, VIDEO_ACTIVITY_ID, ActivityDefinition } from "@/lib/activities";
@@ -103,11 +103,7 @@ export default function SessionPage() {
                     className="group"
                   >
                     <div className="flex items-center gap-3 px-4 py-3 bg-white/5 border border-dashed border-white/20 rounded-2xl hover:bg-white/10 transition-all hover:translate-x-1 relative shadow-sm">
-                      {dailyCompleted.includes(nonInterestSuggestion.id) && (
-                        <div className="absolute right-3 bg-white text-accent-secondary rounded-full p-0.5 shadow-lg z-20">
-                          <ShieldCheck className="w-3 h-3" />
-                        </div>
-                      )}
+
                       <div className="w-8 h-8 shrink-0 rounded-xl bg-white/10 flex items-center justify-center">
                         {(() => {
                           const Icon = nonInterestSuggestion.icon;
