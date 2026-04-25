@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { concepts } from './topics';
 import { useUserStore } from '@/store/userStore';
 import { generateConcepts } from './actions';
-import { Loader2, BookOpen, History, Sparkles, ChevronLeft, Calendar } from 'lucide-react';
+import { Loader2, BookOpen, History, Sparkles, ChevronLeft, Calendar, ArrowLeft } from 'lucide-react';
 
 type Step =
   | { type: 'concept'; title: string; description: string; conceptName: string; }
@@ -108,64 +108,72 @@ export default function PhilosophyModule() {
 
   if (viewMode === 'menu') {
     return (
-      <main className="min-h-screen max-w-4xl mx-auto p-6 flex flex-col justify-center space-y-12 animate-in fade-in duration-700">
-        <div className="space-y-4 text-center">
-          <h1 className="text-6xl font-black tracking-tighter text-foreground italic">
-            The Inner <span className="text-accent-secondary">Sanctum</span>
-          </h1>
-          <p className="text-xl text-foreground/60 font-medium max-w-xl mx-auto">
-            Deepen your understanding of existence through guided exploration and reflective wisdom.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <main className="min-h-screen max-w-4xl mx-auto p-6 flex flex-col animate-in fade-in duration-700">
+        <div className="w-full flex items-center mb-8">
           <button
             onClick={() => {
               setCurrentIndex(0);
               setCurrentSessionMCQs([]);
-              setViewMode('learn');
+              router.push('/learn');
             }}
-            className="group relative p-1 rounded-[3rem] bg-gradient-to-br from-accent-secondary to-accent transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out"
+            className="p-3 rounded-2xl bg-transparent hover:bg-foreground/5 text-accent-secondary transition-all active:scale-95"
+            aria-label="Back to Hub"
           >
-            <div className="bg-card rounded-[2.8rem] p-10 h-full flex flex-col items-center text-center space-y-6">
-              <div className="w-20 h-20 bg-accent-secondary/10 text-accent-secondary rounded-3xl flex items-center justify-center group-hover:rotate-12 transition-transform">
-                <BookOpen size={40} strokeWidth={2.5} />
-              </div>
-              <div>
-                <h2 className="text-3xl font-black mb-2">Start Learning</h2>
-                <p className="text-foreground/60 font-bold">Discover 10 new philosophical concepts curated for you.</p>
-              </div>
-            </div>
-          </button>
-
-          <button
-            onClick={() => setViewMode('review')}
-            className="group relative p-1 rounded-[3rem] bg-black/5 dark:bg-white/5 transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out"
-          >
-            <div className="bg-card rounded-[2.8rem] p-10 h-full flex flex-col items-center text-center space-y-6">
-              <div className="w-20 h-20 bg-foreground/5 text-foreground/40 rounded-3xl flex items-center justify-center group-hover:-rotate-12 transition-transform">
-                <History size={40} strokeWidth={2.5} />
-              </div>
-              <div>
-                <h2 className="text-3xl font-black mb-2">Review Wisdom</h2>
-                <p className="text-foreground/60 font-bold">Revisit your past reflections and AI-guided insights.</p>
-              </div>
-              {philosophyReflections.length > 0 && (
-                <div className="px-4 py-1 bg-accent-secondary/20 text-accent-secondary rounded-full text-xs font-black uppercase tracking-widest">
-                  {philosophyReflections.length} Reflections Saved
-                </div>
-              )}
-            </div>
+            <ArrowLeft className="w-6 h-6" />
           </button>
         </div>
 
-        <button
-          onClick={() => router.push('/learn')}
-          className="mx-auto flex items-center gap-2 text-foreground/40 hover:text-foreground transition-colors font-black uppercase tracking-widest text-sm"
-        >
-          <ChevronLeft size={20} />
-          Back to Hub
-        </button>
+        <div className="flex-1 flex flex-col justify-center space-y-12">
+          <div className="space-y-4 text-center">
+            <h1 className="text-6xl font-black tracking-tighter text-foreground italic">
+              The Inner <span className="text-accent-secondary">Sanctum</span>
+            </h1>
+            <p className="text-xl text-foreground/60 font-medium max-w-xl mx-auto">
+              Deepen your understanding of existence through guided exploration and reflective wisdom.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <button
+              onClick={() => {
+                setCurrentIndex(0);
+                setCurrentSessionMCQs([]);
+                setViewMode('learn');
+              }}
+              className="group relative p-1 rounded-[3rem] bg-gradient-to-br from-accent-secondary to-accent transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out"
+            >
+              <div className="bg-card rounded-[2.8rem] p-10 h-full flex flex-col items-center text-center space-y-6">
+                <div className="w-20 h-20 bg-accent-secondary/10 text-accent-secondary rounded-3xl flex items-center justify-center group-hover:rotate-12 transition-transform">
+                  <BookOpen size={40} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-black mb-2">Start Learning</h2>
+                  <p className="text-foreground/60 font-bold">Discover 10 new philosophical concepts curated for you.</p>
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setViewMode('review')}
+              className="group relative p-1 rounded-[3rem] bg-black/5 dark:bg-white/5 transition-all hover:scale-[1.02] active:scale-95 shadow-neo-out"
+            >
+              <div className="bg-card rounded-[2.8rem] p-10 h-full flex flex-col items-center text-center space-y-6">
+                <div className="w-20 h-20 bg-foreground/5 text-foreground/40 rounded-3xl flex items-center justify-center group-hover:-rotate-12 transition-transform">
+                  <History size={40} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-black mb-2">Review Wisdom</h2>
+                  <p className="text-foreground/60 font-bold">Revisit your past reflections and AI-guided insights.</p>
+                </div>
+                {philosophyReflections.length > 0 && (
+                  <div className="px-4 py-1 bg-accent-secondary/20 text-accent-secondary rounded-full text-xs font-black uppercase tracking-widest">
+                    {philosophyReflections.length} Reflections Saved
+                  </div>
+                )}
+              </div>
+            </button>
+          </div>
+        </div>
       </main>
     );
   }
