@@ -4,17 +4,25 @@ const IS_CAPACITOR = typeof window !== 'undefined' && (window as any).Capacitor;
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
 async function callGateway(action: string, payload: any = {}) {
+  const url = `${API_BASE_URL}/api/android-gateway`;
   try {
-    const response = await fetch(`${API_BASE_URL}/api/android-gateway`, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action, payload })
     });
 
-    if (!response.ok) throw new Error(`Gateway returned ${response.status}`);
+    if (!response.ok) {
+      console.error(`[Action Proxy] Gateway Error: Status ${response.status} for action ${action}`);
+      throw new Error(`Gateway returned ${response.status}`);
+    }
     return await response.json();
-  } catch (e) {
-    console.error(`[Action Proxy] Failed to call gateway for ${action}:`, e);
+  } catch (e: any) {
+    console.error(`[Action Proxy] Failed to call gateway for ${action}. URL: ${url}. Error:`, e);
+    // Log if it's a network error vs a configuration error
+    if (e.message.includes('fetch')) {
+      console.error('[Action Proxy] Possible CORS issue or Network Disconnected.');
+    }
     throw e;
   }
 }
@@ -82,11 +90,72 @@ export async function generateCrossword() {
 }
 
 // Missing action exports to fix build errors
-export async function generateConcepts(...args: any[]) { return { success: false, concepts: [] }; }
-export async function getPhilosophyFeedback(...args: any[]) { return { success: false, feedback: "" }; }
-export async function generateScienceConcepts(...args: any[]) { return { success: false, concepts: [] }; }
-export async function getScienceFeedback(...args: any[]) { return { success: false, feedback: "" }; }
-export async function generateChallenge(...args: any[]) { return { success: false }; }
-export async function getChallengeFeedback(...args: any[]) { return { success: false }; }
-export async function generatePhilosophyLesson(...args: any[]) { return { success: false }; }
-export async function generateScienceLesson(...args: any[]) { return { success: false }; }
+export async function generateConcepts(interests: string[] = [], exclude: string[] = []) {
+  if (process.env.CAPACITOR_BUILD !== 'true' && !IS_CAPACITOR) {
+    // @ts-ignore
+    const { generateConcepts } = await import('@/app/learn/philosophy/actions');
+    return await generateConcepts(interests, exclude);
+  }
+  return await callGateway('generateConcepts', { interests, exclude });
+}
+
+export async function getPhilosophyFeedback(...args: any[]) {
+  if (process.env.CAPACITOR_BUILD !== 'true' && !IS_CAPACITOR) {
+    // @ts-ignore
+    const { getPhilosophyFeedback } = await import('@/app/learn/philosophy/actions');
+    return await getPhilosophyFeedback(args[0], args[1], args[2], args[3]);
+  }
+  return await callGateway('getPhilosophyFeedback', {
+    conceptName: args[0],
+    conceptText: args[1],
+    question: args[2],
+    userAnswer: args[3]
+  });
+}
+
+export async function generateScienceConcepts(interests: string[] = [], exclude: string[] = []) {
+  if (process.env.CAPACITOR_BUILD !== 'true' && !IS_CAPACITOR) {
+    // @ts-ignore
+    const { generateScienceConcepts } = await import('@/app/learn/science/actions');
+    return await generateScienceConcepts(interests, exclude);
+  }
+  return await callGateway('generateScienceConcepts', { interests, exclude });
+}
+
+export async function getScienceFeedback(...args: any[]) {
+  if (process.env.CAPACITOR_BUILD !== 'true' && !IS_CAPACITOR) {
+    // @ts-ignore
+    const { getScienceFeedback } = await import('@/app/learn/science/actions');
+    return await getScienceFeedback(args[0], args[1], args[2], args[3]);
+  }
+  return await callGateway('getScienceFeedback', {
+    conceptName: args[0],
+    conceptText: args[1],
+    question: args[2],
+    userAnswer: args[3]
+  });
+}
+
+export async function generateChallenge(...args: any[]) {
+  if (process.env.CAPACITOR_BUILD !== 'true' && !IS_CAPACITOR) {
+    // @ts-ignore
+    const { generateChallenge } = await import('@/app/activities/challenges/actions');
+    return await generateChallenge(args[0], args[1]);
+  }
+  return await callGateway('generateChallenge', {
+    context: args[0],
+    previousChallenges: args[1]
+  });
+}
+
+export async function getChallengeFeedback(...args: any[]) {
+  return await callGateway('getChallengeFeedback', { payload: args });
+}
+
+export async function generatePhilosophyLesson(...args: any[]) {
+  return await callGateway('generatePhilosophyLesson', { payload: args });
+}
+
+export async function generateScienceLesson(...args: any[]) {
+  return await callGateway('generateScienceLesson', { payload: args });
+}
