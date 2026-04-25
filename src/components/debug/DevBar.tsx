@@ -5,6 +5,8 @@ import { Calendar, RefreshCw, X, Bug, Layout } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 
 export const DevBar = () => {
+  if (process.env.NODE_ENV === 'production') return null;
+
   const [isVisible, setIsVisible] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [overrideDate, setOverrideDate] = useState('');
