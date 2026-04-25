@@ -1,10 +1,13 @@
-import { Laptop, History, Puzzle, Languages, FlaskConical, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Search, X as XIcon, Brain, Sun, Moon, ArrowRight, Plus, CheckCircle2, ShieldCheck, Download, Smartphone, Clock } from 'lucide-react';
+import { Laptop, History, Puzzle, Languages, FlaskConical, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Search, X as XIcon, Brain, Sun, Moon, ArrowRight, Plus, CheckCircle2, ShieldCheck, Download, Smartphone, Clock, Bell, Battery, Activity, AlertCircle } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
 import { useState, useEffect } from 'react';
 import { useUserStore } from '@/store/userStore';
 import { Button } from './ui/Button';
+import { Card } from './ui/Card';
 import { ALL_LANGUAGES } from '@/lib/languages';
 import { FRICTION_PRESETS } from '@/lib/friction-presets';
+import { WaitLessDigitalWellbeing } from '@/lib/native-bridge';
+import router from 'next/router';
 
 const INTEREST_OPTIONS = [
   { id: 'tech', label: 'Technology', icon: Laptop },
@@ -41,6 +44,45 @@ export default function Onboarding() {
   const [frictionConfigs, setFrictionConfigs] = useState<Record<string, { start: string, end: string }>>({});
   const [customFrictionData, setCustomFrictionData] = useState({ name: '', start: '09:00', end: '10:00' });
   const [isAddingCustom, setIsAddingCustom] = useState(false);
+
+  // Permission States
+  const [usageStatsGranted, setUsageStatsGranted] = useState(false);
+  const [notificationGranted, setNotificationGranted] = useState(false);
+  const [batteryGranted, setBatteryGranted] = useState(false);
+  const [physicalActivityGranted, setPhysicalActivityGranted] = useState(false);
+  const [backgroundLocationGranted, setBackgroundLocationGranted] = useState(false);
+  const [checkingPermissions, setCheckingPermissions] = useState(true);
+
+  const checkPermissions = async () => {
+    if (Capacitor.getPlatform() === 'web') return;
+    try {
+      const [usage, notify, battery, physical, background] = await Promise.all([
+        WaitLessDigitalWellbeing.hasUsageStatsPermission(),
+        WaitLessDigitalWellbeing.hasNotificationPermission(),
+        WaitLessDigitalWellbeing.hasBatteryOptimizationPermission(),
+        WaitLessDigitalWellbeing.hasPhysicalActivityPermission(),
+        WaitLessDigitalWellbeing.hasBackgroundLocationPermission()
+      ]);
+      
+      setUsageStatsGranted(usage.granted);
+      setNotificationGranted(notify.granted);
+      setBatteryGranted(battery.granted);
+      setPhysicalActivityGranted(physical.granted);
+      setBackgroundLocationGranted(background.granted);
+    } catch (e) {
+      console.error('Failed to check permissions', e);
+    } finally {
+      setCheckingPermissions(false);
+    }
+  };
+
+  useEffect(() => {
+    if (step === 5) {
+      checkPermissions();
+      const interval = setInterval(checkPermissions, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [step]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -108,7 +150,9 @@ export default function Onboarding() {
     });
   };
 
-  const handleFinish = () => {
+  const setOnboardingComplete = useUserStore((state) => state.setOnboardingComplete);
+
+  const handleFinish = (skipComplete: boolean = false) => {
     if (languagesSelected.length >= 1) {
       setInterests(selected);
       setVideoGenres(videoSelected);
@@ -139,11 +183,59 @@ export default function Onboarding() {
       }
 
       setFrictionPoints(points);
+      
+      if (!skipComplete) {
+        setOnboardingComplete(true);
+      } else {
+        setStep(5);
+      }
     }
   };
 
   const filteredLanguages = ALL_LANGUAGES.filter(lang =>
     lang.label.toLowerCase().includes(languageSearch.toLowerCase())
+  );
+
+  const PermissionItem = ({ 
+    title, 
+    description, 
+    icon: Icon, 
+    status, 
+    action 
+  }: { 
+    title: string, 
+    description: string, 
+    icon: any, 
+    status: 'granted' | 'missing' | 'checking',
+    action?: () => void
+  }) => (
+    <Card className="p-5 flex items-start gap-4 shadow-neo-out text-left">
+      <div className={`p-3 rounded-2xl bg-card shadow-neo-in ${status === 'granted' ? 'text-accent' : 'text-foreground/40'}`}>
+        <Icon size={24} />
+      </div>
+      <div className="flex-1 space-y-1">
+        <h3 className="font-bold text-sm">{title}</h3>
+        <p className="text-[10px] text-foreground/60 font-medium leading-relaxed">{description}</p>
+        <div className="pt-2">
+          {status === 'granted' ? (
+            <div className="flex items-center text-accent font-bold text-[10px]">
+              <CheckCircle2 size={12} className="mr-1" />
+              Granted
+            </div>
+          ) : status === 'checking' ? (
+            <div className="text-foreground/20 text-[10px] animate-pulse">Checking...</div>
+          ) : (
+            <Button 
+              onClick={action}
+              variant="outline" 
+              className="py-1 px-3 text-[10px] shadow-neo-out active:shadow-neo-in h-auto"
+            >
+              Grant
+            </Button>
+          )}
+        </div>
+      </div>
+    </Card>
   );
 
   return (
@@ -408,16 +500,26 @@ export default function Onboarding() {
                 </a>
               </div>
             ) : (
-              <div className="flex gap-4 items-start text-left">
-                <div className="p-3 bg-accent/10 text-accent rounded-2xl">
-                  <ShieldCheck size={24} />
+              <div className="space-y-6 text-left">
+                <div className="flex gap-4 items-start">
+                  <div className="p-3 bg-accent/10 text-accent rounded-2xl">
+                    <ShieldCheck size={24} />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="font-black uppercase tracking-wider text-sm">Optimize Your Experience</h3>
+                    <p className="text-foreground/60 text-sm font-medium leading-relaxed">
+                      To detect waiting periods automatically, WaitLess needs a few system permissions.
+                    </p>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="font-black uppercase tracking-wider text-sm">Optimize Your Experience</h3>
-                  <p className="text-foreground/60 text-sm font-medium leading-relaxed">
-                    Head over to your Profile to customize system permissions. This helps WaitLess detect waiting periods more accurately.
-                  </p>
-                </div>
+
+                <Button
+                  onClick={() => handleFinish(true)}
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all"
+                >
+                  <ShieldCheck size={20} />
+                  SETUP PERMISSIONS
+                </Button>
               </div>
             )}
 
@@ -442,7 +544,72 @@ export default function Onboarding() {
               Back
             </Button>
             <Button
-              onClick={handleFinish}
+              onClick={() => handleFinish()}
+              variant="primary"
+              className={`flex-1 py-5 text-xl font-black shadow-neo-out active:shadow-neo-in active:scale-95`}
+            >
+              Finish Setup
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {step === 5 && (
+        <div className="max-w-xl w-full text-center space-y-8 animate-in slide-in-from-right-8 duration-700">
+          <div className="space-y-4">
+            <h1 className="text-4xl font-black tracking-tight">Final Steps.</h1>
+            <p className="text-foreground/50 text-lg font-medium">
+              Give WaitLess the tools it needs to monitor your waiting time.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <PermissionItem 
+              title="Notifications"
+              description="Pings you when a wait is detected."
+              icon={Bell}
+              status={checkingPermissions ? 'checking' : notificationGranted ? 'granted' : 'missing'}
+              action={() => WaitLessDigitalWellbeing.requestNotificationPermission()}
+            />
+            <PermissionItem 
+              title="Usage Access"
+              description="Detects doomscrolling apps."
+              icon={Smartphone}
+              status={checkingPermissions ? 'checking' : usageStatsGranted ? 'granted' : 'missing'}
+              action={() => WaitLessDigitalWellbeing.openUsageSettings()}
+            />
+            <PermissionItem 
+              title="Background Activity"
+              description="Prevents system from killing the app."
+              icon={Battery}
+              status={checkingPermissions ? 'checking' : batteryGranted ? 'granted' : 'missing'}
+              action={() => WaitLessDigitalWellbeing.requestBatteryOptimizationPermission()}
+            />
+            <PermissionItem 
+              title="Physical Activity"
+              description="Detects walking/movement."
+              icon={Activity}
+              status={checkingPermissions ? 'checking' : physicalActivityGranted ? 'granted' : 'missing'}
+              action={() => WaitLessDigitalWellbeing.requestPhysicalActivityPermission()}
+            />
+            <PermissionItem 
+              title="Commute Reminder"
+              description="Station alerts. Choose 'Allow all the time'."
+              icon={ShieldCheck}
+              status={checkingPermissions ? 'checking' : backgroundLocationGranted ? 'granted' : 'missing'}
+              action={() => WaitLessDigitalWellbeing.requestBackgroundLocationPermission()}
+            />
+          </div>
+
+          <div className="pt-4 flex gap-4">
+            <Button
+              onClick={() => setStep(4)}
+              className={`py-5 px-8 font-black shadow-lg bg-background border border-accent/10 hover:bg-accent/5 !text-accent`}
+            >
+              Back
+            </Button>
+            <Button
+              onClick={() => setOnboardingComplete(true)}
               variant="primary"
               className={`flex-1 py-5 text-xl font-black shadow-neo-out active:shadow-neo-in active:scale-95`}
             >

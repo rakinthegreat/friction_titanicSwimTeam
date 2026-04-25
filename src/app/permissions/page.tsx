@@ -1,34 +1,40 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { ArrowLeft, ShieldCheck, Bell, Battery, Smartphone, CheckCircle2, AlertCircle, Activity } from 'lucide-react';
 import { WaitLessDigitalWellbeing } from '@/lib/native-bridge';
+import { useUserStore } from '@/store/userStore';
 
-export default function PermissionsPage() {
+function PermissionsContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isOnboarding = searchParams.get('onboarding') === 'true';
   const [usageStatsGranted, setUsageStatsGranted] = useState(false);
   const [notificationGranted, setNotificationGranted] = useState(false);
   const [batteryGranted, setBatteryGranted] = useState(false);
   const [physicalActivityGranted, setPhysicalActivityGranted] = useState(false);
+  const [backgroundLocationGranted, setBackgroundLocationGranted] = useState(false);
   const [checking, setChecking] = useState(true);
 
   const checkPermissions = async () => {
     try {
-      const [usage, notify, battery, physical] = await Promise.all([
+      const [usage, notify, battery, physical, background] = await Promise.all([
         WaitLessDigitalWellbeing.hasUsageStatsPermission(),
         WaitLessDigitalWellbeing.hasNotificationPermission(),
         WaitLessDigitalWellbeing.hasBatteryOptimizationPermission(),
-        WaitLessDigitalWellbeing.hasPhysicalActivityPermission()
+        WaitLessDigitalWellbeing.hasPhysicalActivityPermission(),
+        WaitLessDigitalWellbeing.hasBackgroundLocationPermission()
       ]);
       
       setUsageStatsGranted(usage.granted);
       setNotificationGranted(notify.granted);
       setBatteryGranted(battery.granted);
       setPhysicalActivityGranted(physical.granted);
+      setBackgroundLocationGranted(background.granted);
     } catch (e) {
       console.error('Failed to check permissions', e);
     } finally {
@@ -38,6 +44,11 @@ export default function PermissionsPage() {
 
   useEffect(() => {
     checkPermissions();
+    
+    // Automatically setup geofencing if background location is granted
+    if (backgroundLocationGranted) {
+      WaitLessDigitalWellbeing.setupGeofencing().catch(console.error);
+    }
     
     // Check again when window regains focus (user returns from settings)
     window.addEventListener('focus', checkPermissions);
@@ -83,6 +94,27 @@ export default function PermissionsPage() {
       setPhysicalActivityGranted(granted);
     } catch (e) {
       console.error('Failed to request physical activity permission', e);
+    }
+  };
+
+  const handleRequestBackgroundLocation = async () => {
+    try {
+      await WaitLessDigitalWellbeing.requestBackgroundLocationPermission();
+      // This usually opens settings, so we rely on the focus/polling check
+    } catch (e) {
+      console.error('Failed to request background location permission', e);
+    }
+  };
+
+  const handleSetupGeofencing = async () => {
+    try {
+      const { status } = await WaitLessDigitalWellbeing.setupGeofencing();
+      if (status === 'success') {
+        alert('Station Alerts activated! You will be notified when waiting at a station.');
+      }
+    } catch (e) {
+      console.error('Failed to setup geofencing', e);
+      alert('Failed to activate alerts. Please ensure location is enabled.');
     }
   };
 
@@ -136,9 +168,9 @@ export default function PermissionsPage() {
             onClick={() => router.push('/')}
             className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors mr-2"
           >
-            <ArrowLeft className="w-6 h-6" />
+            {isOnboarding ? <Smartphone className="w-6 h-6" /> : <ArrowLeft className="w-6 h-6" />}
           </button>
-          <h1 className="text-3xl font-black tracking-tight">Permissions</h1>
+          <h1 className="text-3xl font-black tracking-tight">{isOnboarding ? 'Final Steps' : 'Permissions'}</h1>
         </div>
         <ThemeToggle />
       </header>
@@ -186,6 +218,14 @@ export default function PermissionsPage() {
             status={checking ? 'checking' : physicalActivityGranted ? 'granted' : 'missing'}
             action={handleRequestPhysicalActivity}
           />
+
+          <PermissionItem 
+            title="Commute Reminder"
+            description="Detects if you're waiting at a station to suggest activities. Click Allow all the time, if available."
+            icon={ShieldCheck}
+            status={checking ? 'checking' : backgroundLocationGranted ? 'granted' : 'missing'}
+            action={handleRequestBackgroundLocation}
+          />
         </div>
       </section>
 
@@ -195,7 +235,35 @@ export default function PermissionsPage() {
           Some features may be limited without all permissions
         </div>
       )}
+
+      {isOnboarding && (
+        <div className="pt-4">
+          <Button 
+            onClick={() => {
+              const setOnboardingComplete = useUserStore.getState().setOnboardingComplete;
+              setOnboardingComplete(true);
+              router.push('/');
+            }}
+            className="w-full py-6 rounded-[2rem] bg-accent text-white font-black text-2xl shadow-neo-out active:shadow-neo-in flex items-center justify-center gap-3 animate-in slide-in-from-bottom-8 duration-1000 delay-500"
+          >
+            FINISH SETUP
+            <ArrowLeft className="w-6 h-6 rotate-180" />
+          </Button>
+        </div>
+      )}
     </main>
+  );
+}
+
+export default function PermissionsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <PermissionsContent />
+    </Suspense>
   );
 }
 

@@ -193,9 +193,11 @@ export default function Home() {
     setActiveActivity(null);
   };
 
+  const onboardingComplete = useUserStore((state) => state.onboardingComplete);
+
   if (!mounted || !_hasHydrated) return null;
 
-  if (interests.length === 0 || !videoGenres || videoGenres.length === 0) {
+  if (!onboardingComplete) {
     return <Onboarding />;
   }
 

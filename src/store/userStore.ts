@@ -58,6 +58,7 @@ interface UserState {
     blockDoomscrolling: boolean;
     showDevTiles: boolean;
   };
+  onboardingComplete: boolean;
   navigationSource: 'home' | 'profile' | 'learn' | 'games' | 'activities';
   navigationHistory: string[];
 
@@ -157,6 +158,7 @@ interface UserState {
   syncWithFirebase: () => Promise<void>;
   setQuotePool: (quotes: string[]) => void;
   refreshQuote: () => void;
+  setOnboardingComplete: (complete: boolean) => void;
   _hasHydrated: boolean;
   setHasHydrated: (state: boolean) => void;
 }
@@ -187,6 +189,8 @@ export const useUserStore = create<UserState>()(
         blockDoomscrolling: true,
         showDevTiles: false,
       },
+      onboardingComplete: false,
+      onboardingInProgress: false, // Added for UI tracking if needed
 
       completedPhilosophyConcepts: [],
       customPhilosophyConcepts: [],
@@ -467,6 +471,7 @@ export const useUserStore = create<UserState>()(
           lastQuoteUpdate: Date.now()
         };
       }),
+      setOnboardingComplete: (complete) => set({ onboardingComplete: complete }),
 
       startSession: (duration) => set({
         sessionDuration: duration,

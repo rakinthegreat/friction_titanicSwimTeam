@@ -14,6 +14,9 @@ export interface WaitLessDigitalWellbeingPlugin {
   requestBatteryOptimizationPermission(): Promise<void>;
   hasPhysicalActivityPermission(): Promise<{ granted: boolean }>;
   requestPhysicalActivityPermission(): Promise<{ granted: boolean }>;
+  hasBackgroundLocationPermission(): Promise<{ granted: boolean }>;
+  requestBackgroundLocationPermission(): Promise<void>;
+  setupGeofencing(): Promise<{ status: string }>;
 }
 
 const isNative = Capacitor.isNativePlatform();
@@ -35,7 +38,10 @@ const WaitLessDigitalWellbeing: WaitLessDigitalWellbeingPlugin = isNative ? Wait
   hasBatteryOptimizationPermission: async () => ({ granted: true }),
   requestBatteryOptimizationPermission: async () => { console.log('Battery optimization only on Android'); },
   hasPhysicalActivityPermission: async () => ({ granted: true }),
-  requestPhysicalActivityPermission: async () => ({ granted: true })
+  requestPhysicalActivityPermission: async () => ({ granted: true }),
+  hasBackgroundLocationPermission: async () => ({ granted: true }),
+  requestBackgroundLocationPermission: async () => { console.log('Location settings only on Android'); },
+  setupGeofencing: async () => ({ status: 'success' })
 };
 
 

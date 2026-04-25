@@ -108,7 +108,7 @@ export default function ChallengesPage() {
         <ThemeToggle />
       </header>
 
-      <section className="bg-card rounded-[2.5rem] p-10  border border-black/5 relative overflow-hidden">
+      <section className={`${step === 'summary' ? '' : 'bg-card p-10 border border-black/5'} rounded-[2.5rem] relative overflow-hidden`}>
         {step === 'context' && (
           <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-6">
@@ -281,11 +281,11 @@ export default function ChallengesPage() {
         )}
 
         {step === 'summary' && (
-          <div className="w-full max-w-2xl bg-[#0f0f0f] rounded-[3rem] p-12 text-center space-y-10 shadow-2xl relative border border-white/5 overflow-hidden animate-in zoom-in duration-700">
+          <div className="w-full max-w-2xl mx-auto bg-card rounded-[3rem] p-8 pt-16 text-center space-y-8 shadow-neo-out relative border border-foreground/5 overflow-hidden animate-in zoom-in duration-700">
             <div className="absolute top-6 left-6">
               <BackButton href="/" className="text-accent" />
             </div>
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-accent/10 rounded-full blur-[80px]" />
+
             <div className="w-24 h-24 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto">
               <CheckCircle2 size={48} />
             </div>
