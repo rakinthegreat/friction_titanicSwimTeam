@@ -13,6 +13,20 @@ function run(command, env = {}) {
   });
 }
 
+function findFilesRecursive(dir, filename, results = []) {
+  const list = fs.readdirSync(dir);
+  list.forEach(file => {
+    const filePath = path.resolve(dir, file);
+    const stat = fs.statSync(filePath);
+    if (stat && stat.isDirectory()) {
+      findFilesRecursive(filePath, filename, results);
+    } else if (file === filename) {
+      results.push(filePath);
+    }
+  });
+  return results;
+}
+
 try {
   console.log('--- STARTING ANDROID BUILD ---');
 
@@ -43,10 +57,8 @@ try {
   try {
     // 2.5 Disable Server Actions for static export
     console.log('Temporarily redirecting Server Actions to proxy...');
-    actionFiles = execSync('powershell -Command "Get-ChildItem -Path src/app -Recurse -Filter \\"actions.ts\\" | Select-Object -ExpandProperty FullName"', { encoding: 'utf8' })
-      .split('\n')
-      .map(f => f.trim())
-      .filter(f => f);
+    
+    actionFiles = findFilesRecursive(path.resolve(__dirname, '../src/app'), 'actions.ts');
     
     for (const file of actionFiles) {
       const content = fs.readFileSync(file, 'utf8');
@@ -79,7 +91,7 @@ try {
 
     if (apiHidden) {
       console.log('Restoring API routes...');
-      // Retry logic for Windows EPERM/EBUSY errors
+      // Retry logic for EPERM/EBUSY errors (common on Windows, but good practice)
       let restored = false;
       for (let i = 0; i < 5; i++) {
         try {
@@ -90,7 +102,8 @@ try {
           break;
         } catch (err) {
           console.warn(`  Attempt ${i + 1} failed to restore API folder. Retrying in 2s...`);
-          execSync('powershell -Command "Start-Sleep -Seconds 2"');
+          const sleepCmd = process.platform === 'win32' ? 'timeout /t 2' : 'sleep 2';
+          try { execSync(sleepCmd); } catch (e) {}
         }
       }
       if (!restored) {
