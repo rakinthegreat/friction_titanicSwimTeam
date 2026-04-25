@@ -255,7 +255,7 @@ export default function Home() {
               <div className="animate-in fade-in zoom-in-95 duration-500">
                 <div className="space-y-1 relative z-10 mb-6">
                   <h2 className="text-2xl font-black">How long do you expect to wait?</h2>
-                  <p className="opacity-80 font-medium text-sm">Choose an approximate duration of your commute</p>
+                  <p className="opacity-80 font-medium text-sm">We'll make the wait feel shorter.</p>
                 </div>
                 {/* Portrait: 3+1 split. Landscape: flex row of 5 via display:contents */}
                 <div className="space-y-3 relative z-10 [@media(orientation:landscape)]:flex [@media(orientation:landscape)]:gap-3 [@media(orientation:landscape)]:space-y-0">
