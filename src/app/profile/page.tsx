@@ -3,8 +3,9 @@
 import { useUserStore } from "@/store/userStore";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useFirebaseAuth } from "@/hooks/useFirebaseAuth";
-import { LogOut, ArrowLeft, CloudUpload, Settings2, Check, X, Laptop, History, Puzzle, Languages, FlaskConical, Brain, Leaf, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Trophy, Search, X as XIcon, Clock, Bell, BellOff } from "lucide-react";
+import { LogOut, ArrowLeft, CloudUpload, Settings2, Check, X, Laptop, History, Puzzle, Languages, FlaskConical, Brain, Leaf, Plane, Landmark, GraduationCap, Megaphone, Newspaper, Trophy, Search, X as XIcon, Clock, Bell, BellOff, ShieldCheck, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { Capacitor } from "@capacitor/core";
 import { useEffect, useState } from "react";
 import { ALL_LANGUAGES } from "@/lib/languages";
 import { FRICTION_PRESETS } from "@/lib/friction-presets";
@@ -154,7 +155,7 @@ export default function Profile() {
   );
 
   const handleUpdateFrictionTime = (id: string) => {
-    const updated = frictionPoints.map(p => 
+    const updated = frictionPoints.map(p =>
       p.id === id ? { ...p, startTime: tempFrictionTime.start, endTime: tempFrictionTime.end } : p
     );
     setFrictionPoints(updated);
@@ -444,6 +445,31 @@ export default function Profile() {
           )}
         </div>
 
+        {Capacitor.getPlatform() === 'android' && (
+          <Link href="/permissions" className="group md:col-span-2">
+            <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 group-hover:border-accent/20 transition-all group-hover:-translate-y-1 h-full flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:scale-110 transition-transform">
+                <ShieldCheck size={80} />
+              </div>
+              <div className="flex justify-between items-start mb-2 relative z-10">
+                <div className="space-y-1">
+                  <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">App Permissions</p>
+                  <h3 className="text-2xl font-black italic tracking-tighter uppercase leading-tight">Improve Experience</h3>
+                </div>
+                <div className="p-3 bg-accent/10 text-accent rounded-2xl group-hover:bg-accent group-hover:text-white transition-colors">
+                  <ShieldCheck size={20} />
+                </div>
+              </div>
+              <div className="flex items-center justify-between relative z-10">
+                <p className="text-foreground/60 font-medium text-sm leading-relaxed max-w-[80%]">
+                  Configure system permissions for better detection.
+                </p>
+                <ChevronRight className="w-5 h-5 text-accent opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0" />
+              </div>
+            </div>
+          </Link>
+        )}
+
         <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 flex flex-col justify-between md:col-span-2">
           <div className="flex justify-between items-center mb-2">
             <div className="space-y-1">
@@ -570,20 +596,20 @@ export default function Profile() {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {FRICTION_PRESETS.filter(p => !frictionPoints.some(fp => fp.type === p.type)).map((preset) => {
-                  const Icon = preset.icon;
-                  return (
-                    <button
-                      key={preset.type}
-                      onClick={() => handleAddPresetFriction(preset)}
-                      className="flex items-center gap-4 p-4 bg-card rounded-2xl shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all text-left group"
-                    >
-                      <div className="p-3 bg-accent/10 text-accent rounded-xl group-hover:bg-accent group-hover:text-white transition-colors">
-                        <Icon size={20} />
-                      </div>
-                      <span className="font-black text-xs uppercase tracking-wider">{preset.label}</span>
-                    </button>
-                  );
-                })}
+                    const Icon = preset.icon;
+                    return (
+                      <button
+                        key={preset.type}
+                        onClick={() => handleAddPresetFriction(preset)}
+                        className="flex items-center gap-4 p-4 bg-card rounded-2xl shadow-neo-out hover:scale-[1.02] active:scale-95 transition-all text-left group"
+                      >
+                        <div className="p-3 bg-accent/10 text-accent rounded-xl group-hover:bg-accent group-hover:text-white transition-colors">
+                          <Icon size={20} />
+                        </div>
+                        <span className="font-black text-xs uppercase tracking-wider">{preset.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
               {FRICTION_PRESETS.length === frictionPoints.length && (
@@ -825,8 +851,7 @@ export default function Profile() {
             <button
               onClick={handleSync}
               disabled={isSyncing}
-              className={`w-full py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2 ${
-                syncSuccess
+              className={`w-full py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2 ${syncSuccess
                   ? 'bg-card text-green-500 shadow-neo-in scale-[0.98]'
                   : 'bg-card text-accent shadow-neo-out hover:scale-[1.02] active:scale-[0.98]'
                 }`}

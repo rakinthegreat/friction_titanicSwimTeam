@@ -12,12 +12,13 @@ import { useRouter } from "next/navigation";
 import { ACTIVITIES } from "@/lib/activities";
 import { VideoRecommendation } from "@/components/recreation/VideoRecommendation";
 import { INITIAL_QUOTES } from "@/lib/quotes";
-import { generateQuotes } from "@/app/quotes/actions";
-import vocabData from "@/stored-data/english-vocab.json";
+import { getDailyWord, getEffectiveDate } from "@/lib/dailyWord";
+import { getCachedData, setCachedData } from "@/lib/offline-data-manager";
 import { ActivityDefinition } from '@/lib/activities';
 import { Capacitor } from '@capacitor/core';
 import { FrictionPoint } from "@/store/userStore";
 import { FRICTION_PRESETS } from "@/lib/friction-presets";
+import { generateQuotes } from "./quotes/actions";
 
 /** Virtual activity id for the watch/recreation slot */
 const VIDEO_ACTIVITY_ID = '__video__';
@@ -158,19 +159,58 @@ export default function Home() {
   const setQuotePool = useUserStore(state => state.setQuotePool);
   const refreshQuote = useUserStore(state => state.refreshQuote);
 
-  // Word of the Day — seeded by calendar date so it's stable within a day
-  const wordOfTheDay = (() => {
-    const today = new Date();
-    const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-    const idx = seed % vocabData.length;
-    return vocabData[idx] as { question: string; answer: string; definition: string };
-  })();
+  // Word of the Day Sync
+  const [wordData, setWordData] = useState<{ word: string; phonetic: string; meaning: string } | null>(null);
+  const [wordLoading, setWordLoading] = useState(true);
+
+  useEffect(() => {
+    const CACHE_KEY = 'word_of_day_cache_v2';
+    const fetchWordData = async () => {
+      try {
+        const today = getEffectiveDate();
+        const cached = await getCachedData<any>(CACHE_KEY);
+        if (cached && cached.date === today) {
+          setWordData(cached.data);
+          setWordLoading(false);
+          return;
+        }
+
+        const word = getDailyWord();
+        const defRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+        let data: { word: string; phonetic: string; meaning: string };
+
+        if (defRes.ok) {
+          const defData = await defRes.json();
+          const entry = defData[0];
+          data = {
+            word: word,
+            meaning: entry.meanings[0].definitions[0].definition,
+            phonetic: entry.phonetic || ''
+          };
+        } else {
+          data = {
+            word: word,
+            meaning: 'A common daily word to help you reclaim your time and focus.',
+            phonetic: ''
+          };
+        }
+
+        setWordData(data);
+        await setCachedData(CACHE_KEY, { date: today, data });
+      } catch (error) {
+        console.error("Failed to fetch word of the day:", error);
+      } finally {
+        setWordLoading(false);
+      }
+    };
+    fetchWordData();
+  }, []);
 
   // Word of the Day probability: 70% if interested in languages, 30% otherwise
   const [wordOfDayRoll] = useState(() => Math.random());
   const showWordOfDay = interests.includes('languages')
-    ? wordOfDayRoll < 0.7
-    : wordOfDayRoll < 0.3;
+    ? wordOfDayRoll < 0.65
+    : wordOfDayRoll < 0.1;
   const frictionPoints = useUserStore(state => state.frictionPoints);
   const [activeFriction, setActiveFriction] = useState<FrictionPoint | null>(null);
   const lastNotifiedFrictionId = useRef<string | null>(null);
@@ -324,15 +364,6 @@ export default function Home() {
             )}
           </div>
           <div className="flex items-center gap-3">
-            {Capacitor.getPlatform() === 'android' && (
-              <Link
-                href="/permissions"
-                className="p-3 rounded-2xl bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-accent"
-                aria-label="Manage Permissions"
-              >
-                <ShieldCheck size={20} />
-              </Link>
-            )}
             <Link
               href="/profile"
               className="p-3 rounded-2xl bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-accent"
@@ -491,8 +522,8 @@ export default function Home() {
             </>
           )}
         </section>
-        {showWordOfDay ? (
-          /* ── Word of the Day (languages interest) ── */
+        {showWordOfDay && wordData ? (
+          /* ── Word of the Day (synced) ── */
           <div className="bg-[#0f0f0f] rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden group animate-in fade-in slide-in-from-top-4 duration-1000">
             <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent/20 rounded-full blur-[100px] animate-pulse pointer-events-none" />
             <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-accent-secondary/10 rounded-full blur-[100px] animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
@@ -500,30 +531,29 @@ export default function Home() {
             <div className="relative z-10 space-y-5">
               <p className="text-[10px] font-black uppercase tracking-[0.25em] text-accent/70">Word of the Day</p>
 
-              {/* The word */}
-              <h2 className="text-5xl md:text-6xl font-black text-white tracking-tighter capitalize animate-in fade-in slide-in-from-bottom-4 duration-700">
-                {wordOfTheDay.answer}
-              </h2>
-              {/* Definition */}
-              <div className="border-l-2 border-accent/40 pl-4">
-                <p className="text-white/40 text-lg font-medium italic leading-relaxed">
-                  {wordOfTheDay.definition}
+              {/* The word and Phonetic */}
+              <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                <h2 className="text-5xl md:text-6xl font-black text-white tracking-tighter capitalize animate-in fade-in slide-in-from-bottom-4 duration-700">
+                  {wordData.word}
+                </h2>
+                {wordData.phonetic && (
+                  <span className="text-orange-500/80 text-xl font-bold font-mono tracking-widest italic animate-in fade-in slide-in-from-bottom-2 duration-1000 delay-200">
+                    {wordData.phonetic}
+                  </span>
+                )}
+              </div>
+
+              {/* Meaning */}
+              <div className="border-l-2 border-accent/40 pl-6 py-1">
+                <p className="text-white/70 font-medium text-lg md:text-xl leading-relaxed italic">
+                  "{wordData.meaning}"
                 </p>
               </div>
-              {/* Sentence — split on blank, render word as accent span */}
-              <p className="text-white/60 font-medium text-base md:text-lg leading-relaxed">
-                {wordOfTheDay.question.split('______').map((part, i, arr) => (
-                  <span key={i}>
-                    {part}
-                    {i < arr.length - 1 && (
-                      <span className="text-accent font-black">{wordOfTheDay.answer}</span>
-                    )}
-                  </span>
-                ))}
-              </p>
-
-
             </div>
+          </div>
+        ) : showWordOfDay && wordLoading ? (
+          <div className="bg-[#0f0f0f] rounded-[2.5rem] p-12 shadow-2xl flex items-center justify-center">
+            <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin" />
           </div>
         ) : currentQuote ? (
           /* ── Motivational Quote (default) ── */
