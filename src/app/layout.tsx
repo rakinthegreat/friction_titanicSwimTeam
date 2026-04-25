@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { NotificationInitializer } from "@/components/NotificationInitializer";
+import { ToastContainer } from "@/components/ui/ToastNotification";
 
 export default function RootLayout({
   children,
@@ -34,6 +35,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>
+          <ToastContainer />
           <NotificationInitializer />
           {children}
         </AuthProvider>
