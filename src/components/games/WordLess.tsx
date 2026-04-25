@@ -114,7 +114,7 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
     const isAndroid = ua.includes('android');
     const isCapacitor = typeof window !== 'undefined' && !!(window as any).Capacitor;
     const isCapEnv = process.env.NEXT_PUBLIC_IS_CAPACITOR === 'true';
-    
+
     setShowVirtualKeyboard(isAndroid || isCapacitor || isCapEnv);
   }, []);
 
@@ -148,7 +148,7 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
   const getLetterClass = (guess: string, index: number) => {
     const letter = guess[index];
     const target = targetWord.toUpperCase();
-    
+
     if (target[index] === letter) return 'bg-accent text-white border-accent';
     if (!target.includes(letter)) return 'bg-foreground/10 text-foreground border-foreground/5';
 
@@ -179,30 +179,29 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
 
   const getKeyClass = (key: string) => {
     const status = keyStatuses[key];
-    const base = "flex items-center justify-center rounded-lg font-black transition-all active:scale-90 select-none ";
-    
+    const base = "flex-1 flex items-center justify-center rounded-xl font-black transition-all active:scale-90 select-none py-5 ";
+
     if (key === 'ENTER' || key === 'BACKSPACE') {
-      return base + "px-2 py-4 text-[10px] bg-foreground/10 text-foreground min-w-[3.5rem]";
+      return base + "text-[10px] bg-foreground/10 text-foreground flex-[1.5]";
     }
 
     switch (status) {
-      case 'correct': return base + "bg-accent text-white w-8 sm:w-10 py-4";
-      case 'present': return base + "bg-accent-secondary text-white w-8 sm:w-10 py-4";
-      case 'absent': return base + "bg-foreground/10 text-foreground/20 w-8 sm:w-10 py-4";
-      default: return base + "bg-foreground/10 text-foreground w-8 sm:w-10 py-4 hover:bg-foreground/20";
+      case 'correct': return base + "bg-accent text-white";
+      case 'present': return base + "bg-accent-secondary text-white";
+      case 'absent': return base + "bg-foreground/10 text-foreground/20";
+      default: return base + "bg-foreground/10 text-foreground hover:bg-foreground/20";
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-500 w-full max-w-sm mx-auto relative">
+    <div className="flex flex-col items-center justify-center space-y-6 animate-in fade-in duration-500 w-full max-w-full mx-auto relative px-[2px]">
       {status !== 'playing' && (
         <div className="absolute -top-16 -left-8">
           <BackButton href="/" className="text-accent" />
         </div>
       )}
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-black italic tracking-tighter">WordLess</h2>
-        <p className="text-foreground/40 font-bold uppercase tracking-[0.2em] text-[10px]">Guess the {WORD_LENGTH}-letter word</p>
+      <div className="text-center">
+        <p className="text-foreground/40 font-bold uppercase tracking-[0.2em] text-[12px] mt-5">Guess the {WORD_LENGTH}-letter word</p>
       </div>
 
       <div className="grid gap-2">
@@ -211,11 +210,10 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
           return (
             <div key={i} className="flex gap-2">
               {Array.from({ length: WORD_LENGTH }).map((_, j) => (
-                <div 
-                  key={j} 
-                  className={`w-12 h-12 flex items-center justify-center border-2 rounded-xl text-xl font-black transition-all duration-500 ${
-                    guesses[i] ? getLetterClass(guesses[i], j) : 'border-foreground/10'
-                  } ${i === guesses.length && guess[j] ? 'scale-110 border-accent/50 shadow-neo-out' : ''}`}
+                <div
+                  key={j}
+                  className={`w-12 h-12 flex items-center justify-center border-2 rounded-xl text-xl font-black transition-all duration-500 ${guesses[i] ? getLetterClass(guesses[i], j) : 'border-foreground/10'
+                    } ${i === guesses.length && guess[j] ? 'scale-110 border-accent/50 shadow-neo-out' : ''}`}
                 >
                   {guess[j] || ""}
                 </div>
@@ -267,6 +265,8 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
           </div>
         </div>
       )}
+      <br />
+      <br />
     </div>
   );
 };

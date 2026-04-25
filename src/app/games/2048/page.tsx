@@ -275,25 +275,28 @@ export default function Game2048Page() {
     };
   }, [move]);
 
-  const getTileColor = (val: number) => {
+  const getTileStyles = (val: number) => {
+    const len = val.toString().length;
+    const fontSize = len <= 2 ? 'text-5xl sm:text-7xl' : len === 3 ? 'text-4xl sm:text-6xl' : 'text-3xl sm:text-5xl';
+    
     switch (val) {
-      case 2: return 'bg-card text-foreground shadow-neo-out text-4xl';
-      case 4: return 'bg-accent/10 text-accent shadow-neo-out text-4xl';
-      case 8: return 'bg-accent/20 text-accent font-bold text-4xl';
-      case 16: return 'bg-accent/40 text-white font-bold text-4xl';
-      case 32: return 'bg-accent/60 text-white font-bold text-4xl';
-      case 64: return 'bg-accent/80 text-white font-black text-4xl';
-      case 128: return 'bg-accent text-white font-black text-3xl shadow-neo-in';
-      case 256: return 'bg-accent-secondary/50 text-white font-black text-3xl shadow-neo-in';
-      case 512: return 'bg-accent-secondary/70 text-white font-black text-3xl shadow-neo-in';
-      case 1024: return 'bg-accent-secondary/90 text-white font-black text-2xl shadow-neo-in';
-      case 2048: return 'bg-accent-secondary text-white font-black text-2xl animate-pulse shadow-neo-in';
+      case 2: return `bg-card text-foreground shadow-neo-out ${fontSize}`;
+      case 4: return `bg-accent/10 text-accent shadow-neo-out ${fontSize}`;
+      case 8: return `bg-accent/20 text-accent font-bold ${fontSize}`;
+      case 16: return `bg-accent/40 text-white font-bold ${fontSize}`;
+      case 32: return `bg-accent/60 text-white font-bold ${fontSize}`;
+      case 64: return `bg-accent/80 text-white font-black ${fontSize}`;
+      case 128: return `bg-[#f97316] text-white font-black shadow-neo-in ${fontSize}`;
+      case 256: return `bg-[#fb923c] text-white font-black shadow-neo-in ${fontSize}`;
+      case 512: return `bg-[#ea580c] text-white font-black shadow-neo-in ${fontSize}`;
+      case 1024: return `bg-[#dc2626] text-white font-black shadow-neo-in ${fontSize}`;
+      case 2048: return `bg-[#b91c1c] text-white font-black animate-pulse shadow-neo-in ${fontSize}`;
       default: return 'bg-card/50 opacity-20';
     }
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-xl mx-auto">
+    <div className="min-h-screen p-4 sm:p-6 flex flex-col max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-8 touch-auto relative z-50">
         <div className="flex items-center">
           <BackButton href="/" className="text-accent" />
@@ -326,9 +329,9 @@ export default function Game2048Page() {
       </div>
 
       <Card
-        className="flex flex-col items-center justify-center p-4 sm:p-6 mb-8 relative select-none"
+        className="flex-1 flex flex-col items-center justify-center p-6 sm:p-10 mb-8 relative select-none"
       >
-        <div className="grid grid-cols-4 gap-4 sm:gap-6 w-full bg-black/10 dark:bg-white/5 p-4 sm:p-6 rounded-[2.5rem] shadow-neo-in aspect-square relative">
+        <div className="grid grid-cols-4 gap-6 sm:gap-10 w-full bg-black/10 dark:bg-white/5 p-6 sm:p-10 rounded-[2.5rem] shadow-neo-in aspect-square relative">
           {grid.flat().map((val, i) => {
             const r = Math.floor(i / 4);
             const c = i % 4;
@@ -338,8 +341,8 @@ export default function Game2048Page() {
               <div
                 key={i}
                 className={`
-                  aspect-square rounded-2xl flex items-center justify-center transition-all duration-300 
-                  ${getTileColor(val)}
+                  aspect-square rounded-xl flex items-center justify-center transition-all duration-300 
+                  ${getTileStyles(val)}
                   ${val === 0 ? 'shadow-neo-in' : 'scale-100'}
                   ${isLatest ? 'ring-4 ring-white/30 animate-pulse' : ''}
                 `}

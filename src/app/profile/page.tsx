@@ -37,10 +37,10 @@ export default function Profile() {
   const setVideoGenres = useUserStore((state) => state.setVideoGenres);
   const setPreferredLanguages = useUserStore((state) => state.setPreferredLanguages);
   const [mounted, setMounted] = useState(false);
-  
+
   const [isEditingInterests, setIsEditingInterests] = useState(false);
   const [tempInterests, setTempInterests] = useState<string[]>(interests);
-  
+
   const [isEditingVideoGenres, setIsEditingVideoGenres] = useState(false);
   const [tempVideoGenres, setTempVideoGenres] = useState<string[]>(videoGenres || []);
 
@@ -122,7 +122,7 @@ export default function Profile() {
   return (
     <main className="min-h-screen bg-background p-6 md:p-12 max-w-5xl mx-auto space-y-12">
       <header className="flex justify-between items-center">
-        <Link 
+        <Link
           href="/"
           className="p-4 bg-card rounded-2xl shadow-neo-out hover:scale-105 active:scale-95 transition-all group"
         >
@@ -171,7 +171,7 @@ export default function Profile() {
         <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-2">
             <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Interests & Focus</p>
-            <button 
+            <button
               onClick={() => {
                 setTempInterests(interests);
                 setIsEditingInterests(!isEditingInterests);
@@ -195,7 +195,7 @@ export default function Profile() {
                       className={`flex flex-col items-center justify-center p-4 rounded-2xl transition-all cursor-pointer ${isSelected
                         ? 'shadow-neo-in text-accent'
                         : 'shadow-neo-out text-foreground/40 hover:scale-[1.02]'
-                      }`}
+                        }`}
                     >
                       <Icon size={24} className="mb-2" />
                       <span className="font-bold text-[10px] uppercase tracking-wider">{opt.label}</span>
@@ -226,7 +226,7 @@ export default function Profile() {
         <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-2">
             <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Video Interests</p>
-            <button 
+            <button
               onClick={() => {
                 setTempVideoGenres(videoGenres || []);
                 setIsEditingVideoGenres(!isEditingVideoGenres);
@@ -250,7 +250,7 @@ export default function Profile() {
                       className={`flex flex-col items-center justify-center p-4 rounded-2xl transition-all cursor-pointer ${isSelected
                         ? 'shadow-neo-in text-accent'
                         : 'shadow-neo-out text-foreground/40 hover:scale-[1.02]'
-                      }`}
+                        }`}
                     >
                       <Icon size={24} className="mb-2" />
                       <span className="font-bold text-[10px] uppercase tracking-wider">{opt.label}</span>
@@ -277,11 +277,11 @@ export default function Profile() {
             </div>
           )}
         </div>
-        
+
         <div className="bg-card rounded-[2.5rem] p-8 space-y-4 shadow-neo-out border border-white/5 flex flex-col justify-between md:col-span-2">
           <div className="flex justify-between items-center mb-2">
             <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Content Language</p>
-            <button 
+            <button
               onClick={() => {
                 setTempLanguages(preferredLanguages || []);
                 setIsEditingLanguages(!isEditingLanguages);
@@ -297,8 +297,8 @@ export default function Profile() {
             <div className="space-y-6 animate-in fade-in zoom-in duration-300">
               <div className="relative group">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-accent transition-colors" size={20} />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Search languages..."
                   value={languageSearch}
                   onChange={(e) => setLanguageSearch(e.target.value)}
@@ -403,8 +403,8 @@ export default function Profile() {
                       </td>
                       <td className="py-4 px-2 text-center">
                         <span className="font-black text-xs text-accent">
-                          {s.averageTime > 60 
-                            ? `${Math.floor(s.averageTime / 60)}m ${Math.round(s.averageTime % 60)}s` 
+                          {s.averageTime > 60
+                            ? `${Math.floor(s.averageTime / 60)}m ${Math.round(s.averageTime % 60)}s`
                             : `${Math.round(s.averageTime)}s`}
                         </span>
                       </td>
@@ -435,14 +435,14 @@ export default function Profile() {
               <CloudUpload size={24} />
             </div>
           </div>
-          
+
           <div className="bg-foreground/5 p-4 rounded-2xl space-y-1">
             <p className="text-[10px] font-black text-foreground/40 uppercase tracking-tighter">Last Backup</p>
             <p className="text-xs font-bold">{lastBackupDate ? new Date(lastBackupDate).toLocaleString() : 'Never'}</p>
           </div>
-          
+
           {!uid ? (
-            <button 
+            <button
               onClick={signInWithGoogle}
               disabled={isLoading}
               className="w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all"
@@ -450,14 +450,13 @@ export default function Profile() {
               {isLoading ? 'Connecting...' : 'Sign in to Backup'}
             </button>
           ) : (
-            <button 
+            <button
               onClick={handleSync}
               disabled={isSyncing}
-              className={`w-full py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2 ${
-                syncSuccess 
-                  ? 'bg-card text-green-500 shadow-neo-in scale-[0.98]' 
+              className={`w-full py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2 ${syncSuccess
+                  ? 'bg-card text-green-500 shadow-neo-in scale-[0.98]'
                   : 'bg-card text-accent shadow-neo-out hover:scale-[1.02] active:scale-[0.98]'
-              }`}
+                }`}
             >
               {isSyncing ? (
                 <>
