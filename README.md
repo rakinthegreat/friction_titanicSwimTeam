@@ -104,3 +104,33 @@ WaitLess integrates several industry-standard APIs to provide a rich, real-time 
 *   **IP Services**: IPAPI.co and FreeIPAPI for fallback location detection.
 *   **Content Discovery**: YouTube (Custom curated scraping for mindful video recommendations).
 *   **Activity Recognition**: Google Activity Recognition API for intelligent habit and commute detection.
+
+## In App Screenshots
+<img width="1469" height="708" alt="mode selection" src="https://github.com/user-attachments/assets/10652bf7-70e6-43ca-951a-e8b63d7c2531" />
+<br/>
+<img width="1466" height="702" alt="onboarding interests" src="https://github.com/user-attachments/assets/8c3e5215-be13-4970-a7c2-2e505957545b" />
+<br/>
+<img width="1470" height="706" alt="onboarding videos" src="https://github.com/user-attachments/assets/c262d75b-7800-4055-9063-8557918ba271" />
+<br/>
+<img width="1470" height="711" alt="onboarding download" src="https://github.com/user-attachments/assets/a442cec1-d054-4c6a-8655-392059ca1bc8" />
+<br/>
+This is the Homepage
+<img width="2940" height="1774" alt="homepage" src="https://github.com/user-attachments/assets/ad9a3f27-6a5c-429c-b47c-48a67005e556" />
+<br/>
+When user selects 5 minute time break, this suggestions are updated alogorithmically
+<img width="2940" height="1548" alt="5 min" src="https://github.com/user-attachments/assets/5da76bc0-664e-41e4-94c4-a51446f4fad1" />
+5 min video suggestion
+<img width="1410" height="692" alt="image" src="https://github.com/user-attachments/assets/04b5f578-6496-46b0-8660-149858533754" />
+Philosophical Exploration
+<img width="2940" height="2014" alt="image" src="https://github.com/user-attachments/assets/ca709a2b-eadb-47a7-b5b8-18ef07a4e1cd" />
+Memory match game + Session end notification
+<img width="2940" height="1574" alt="image" src="https://github.com/user-attachments/assets/b15357c2-6b7d-4f2f-a17e-505953e6533a" />
+
+
+
+
+
+
+
+
+
