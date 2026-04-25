@@ -156,8 +156,7 @@ export default function TriviaPage() {
     setGameState('playing');
     setScore(0);
     const params = new URLSearchParams(window.location.search);
-    const time = parseInt(params.get('time') || '1');
-    const scaledTime = Math.min(300, Math.max(60, time * 60));
+    const scaledTime = 60;
     setTimeLeft(scaledTime);
     setIsShaking(false);
     setFeedback(null);
@@ -323,10 +322,17 @@ export default function TriviaPage() {
 
           <div className="flex flex-col sm:flex-row gap-6 w-full max-w-md">
             <button
-              onClick={resetGame}
+              onClick={() => {
+                const state = useUserStore.getState();
+                if (state.sessionEndTime && state.sessionEndTime > Date.now()) {
+                  router.push('/session');
+                } else {
+                  router.push('/');
+                }
+              }}
               className="w-full py-6 px-8 rounded-[2rem] bg-accent-secondary text-white font-black text-2xl shadow-neo-out hover:scale-105 active:scale-95 transition-all"
             >
-              Try Again
+              Continue
             </button>
           </div>
         </div>

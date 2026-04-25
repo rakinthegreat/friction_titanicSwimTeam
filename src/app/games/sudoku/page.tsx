@@ -218,11 +218,22 @@ export default function SudokuPage() {
 
         <Button
           variant={isWon ? "primary" : "outline"}
-          onClick={startNewGame}
+          onClick={() => {
+            if (isWon) {
+              const state = useUserStore.getState();
+              if (state.sessionEndTime && state.sessionEndTime > Date.now()) {
+                router.push('/session');
+              } else {
+                router.push('/');
+              }
+            } else {
+              startNewGame();
+            }
+          }}
           className="w-full max-w-[200px]"
         >
-          <RotateCcw className="w-4 h-4 mr-2" />
-          {isWon ? "Play Again" : "New Game"}
+          {!isWon && <RotateCcw className="w-4 h-4 mr-2" />}
+          {isWon ? "Continue" : "New Game"}
         </Button>
       </Card>
     </div>

@@ -45,8 +45,13 @@ export default function WordLessPage() {
   }, []);
 
   const handleComplete = (xp: number) => {
-    updateStats(5);
-    router.push('/');
+    updateStats(0);
+    const state = useUserStore.getState();
+    if (state.sessionEndTime && state.sessionEndTime > Date.now()) {
+      router.push('/session');
+    } else {
+      router.push('/');
+    }
   };
 
   return (

@@ -223,7 +223,7 @@ export default function Profile() {
             <Leaf size={80} />
           </div>
           <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Total Progress</p>
-          <p className="text-6xl font-black italic tracking-tighter text-accent">{stats.totalMinutesSaved}</p>
+          <p className="text-6xl font-black italic tracking-tighter text-accent">{Math.floor(stats.totalMinutesSaved)}</p>
           <p className="text-sm font-bold text-foreground/60">Minutes Saved</p>
         </div>
 

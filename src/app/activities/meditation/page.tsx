@@ -169,7 +169,14 @@ export default function MeditationPage() {
             </p>
           </div>
           <button
-            onClick={() => router.push('/')}
+            onClick={() => {
+              const state = useUserStore.getState();
+              if (state.sessionEndTime && state.sessionEndTime > Date.now()) {
+                router.push('/session');
+              } else {
+                router.push('/');
+              }
+            }}
             className="w-full py-4 bg-accent text-white rounded-2xl font-black shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
             CONTINUE

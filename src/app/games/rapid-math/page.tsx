@@ -135,8 +135,7 @@ export default function RapidMathPage() {
   const startGame = () => {
     setScore(0);
     const params = new URLSearchParams(window.location.search);
-    const time = parseInt(params.get('time') || '1');
-    const scaledTime = Math.min(180, Math.max(30, time * 30)); // 1m -> 30s, 5m -> 150s
+    const scaledTime = 60; // 1m fixed duration
     setTotalTime(scaledTime);
     setGameState('playing');
     setFeedback(null);
@@ -273,9 +272,15 @@ export default function RapidMathPage() {
               </div>
 
               <div className="flex gap-4 pt-4">
-                <Button onClick={startGame} className="w-full py-5 text-lg font-black italic tracking-widest shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all">
-                  <RefreshCw size={24} className="mr-2" />
-                  Retry
+                <Button onClick={() => {
+                  const state = useUserStore.getState();
+                  if (state.sessionEndTime && state.sessionEndTime > Date.now()) {
+                    router.push('/session');
+                  } else {
+                    router.push('/');
+                  }
+                }} className="w-full py-5 text-lg font-black italic tracking-widest shadow-neo-out hover:scale-[1.02] active:scale-[0.98] transition-all">
+                  Continue
                 </Button>
               </div>
             </Card>

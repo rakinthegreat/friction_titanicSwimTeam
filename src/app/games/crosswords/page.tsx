@@ -31,7 +31,12 @@ export default function CrosswordsPage() {
 
   const handleComplete = (xp: number) => {
     updateStats(xp);
-    router.push('/');
+    const state = useUserStore.getState();
+    if (state.sessionEndTime && state.sessionEndTime > Date.now()) {
+      router.push('/session');
+    } else {
+      router.push('/');
+    }
   };
 
   return (
