@@ -1,10 +1,34 @@
 import { getCachedData, setCachedData, CACHE_KEYS, getOfflineQuotes, getOfflineVideos } from './offline-data-manager';
+import { CapacitorHttp } from '@capacitor/core';
 
 const IS_CAPACITOR = typeof window !== 'undefined' && (window as any).Capacitor;
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
 async function callGateway(action: string, payload: any = {}) {
   const url = `${API_BASE_URL}/api/android-gateway`;
+  
+  // Use Native HTTP Bridge if on Capacitor to bypass local interception and CORS
+  if (IS_CAPACITOR) {
+    try {
+      console.log(`[Action Proxy] Using Native Bridge for ${action}`);
+      const response = await CapacitorHttp.post({
+        url,
+        headers: { 'Content-Type': 'application/json' },
+        data: { action, payload }
+      });
+      
+      if (response.status >= 200 && response.status < 300) {
+        return response.data;
+      }
+      
+      console.error(`[Action Proxy] Native Bridge Error: Status ${response.status}`);
+      throw new Error(`Gateway returned ${response.status}`);
+    } catch (e: any) {
+      console.error(`[Action Proxy] Native Bridge failed for ${action}:`, e);
+      // Fallback to fetch
+    }
+  }
+
   try {
     const response = await fetch(url, {
       method: 'POST',

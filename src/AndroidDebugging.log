@@ -1,0 +1,39 @@
+## First, I tried generating a challenge. I got this error:
+
+2026-04-25 21:33:28.082 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  call setFrameRateCategory for touch hint category=no preference, reason=boost timeout, vri=VRI[MainActivity]@7887f27
+2026-04-25 21:33:28.804 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  ViewPostIme pointer 0
+2026-04-25 21:33:28.805 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  call setFrameRateCategory for touch hint category=high hint, reason=touch, vri=VRI[MainActivity]@7887f27
+2026-04-25 21:33:28.842 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  ViewPostIme pointer 1
+2026-04-25 21:33:28.852 13819-13924 Capacitor               com.waitless.app                     D  Handling local request: https://waitless-friction.vercel.app/api/android-gateway
+2026-04-25 21:33:28.858 13819-13819 Capacitor/Console       com.waitless.app                     E  File: https://waitless-friction.vercel.app/_next/static/chunks/app/page-d528bed5d0255522.js - Line 1 - Msg: [Action Proxy] Failed to call gateway for generateChallenge. URL: https://waitless-friction.vercel.app/api/android-gateway. Error: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+2026-04-25 21:33:28.859 13819-13819 Capacitor/Console       com.waitless.app                     E  File: https://waitless-friction.vercel.app/activities/challenges?time=10 - Line 1 - Msg: Uncaught (in promise) SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+2026-04-25 21:33:31.845 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  call setFrameRateCategory for touch hint category=no preference, reason=boost timeout, vri=VRI[MainActivity]@7887f27
+
+
+## Next, I tried submitting a scienctific open ended answer for feedback. I got this error:
+
+2026-04-25 21:36:07.501 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  ViewPostIme pointer 0
+2026-04-25 21:36:07.502 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  call setFrameRateCategory for touch hint category=high hint, reason=touch, vri=VRI[MainActivity]@7887f27
+2026-04-25 21:36:07.582 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  ViewPostIme pointer 1
+2026-04-25 21:36:07.600 13819-13923 Capacitor               com.waitless.app                     D  Handling local request: https://waitless-friction.vercel.app/api/android-gateway
+2026-04-25 21:36:07.603 13819-13819 ImeTracker              com.waitless.app                     I  com.waitless.app:61e03c3e: onRequestHide at ORIGIN_CLIENT reason HIDE_SOFT_INPUT fromUser false
+2026-04-25 21:36:07.603 13819-13819 InputMethodManager_LC   com.waitless.app                     I  hsifw() - flag : 0
+2026-04-25 21:36:07.603 13819-13819 InputMethodManager_LC   com.waitless.app                     I  hsifw() - mService.hideSoftInput
+2026-04-25 21:36:07.603 13819-13819 InsetsController        com.waitless.app                     D  hide(ime(), fromIme=false)
+2026-04-25 21:36:07.604 13819-13819 ImeTracker              com.waitless.app                     I  com.waitless.app:61e03c3e: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2026-04-25 21:36:07.604 13819-13819 InputMethodManagerUtils com.waitless.app                     D  startInputInner - Id : 0
+2026-04-25 21:36:07.604 13819-13819 InputMethodManager      com.waitless.app                     I  startInputInner - IInputMethodManagerGlobalInvoker.startInputOrWindowGainedFocus
+2026-04-25 21:36:07.608 13819-13844 InputTransport          com.waitless.app                     D  Input channel constructed: 'ClientS', fd=281
+2026-04-25 21:36:07.611 13819-13819 Capacitor/Console       com.waitless.app                     E  File: https://waitless-friction.vercel.app/_next/static/chunks/app/page-d528bed5d0255522.js - Line 1 - Msg: [Action Proxy] Failed to call gateway for getPhilosophyFeedback. URL: https://waitless-friction.vercel.app/api/android-gateway. Error: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+2026-04-25 21:36:07.623 13819-13819 Capacitor/Console       com.waitless.app                     E  File: https://waitless-friction.vercel.app/learn/science?time=10 - Line 1 - Msg: Uncaught (in promise) SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+2026-04-25 21:36:10.583 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  call setFrameRateCategory for touch hint category=no preference, reason=boost timeout, vri=VRI[MainActivity]@7887f27
+
+## Third, I tried fetching video. I got this error:
+
+2026-04-25 21:37:17.105 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  ViewPostIme pointer 0
+2026-04-25 21:37:17.108 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  call setFrameRateCategory for touch hint category=high hint, reason=touch, vri=VRI[MainActivity]@7887f27
+2026-04-25 21:37:17.145 13819-13819 VRI[MainAc...y]@7887f27 com.waitless.app                     I  ViewPostIme pointer 1
+2026-04-25 21:37:17.154 13819-13923 Capacitor               com.waitless.app                     D  Handling local request: https://waitless-friction.vercel.app/api/android-gateway
+2026-04-25 21:37:17.161 13819-13819 Capacitor/Console       com.waitless.app                     E  File: https://waitless-friction.vercel.app/_next/static/chunks/app/page-d528bed5d0255522.js - Line 1 - Msg: [Action Proxy] Failed to call gateway for getRecommendedVideos. URL: https://waitless-friction.vercel.app/api/android-gateway. Error: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+2026-04-25 21:37:17.162 13819-13819 Capacitor/Console       com.waitless.app                     I  File: https://waitless-friction.vercel.app/_next/static/chunks/app/page-d528bed5d0255522.js - Line 1 - Msg: [Action Proxy] Offline/Error. Using local videos.
+2026-04-25 21:37:17.164 13819-13924 Capacitor               com.waitless.app                     D  Handling local request: https://waitless-friction.vercel.app/_next/static/chunks/7546.159b2d9fa877795c.js
