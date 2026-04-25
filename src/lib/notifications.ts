@@ -12,132 +12,117 @@ const stringToId = (str: string, suffix = 0) => {
   return Math.abs(hash);
 };
 
+// Web Fallback Timer Storage
+let webTimers: any[] = [];
+
 export const scheduleFrictionNotifications = async (points: FrictionPoint[]) => {
   try {
-    console.log('[WaitLess] Initializing friction notification scheduling...');
+    const isNative = Capacitor.isNativePlatform();
+    console.log(`[WaitLess] Initializing scheduling (Native: ${isNative})`);
     
-    // 1. Request permission if not granted
+    // 1. Permissions
     const permission = await LocalNotifications.checkPermissions();
-    console.log('[WaitLess] Current notification permissions:', JSON.stringify(permission));
-    
-    if (permission.display !== 'granted') {
-      const request = await LocalNotifications.requestPermissions();
-      console.log('[WaitLess] Requested permissions result:', JSON.stringify(request));
-      if (request.display !== 'granted') {
-        console.warn('[WaitLess] Notification permission denied by user');
-        return;
+    if (permission.display !== 'granted' && isNative) {
+      await LocalNotifications.requestPermissions();
+    }
+
+    // 2. Clear existing
+    if (isNative) {
+      const pending = await LocalNotifications.getPending();
+      if (pending.notifications.length > 0) {
+        await LocalNotifications.cancel(pending);
       }
+    } else {
+      webTimers.forEach(t => clearTimeout(t));
+      webTimers = [];
     }
 
-    // 2. Create Android Channel
-    if (Capacitor.getPlatform() === 'android') {
-      console.log('[WaitLess] Creating Android notification channel: friction-alerts');
-      await LocalNotifications.createChannel({
-        id: 'friction-alerts',
-        name: 'Friction Alerts',
-        description: 'Notifications for your scheduled idle periods',
-        importance: 5,
-        visibility: 1,
-        vibration: true,
-      });
-    }
+    // 3. Schedule next occurrences
+    const now = new Date();
 
-    // 3. Clear all existing scheduled notifications
-    const pendingBefore = await LocalNotifications.getPending();
-    console.log(`[WaitLess] Pending notifications before clear: ${pendingBefore.notifications.length}`);
-    
-    if (pendingBefore.notifications.length > 0) {
-      await LocalNotifications.cancel(pendingBefore);
-      console.log('[WaitLess] Canceled all pending notifications');
-    }
-
-    // 4. Schedule new ones
-    const notifications = points.flatMap(point => {
+    points.forEach(point => {
       const [hour, minute] = point.startTime.split(':').map(Number);
       
-      return (point.days || [1, 2, 3, 4, 5]).map(day => {
-        const id = stringToId(point.id, day);
-        const logMsg = `Scheduling: ${point.label} (ID: ${id}) at ${hour}:${minute} on weekday ${day + 1}`;
-        console.log(`[WaitLess] ${logMsg}`);
-        
-        return {
-          id,
-          title: `Wait Window: ${point.label}`,
-          body: "You have some idle time. Ready for a quick learning session?",
-          largeBody: `Your scheduled ${point.label} window has started. Why not spend 5 minutes on your interests?`,
-          summaryText: "Time to WaitLess",
-          channelId: 'friction-alerts',
-          schedule: {
-            on: {
-              weekday: day + 1, // 1=Sunday, 2=Monday...
-              hour,
-              minute
-            },
-            repeats: true,
-            allowWhileIdle: true
-          },
-          sound: 'beep.wav',
-          extra: {
-            frictionId: point.id,
-            type: point.type
+      // Calculate the next occurrence
+      // We check today and the next 7 days
+      for (let i = 0; i < 7; i++) {
+        const target = new Date();
+        target.setDate(now.getDate() + i);
+        target.setHours(hour, minute, 0, 0);
+
+        const day = target.getDay();
+        if ((point.days || [0,1,2,3,4,5,6]).includes(day)) {
+          // If it's today but already passed, skip to next day
+          if (i === 0 && target.getTime() <= now.getTime()) continue;
+
+          if (isNative) {
+            // "Meditation Pathway": Use exact 'at' timestamp for reliability
+            LocalNotifications.schedule({
+              notifications: [{
+                id: stringToId(point.id, day),
+                title: `Wait Window: ${point.label}`,
+                body: "You have some idle time. Ready for a quick learning session?",
+                channelId: 'friction-alerts',
+                schedule: { 
+                  at: target,
+                  allowWhileIdle: true 
+                }
+              }]
+            });
+          } else {
+            // Web Fallback
+            const delay = target.getTime() - now.getTime();
+            if (delay > 0 && delay < 86400000) { // Only set timers for the next 24h on web
+              console.log(`[WaitLess Web] Setting timer for ${point.label} in ${Math.round(delay/1000)}s`);
+              const timer = setTimeout(() => {
+                NotificationService.sendNotification(
+                  `Wait Window: ${point.label}`,
+                  "Time for a quick learning session!"
+                );
+              }, delay);
+              webTimers.push(timer);
+            }
           }
-        };
-      });
+          // Only schedule the NEXT occurrence per point to keep the queue clean
+          break; 
+        }
+      }
     });
 
-    if (notifications.length > 0) {
-      await LocalNotifications.schedule({ notifications });
-      const pendingAfter = await LocalNotifications.getPending();
-      console.log(`[WaitLess] Success! Scheduled ${notifications.length} friction notifications. Verified pending: ${pendingAfter.notifications.length}`);
-    } else {
-      console.log('[WaitLess] No friction points to schedule');
-    }
+    console.log(`[WaitLess] ${isNative ? 'Native alarms' : 'Web timers'} updated for ${points.length} points.`);
   } catch (error) {
-    console.error('[WaitLess] Error during notification scheduling:', error);
+    console.error('[WaitLess] Scheduling Error:', error);
   }
 };
 
-// Listen for notifications while app is active
-LocalNotifications.addListener('localNotificationReceived', (notification) => {
-  console.log('[WaitLess] Notification TRIGGERED and RECEIVED in foreground:', JSON.stringify(notification));
-});
-
-LocalNotifications.addListener('localNotificationActionPerformed', (action) => {
-  console.log('[WaitLess] Notification ACTION performed:', JSON.stringify(action));
-});
-
 export const NotificationService = {
-  // ... (rest of the service remains the same)
   requestPermission: async () => {
-    const permission = await LocalNotifications.checkPermissions();
-    if (permission.display !== 'granted') {
-      return await LocalNotifications.requestPermissions();
+    if (!Capacitor.isNativePlatform() && 'Notification' in window) {
+      const res = await Notification.requestPermission();
+      return { display: res === 'granted' ? 'granted' : 'denied' };
     }
-    return permission;
+    return await LocalNotifications.requestPermissions();
   },
   sendNotification: async (title: string, body: string) => {
+    const isNative = Capacitor.isNativePlatform();
     try {
-      if (Capacitor.getPlatform() === 'android') {
-        await LocalNotifications.createChannel({
-          id: 'general-alerts',
-          name: 'General Alerts',
-          importance: 4,
+      if (isNative) {
+        if (Capacitor.getPlatform() === 'android') {
+          await LocalNotifications.createChannel({ id: 'general', name: 'General', importance: 4 });
+        }
+        await LocalNotifications.schedule({
+          notifications: [{ title, body, id: Date.now(), channelId: 'general', schedule: { at: new Date(Date.now() + 100) } }]
         });
+      } else {
+        // Web Notification Fallback
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification(title, { body });
+        } else {
+          alert(`${title}\n\n${body}`);
+        }
       }
-
-      await LocalNotifications.schedule({
-        notifications: [
-          {
-            title,
-            body,
-            id: Math.floor(Math.random() * 1000000),
-            channelId: 'general-alerts',
-            schedule: { at: new Date(Date.now() + 500) }
-          }
-        ]
-      });
-    } catch (error) {
-      console.error('Error sending immediate notification:', error);
+    } catch (e) {
+      console.error('Notification failed', e);
     }
   },
   scheduleFrictionNotifications

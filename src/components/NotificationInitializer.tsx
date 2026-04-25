@@ -9,6 +9,7 @@ export const NotificationInitializer = () => {
   const _hasHydrated = useUserStore((state) => state._hasHydrated);
 
   useEffect(() => {
+    console.log(`[WaitLess] NotificationInitializer check: Hydrated=${_hasHydrated}, Points=${frictionPoints.length}`);
     if (_hasHydrated && frictionPoints.length > 0) {
       scheduleFrictionNotifications(frictionPoints);
     }

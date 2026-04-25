@@ -1,0 +1,3 @@
+const fs = require('fs');
+const html = fs.readFileSync('scratch.html', 'utf-8');
+// Mocking the scraper...

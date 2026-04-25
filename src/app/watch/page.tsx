@@ -62,8 +62,7 @@ function WatchPageContent() {
           if (ageInMs < 60 * 60 * 1000) {
             const allVideos: any[] = JSON.parse(cachedData);
             const filtered = allVideos.filter(getDurationFilter(timeMins));
-            const pool = filtered.length >= 2 ? filtered : allVideos.filter((v: any) => v.duration >= 60);
-            const shuffled = [...pool].sort(() => 0.5 - Math.random());
+            const shuffled = [...filtered].sort(() => 0.5 - Math.random());
             setVideos(shuffled.slice(0, 6));
             return;
           }
@@ -80,8 +79,7 @@ function WatchPageContent() {
         localStorage.setItem('video_cache', JSON.stringify(fetched));
         localStorage.setItem('video_cache_time', Date.now().toString());
         const filtered = fetched.filter(getDurationFilter(timeMins));
-        const pool = filtered.length >= 2 ? filtered : fetched.filter((v: any) => v.duration >= 60);
-        const shuffled = [...pool].sort(() => 0.5 - Math.random());
+        const shuffled = [...filtered].sort(() => 0.5 - Math.random());
         setVideos(shuffled.slice(0, 6));
       }
     } catch (e) {

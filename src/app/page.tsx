@@ -5,7 +5,7 @@ import Onboarding from "@/components/Onboarding";
 import { WordLess } from "@/components/games/WordLess";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Gamepad2, User, ShieldCheck, ChevronRight, ArrowRight, Sparkles, Hourglass, PlayCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -169,16 +169,38 @@ export default function Home() {
   const showWordOfDay = interests.includes('languages');
   const frictionPoints = useUserStore(state => state.frictionPoints);
   const [activeFriction, setActiveFriction] = useState<FrictionPoint | null>(null);
+  const lastNotifiedFrictionId = useRef<string | null>(null);
 
   useEffect(() => {
     const checkFriction = () => {
       const now = new Date();
       const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-      const active = frictionPoints.find(p => p.startTime <= timeStr && p.endTime >= timeStr);
+      const day = now.getDay();
+
+      const active = frictionPoints.find(p =>
+        (p.days || [0, 1, 2, 3, 4, 5, 6]).includes(day) &&
+        p.startTime <= timeStr &&
+        p.endTime >= timeStr
+      );
+
       setActiveFriction(active || null);
+
+      // "Meditation Pathway": If we just entered a new window, notify immediately
+      if (active && active.id !== lastNotifiedFrictionId.current) {
+        import('@/lib/notifications').then(({ NotificationService }) => {
+          NotificationService.sendNotification(
+            `Wait Window Detected: ${active.label}`,
+            "You have some idle time. Ready for a quick learning session?"
+          );
+        });
+        lastNotifiedFrictionId.current = active.id;
+      } else if (!active) {
+        lastNotifiedFrictionId.current = null;
+      }
     };
+
     checkFriction();
-    const interval = setInterval(checkFriction, 60000);
+    const interval = setInterval(checkFriction, 30000); // Check every 30s
     return () => clearInterval(interval);
   }, [frictionPoints]);
 
@@ -519,9 +541,8 @@ export default function Home() {
                   return (
                     <span
                       key={i}
-                      className={`text-2xl md:text-4xl font-black leading-tight tracking-tighter animate-in fade-in slide-in-from-bottom-2 duration-700 fill-mode-both hover:scale-110 transition-all cursor-default ${
-                        isKeyword ? 'text-accent shadow-accent/20' : 'text-white'
-                      }`}
+                      className={`text-2xl md:text-4xl font-black leading-tight tracking-tighter animate-in fade-in slide-in-from-bottom-2 duration-700 fill-mode-both hover:scale-110 transition-all cursor-default ${isKeyword ? 'text-accent shadow-accent/20' : 'text-white'
+                        }`}
                       style={{ animationDelay: `${i * 70}ms` }}
                     >
                       {word}
