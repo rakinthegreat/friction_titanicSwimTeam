@@ -1,6 +1,7 @@
 package com.waitless.app;
 
 import android.Manifest;
+import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
@@ -61,10 +62,10 @@ public class WaitLessDigitalWellbeingPlugin extends Plugin {
 
     @PluginMethod
     public void hasUsageStatsPermission(PluginCall call) {
-        UsageStatsManager usm = (UsageStatsManager) getContext().getSystemService(Context.USAGE_STATS_SERVICE);
-        long time = System.currentTimeMillis();
-        List<UsageStats> stats = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 10, time);
-        boolean granted = (stats != null && !stats.isEmpty());
+        AppOpsManager appOps = (AppOpsManager) getContext().getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, 
+            android.os.Process.myUid(), getContext().getPackageName());
+        boolean granted = (mode == AppOpsManager.MODE_ALLOWED);
         
         JSObject ret = new JSObject();
         ret.put("granted", granted);
@@ -75,6 +76,8 @@ public class WaitLessDigitalWellbeingPlugin extends Plugin {
     public void openUsageSettings(PluginCall call) {
         Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
+        intent.setData(uri);
         getContext().startActivity(intent);
         call.resolve();
     }
@@ -94,7 +97,7 @@ public class WaitLessDigitalWellbeingPlugin extends Plugin {
     @PluginMethod
     public void requestNotificationPermission(PluginCall call) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissionForAlias("notifications", call, "checkPermissionResult");
+            requestPermissionForAlias("notifications", call, "notificationsPermissionCallback");
         } else {
             JSObject ret = new JSObject();
             ret.put("granted", true);
@@ -117,7 +120,7 @@ public class WaitLessDigitalWellbeingPlugin extends Plugin {
     @PluginMethod
     public void requestPhysicalActivityPermission(PluginCall call) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            requestPermissionForAlias("physicalactivity", call, "checkPermissionResult");
+            requestPermissionForAlias("physicalactivity", call, "physicalActivityPermissionCallback");
         } else {
             JSObject ret = new JSObject();
             ret.put("granted", true);
@@ -126,9 +129,26 @@ public class WaitLessDigitalWellbeingPlugin extends Plugin {
     }
 
     @PermissionCallback
-    private void checkPermissionResult(PluginCall call) {
+    private void notificationsPermissionCallback(PluginCall call) {
         JSObject ret = new JSObject();
-        ret.put("granted", true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            boolean granted = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+            ret.put("granted", granted);
+        } else {
+            ret.put("granted", true);
+        }
+        call.resolve(ret);
+    }
+
+    @PermissionCallback
+    private void physicalActivityPermissionCallback(PluginCall call) {
+        JSObject ret = new JSObject();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            boolean granted = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED;
+            ret.put("granted", granted);
+        } else {
+            ret.put("granted", true);
+        }
         call.resolve(ret);
     }
 

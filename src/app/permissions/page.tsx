@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { ArrowLeft, ShieldCheck, Bell, Battery, Smartphone, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, Bell, Battery, Smartphone, CheckCircle2, AlertCircle, Activity } from 'lucide-react';
 import { WaitLessDigitalWellbeing } from '@/lib/native-bridge';
 
 export default function PermissionsPage() {
@@ -13,19 +13,22 @@ export default function PermissionsPage() {
   const [usageStatsGranted, setUsageStatsGranted] = useState(false);
   const [notificationGranted, setNotificationGranted] = useState(false);
   const [batteryGranted, setBatteryGranted] = useState(false);
+  const [physicalActivityGranted, setPhysicalActivityGranted] = useState(false);
   const [checking, setChecking] = useState(true);
 
   const checkPermissions = async () => {
     try {
-      const [usage, notify, battery] = await Promise.all([
+      const [usage, notify, battery, physical] = await Promise.all([
         WaitLessDigitalWellbeing.hasUsageStatsPermission(),
         WaitLessDigitalWellbeing.hasNotificationPermission(),
-        WaitLessDigitalWellbeing.hasBatteryOptimizationPermission()
+        WaitLessDigitalWellbeing.hasBatteryOptimizationPermission(),
+        WaitLessDigitalWellbeing.hasPhysicalActivityPermission()
       ]);
       
       setUsageStatsGranted(usage.granted);
       setNotificationGranted(notify.granted);
       setBatteryGranted(battery.granted);
+      setPhysicalActivityGranted(physical.granted);
     } catch (e) {
       console.error('Failed to check permissions', e);
     } finally {
@@ -35,9 +38,18 @@ export default function PermissionsPage() {
 
   useEffect(() => {
     checkPermissions();
+    
     // Check again when window regains focus (user returns from settings)
     window.addEventListener('focus', checkPermissions);
-    return () => window.removeEventListener('focus', checkPermissions);
+    
+    // Polling as a fallback for some Android versions where focus might not trigger reliably 
+    // or when the user is in a split-screen/multi-window mode.
+    const interval = setInterval(checkPermissions, 2000);
+    
+    return () => {
+      window.removeEventListener('focus', checkPermissions);
+      clearInterval(interval);
+    };
   }, []);
 
   const handleOpenUsageSettings = async () => {
@@ -62,6 +74,15 @@ export default function PermissionsPage() {
       await WaitLessDigitalWellbeing.requestBatteryOptimizationPermission();
     } catch (e) {
       console.error('Failed to request battery optimization', e);
+    }
+  };
+  
+  const handleRequestPhysicalActivity = async () => {
+    try {
+      const { granted } = await WaitLessDigitalWellbeing.requestPhysicalActivityPermission();
+      setPhysicalActivityGranted(granted);
+    } catch (e) {
+      console.error('Failed to request physical activity permission', e);
     }
   };
 
@@ -157,10 +178,18 @@ export default function PermissionsPage() {
             status={checking ? 'checking' : usageStatsGranted ? 'granted' : 'missing'}
             action={handleOpenUsageSettings}
           />
+
+          <PermissionItem 
+            title="Physical Activity"
+            description="Used to detect when you are walking or stationary to better understand your context."
+            icon={Activity}
+            status={checking ? 'checking' : physicalActivityGranted ? 'granted' : 'missing'}
+            action={handleRequestPhysicalActivity}
+          />
         </div>
       </section>
 
-      {(!usageStatsGranted || !notificationGranted || !batteryGranted) && !checking && (
+      {(!usageStatsGranted || !notificationGranted || !batteryGranted || !physicalActivityGranted) && !checking && (
         <div className="flex items-center gap-2 p-4 bg-red-500/10 rounded-2xl border border-red-500/20 text-red-500 text-xs font-bold justify-center">
           <AlertCircle size={14} />
           Some features may be limited without all permissions

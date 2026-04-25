@@ -13,6 +13,7 @@ import { ACTIVITIES } from "@/lib/activities";
 import { VideoRecommendation } from "@/components/recreation/VideoRecommendation";
 import { INITIAL_QUOTES } from "@/lib/quotes";
 import { generateQuotes } from "@/app/quotes/actions";
+import { Capacitor } from '@capacitor/core';
 
 export default function Home() {
   const router = useRouter();
@@ -145,13 +146,15 @@ export default function Home() {
             <h1 className="text-5xl font-extrabold tracking-tight">WaitLess</h1>
           </div>
           <div className="flex items-center gap-3">
-            <Link
-              href="/permissions"
-              className="p-3 rounded-2xl bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-accent"
-              aria-label="Manage Permissions"
-            >
-              <ShieldCheck size={20} />
-            </Link>
+            {Capacitor.getPlatform() === 'android' && (
+              <Link
+                href="/permissions"
+                className="p-3 rounded-2xl bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-accent"
+                aria-label="Manage Permissions"
+              >
+                <ShieldCheck size={20} />
+              </Link>
+            )}
             <Link
               href="/profile"
               className="p-3 rounded-2xl bg-card shadow-neo-out hover:scale-105 active:shadow-neo-in transition-all text-accent"

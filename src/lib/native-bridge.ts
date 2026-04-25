@@ -12,6 +12,8 @@ export interface WaitLessDigitalWellbeingPlugin {
   requestNotificationPermission(): Promise<{ granted: boolean }>;
   hasBatteryOptimizationPermission(): Promise<{ granted: boolean }>;
   requestBatteryOptimizationPermission(): Promise<void>;
+  hasPhysicalActivityPermission(): Promise<{ granted: boolean }>;
+  requestPhysicalActivityPermission(): Promise<{ granted: boolean }>;
 }
 
 const isNative = Capacitor.isNativePlatform();
@@ -31,7 +33,9 @@ const WaitLessDigitalWellbeing: WaitLessDigitalWellbeingPlugin = isNative ? Wait
   hasNotificationPermission: async () => ({ granted: true }),
   requestNotificationPermission: async () => ({ granted: true }),
   hasBatteryOptimizationPermission: async () => ({ granted: true }),
-  requestBatteryOptimizationPermission: async () => { console.log('Battery optimization only on Android'); }
+  requestBatteryOptimizationPermission: async () => { console.log('Battery optimization only on Android'); },
+  hasPhysicalActivityPermission: async () => ({ granted: true }),
+  requestPhysicalActivityPermission: async () => ({ granted: true })
 };
 
 
