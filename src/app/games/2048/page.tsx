@@ -366,9 +366,15 @@ export default function Game2048Page() {
               <h2 className="text-4xl font-black mb-6 text-accent">
                 {hasWon ? 'You Win!' : 'Game Over'}
               </h2>
-              <Button onClick={initGame} size="lg" className="px-8 py-4 text-lg font-black italic tracking-widest shadow-neo-out hover:shadow-neo-in transition-all active:scale-95">
-                <RotateCcw className="w-5 h-5 mr-3" />
-                TRY AGAIN
+              <Button onClick={() => {
+                const state = useUserStore.getState();
+                if (state.sessionEndTime && state.sessionEndTime > Date.now()) {
+                  router.push('/session');
+                } else {
+                  router.push('/');
+                }
+              }} size="lg" className="px-8 py-4 text-lg font-black italic tracking-widest shadow-neo-out hover:shadow-neo-in transition-all active:scale-95">
+                CONTINUE
               </Button>
             </div>
           )}

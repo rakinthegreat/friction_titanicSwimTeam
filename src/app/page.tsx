@@ -19,120 +19,7 @@ import { Capacitor } from '@capacitor/core';
 import { FrictionPoint } from "@/store/userStore";
 import { FRICTION_PRESETS } from "@/lib/friction-presets";
 
-/** Virtual activity id for the watch/recreation slot */
-const VIDEO_ACTIVITY_ID = '__video__';
 
-/** A synthetic ActivityDefinition representing the video/watch option */
-const VIDEO_ACTIVITY: ActivityDefinition = {
-  id: VIDEO_ACTIVITY_ID,
-  title: 'Watch Something Interesting',
-  description: 'Curated videos based on your interests.',
-  type: 'learn', // use 'learn' so category cap applies correctly
-  href: '/watch',
-  icon: PlayCircle as any,
-  color: 'text-accent',
-  minTime: 3,
-  maxTime: 30,
-  interests: [], // will be matched separately
-  scalable: true,
-};
-
-/** Fisher-Yates shuffle — proper unbiased randomization */
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-/**
- * Category pool for the "Broaden Your Horizons" slot.
- * Mirrors the real learn/ and activities/ folders:
- *   learn/      → trivia | english | philosophy | science
- *   activities/ → meditation | challenges
- */
-const BROADEN_CATEGORY_IDS = ['trivia', 'english', 'philosophy', 'science', 'meditation', 'challenges'] as const;
-
-/**
- * Builds hub suggestions:
- * - `picked`: up to 3 interest-matched items (original logic, unchanged)
- * - `nonInterest`: 1 item for "Broaden Your Horizons" — picked by shuffling
- *                 BROADEN_CATEGORY_IDS and taking the first eligible one
- *                 that wasn't already picked and doesn't match user interests
- */
-function buildSuggestions(
-  mins: number,
-  interests: string[],
-  videoGenres: string[],
-  dailyCompleted: string[]
-): { picked: ActivityDefinition[]; nonInterest: ActivityDefinition | null } {
-  const sortByCompletion = (pool: ActivityDefinition[]) =>
-    [...pool].sort((a, b) => {
-      const aDone = dailyCompleted.includes(a.id);
-      const bDone = dailyCompleted.includes(b.id);
-      if (aDone && !bDone) return 1;
-      if (!aDone && bDone) return -1;
-      return Math.random() - 0.5;
-    });
-
-  // Time-eligible activities
-  const timeEligible = ACTIVITIES.filter(
-    (a) => a.minTime <= mins && a.maxTime >= mins
-  );
-
-  // Interest-matched pool (any type) — also inject video if videoGenres are set
-  const interestMatched = timeEligible.filter(
-    (a) =>
-      a.interests.some((i) => interests.includes(i)) ||
-      interests.length === 0 ||
-      a.type === 'life'
-  );
-
-  // Add the video option to the candidate pool (max 1 will be enforced below)
-  const includeVideo = videoGenres && videoGenres.length > 0;
-  const candidatePool = sortByCompletion(
-    includeVideo ? [...interestMatched, VIDEO_ACTIVITY] : interestMatched
-  );
-
-  // Pick up to 3 from the pool with per-category caps:
-  // - max 1 video ('__video__' type is treated as its own category)
-  // - max 3 for game / learn / life
-  const picked: ActivityDefinition[] = [];
-  const categoryCount: Record<string, number> = {};
-  for (const activity of candidatePool) {
-    if (picked.length >= 3) break;
-    const cat = activity.id === VIDEO_ACTIVITY_ID ? '__video__' : activity.type;
-    const cap = cat === '__video__' ? 1 : 3;
-    const count = categoryCount[cat] ?? 0;
-    if (count >= cap) continue;
-    picked.push(activity);
-    categoryCount[cat] = count + 1;
-  }
-
-  // ── Broaden Your Horizons ────────────────────────────────────────────────────
-  // Shuffle the full category list, then walk it and pick the first activity that:
-  //   1. Wasn't already shown in the main 3
-  //   2. Doesn't overlap with the user's interests (true "broaden" behaviour)
-  const pickedIds = new Set(picked.map((a) => a.id));
-  const shuffledBroaden = shuffle([...BROADEN_CATEGORY_IDS]);
-
-  // Walk the shuffled category list — first one not already in the main 3 wins.
-  // No interest filtering here: the point is variety across ALL categories,
-  // not strict non-overlap (which caused challenges to always win because its
-  // interests:[] never matched the filter).
-  let nonInterest: ActivityDefinition | null = null;
-  for (const catId of shuffledBroaden) {
-    const candidate = ACTIVITIES.find((a) => a.id === catId) ?? null;
-    if (!candidate) continue;
-    if (pickedIds.has(candidate.id)) continue;
-    nonInterest = candidate;
-    break;
-  }
-
-  return { picked, nonInterest };
-}
 
 export default function Home() {
   const router = useRouter();
@@ -143,9 +30,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const preferences = useUserStore((state) => state.preferences);
   const updateStats = useUserStore((state) => state.updateStats);
-  const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
-  const [suggestions, setSuggestions] = useState<typeof ACTIVITIES>([]);
-  const [nonInterestSuggestion, setNonInterestSuggestion] = useState<(typeof ACTIVITIES)[0] | null>(null);
+  const startSession = useUserStore((state) => state.startSession);
   const setNavigationSource = useUserStore((state) => state.setNavigationSource);
 
   const preferredLanguages = useUserStore((state) => state.preferredLanguages);
@@ -272,8 +157,7 @@ export default function Home() {
     replenish();
   }, [_hasHydrated, quotePool.length, setQuotePool]);
 
-  const anySuggestionCompleted = suggestions.length > 0 && suggestions.some(a => dailyCompleted.includes(a.id));
-  const allSuggestionsCompleted = suggestions.length > 0 && suggestions.every(a => dailyCompleted.includes(a.id));
+
 
   useEffect(() => {
     setMounted(true);
@@ -352,7 +236,6 @@ export default function Home() {
               <Hourglass size={120} />
             </div>
 
-            {!selectedDuration ? (
               <div className="animate-in fade-in zoom-in-95 duration-500">
                 <div className="space-y-1 relative z-10 mb-6">
                   <h2 className="text-2xl font-black">How long do you expect to wait?</h2>
@@ -365,10 +248,8 @@ export default function Home() {
                       <button
                         key={mins}
                         onClick={() => {
-                          const { picked, nonInterest } = buildSuggestions(mins, interests, videoGenres, dailyCompleted);
-                          setSuggestions(picked);
-                          setNonInterestSuggestion(nonInterest);
-                          setSelectedDuration(mins);
+                          startSession(mins);
+                          router.push('/session');
                         }}
                         className="rounded-2xl px-6 py-4 font-black transition-all bg-accent shadow-[6px_6px_12px_rgba(0,0,0,0.2),-6px_-6px_12px_rgba(255,255,255,0.1)] hover:scale-105 [@media(orientation:landscape)]:flex-1"
                       >
@@ -381,10 +262,8 @@ export default function Home() {
                       <button
                         key={mins}
                         onClick={() => {
-                          const { picked, nonInterest } = buildSuggestions(mins, interests, videoGenres, dailyCompleted);
-                          setSuggestions(picked);
-                          setNonInterestSuggestion(nonInterest);
-                          setSelectedDuration(mins);
+                          startSession(mins);
+                          router.push('/session');
                         }}
                         className="rounded-2xl px-6 py-4 font-black transition-all bg-accent shadow-[6px_6px_12px_rgba(0,0,0,0.2),2px_2px_4px_rgba(0,0,0,0.1)] hover:scale-105 [@media(orientation:landscape)]:flex-1"
                       >
@@ -394,94 +273,13 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            ) : (
-              <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 relative z-10">
-                <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
-                  <div>
-                    <h2 className="text-3xl font-black">Your Options</h2>
-                    <p className="text-[12px] font-black uppercase tracking-[0.2em] opacity-80 mt-1">Curated for {selectedDuration}m</p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setSelectedDuration(null);
-                      setSuggestions([]);
-                      setNonInterestSuggestion(null);
-                    }}
-                    className="p-3 rounded-full bg-black/10 hover:bg-black/20 transition-colors shadow-lg border border-black/5"
-                    aria-label="Change duration"
-                  >
-                    <ChevronRight className="w-6 h-6 rotate-180" />
-                  </button>
-                </div>
-
-                <div className="space-y-2">
-                  {suggestions.map((activity) => (
-                    <Link
-                      key={activity.id}
-                      href={activity.id === VIDEO_ACTIVITY_ID ? `/watch?time=${selectedDuration}` : `${activity.href}?time=${selectedDuration}`}
-                      className="group"
-                    >
-                      <div className="flex items-center gap-3 px-4 py-3 bg-white/10 rounded-2xl border border-white/5 hover:bg-white/20 transition-all hover:translate-x-1 relative mt-2">
-                        <div className="w-8 h-8 shrink-0 rounded-xl bg-white/10 flex items-center justify-center">
-                          {(() => {
-                            if (activity.id === VIDEO_ACTIVITY_ID) return <PlayCircle className="w-4 h-4 text-white" />;
-                            const original = ACTIVITIES.find(a => a.id === activity.id);
-                            const Icon = original?.icon;
-                            return Icon ? <Icon className="w-4 h-4 text-white" /> : null;
-                          })()}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-black leading-tight">{activity.title}</h3>
-                          <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 mt-0.5">
-                            {activity.id === VIDEO_ACTIVITY_ID ? 'Video' : activity.type === 'life' ? 'Activity' : activity.type === 'game' ? 'Game' : 'Learning'}
-                          </p>
-                        </div>
-                        <ChevronRight className="w-4 h-4 text-white/40 shrink-0" />
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-
-
-
-                {nonInterestSuggestion && (
-                  <div className="pt-2 border-t border-white/10 space-y-2">
-                    <h3 className="text-xs font-black uppercase tracking-widest opacity-60">Broaden Your Horizons</h3>
-                    <Link
-                      href={`${nonInterestSuggestion.href}?time=${selectedDuration}`}
-                      className="group"
-                    >
-                      <div className="flex items-center gap-3 px-4 py-3 bg-white/5 border border-dashed border-white/20 rounded-2xl hover:bg-white/10 transition-all hover:translate-x-1 relative">
-                        {dailyCompleted.includes(nonInterestSuggestion.id) && (
-                          <div className="absolute right-3 bg-white text-accent-secondary rounded-full p-0.5 shadow-lg z-20">
-                            <ShieldCheck className="w-3 h-3" />
-                          </div>
-                        )}
-                        <div className="w-8 h-8 shrink-0 rounded-xl bg-white/10 flex items-center justify-center">
-                          {(() => {
-                            const Icon = nonInterestSuggestion.icon;
-                            return Icon ? <Icon className="w-4 h-4 text-white/70" /> : null;
-                          })()}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-black leading-tight opacity-80">{nonInterestSuggestion.title}</h3>
-                          <p className="text-[10px] font-bold uppercase tracking-widest opacity-40 mt-0.5">
-                            {nonInterestSuggestion.type === 'life' ? 'Activity' : 'Learning'}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
 
           {preferences.showDevTiles && (
             <>
               <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">
                 <p className="text-foreground/40 font-bold uppercase tracking-widest text-xs">Time Reclaimed</p>
-                <p className="text-5xl font-black text-accent">{stats.totalMinutesSaved}<span className="text-xl font-bold text-foreground/20 ml-2 italic">mins</span></p>
+                <p className="text-5xl font-black text-accent">{Math.floor(stats.totalMinutesSaved)}<span className="text-xl font-bold text-foreground/20 ml-2 italic">mins</span></p>
               </div>
 
               <div className="bg-card rounded-[2.5rem] p-8 space-y-3 shadow-neo-out border border-white/5">

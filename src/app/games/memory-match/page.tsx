@@ -276,11 +276,22 @@ export default function MemoryMatchPage() {
 
         <Button
           variant={isWon ? "primary" : "outline"}
-          onClick={initGame}
+          onClick={() => {
+            if (isWon) {
+              const state = useUserStore.getState();
+              if (state.sessionEndTime && state.sessionEndTime > Date.now()) {
+                router.push('/session');
+              } else {
+                router.push('/');
+              }
+            } else {
+              initGame();
+            }
+          }}
           className="w-full max-w-[200px]"
         >
-          <RotateCcw className="w-4 h-4 mr-2" />
-          {isWon ? "Play Again" : "Restart"}
+          {!isWon && <RotateCcw className="w-4 h-4 mr-2" />}
+          {isWon ? "Continue" : "Restart"}
         </Button>
       </Card>
 

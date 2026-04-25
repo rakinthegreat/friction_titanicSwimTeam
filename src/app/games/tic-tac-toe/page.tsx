@@ -223,11 +223,22 @@ export default function TicTacToePage() {
 
         <Button
           variant={winner ? "primary" : "outline"}
-          onClick={resetGame}
+          onClick={() => {
+            if (winner) {
+              const state = useUserStore.getState();
+              if (state.sessionEndTime && state.sessionEndTime > Date.now()) {
+                router.push('/session');
+              } else {
+                router.push('/');
+              }
+            } else {
+              resetGame();
+            }
+          }}
           className="w-full max-w-[200px]"
         >
-          <RotateCcw className="w-4 h-4 mr-2" />
-          {winner ? "Play Again" : "Restart Game"}
+          {!winner && <RotateCcw className="w-4 h-4 mr-2" />}
+          {winner ? "Continue" : "Restart Game"}
         </Button>
       </Card>
     </div>

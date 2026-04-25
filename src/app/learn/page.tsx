@@ -55,7 +55,14 @@ export default function LearnDirectoryPage() {
       <header className="flex justify-between items-center">
         <div className="flex items-center">
           <button
-            onClick={() => router.push(navigationSource === 'profile' ? '/profile' : '/')}
+            onClick={() => {
+              const state = useUserStore.getState();
+              if (state.sessionEndTime && state.sessionEndTime > Date.now()) {
+                router.push('/session');
+              } else {
+                router.push(navigationSource === 'profile' ? '/profile' : '/');
+              }
+            }}
             className="p-2 -ml-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors mr-2"
             aria-label="Back to home"
           >
