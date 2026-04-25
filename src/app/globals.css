@@ -6,7 +6,12 @@
   --card: #FFFFFF;
   --accent: #7EA68B;
   --accent-secondary: #E99C75;
-  
+
+  /* Game Fixed Colors */
+  --correct_position: #7EA68B;
+  --wrong_position: #E99C75;
+  --correct: #7EA68B;
+
   /* Light Mode (No white shadows) */
   --neo-shadow-dark: rgba(0, 0, 0, 0.12);
   --neo-shadow-light: rgba(0, 0, 0, 0.04);
@@ -45,7 +50,12 @@
   --color-card: var(--card);
   --color-accent: var(--accent);
   --color-accent-secondary: var(--accent-secondary);
-  
+
+  /* Game Fixed Classes */
+  --color-correct-position: var(--correct_position);
+  --color-wrong-position: var(--wrong_position);
+  --color-correct: var(--correct);
+
   /* Dynamic Neomorphic Shadows */
   --shadow-neo-out: var(--neo-shadow-out-offset-dark) var(--neo-shadow-dark), var(--neo-shadow-out-offset-light) var(--neo-shadow-light);
   --shadow-neo-in: inset 4px 4px 8px var(--neo-shadow-dark), inset -4px -4px 8px var(--neo-shadow-light);
@@ -104,28 +114,50 @@ body {
 
 @layer utilities {
   @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    75% { transform: translateX(4px); }
+
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    25% {
+      transform: translateX(-4px);
+    }
+
+    75% {
+      transform: translateX(4px);
+    }
   }
+
   .animate-shake {
     animation: shake 0.15s ease-in-out 0s 2;
   }
+
   .grid-cols-23 {
     grid-template-columns: repeat(23, minmax(0, 1fr));
   }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
   }
+
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }

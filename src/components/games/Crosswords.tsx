@@ -422,7 +422,7 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
 
   if (clues === null) return (
     <div className="h-64 flex flex-col items-center justify-center space-y-4">
-      <Loader2 className="w-8 h-8 animate-spin text-accent" />
+      <Loader2 className="w-8 h-8 animate-spin text-correct" />
       <p className="text-xs font-black uppercase tracking-[0.2em] text-foreground/30">Generating Daily Grid...</p>
     </div>
   );
@@ -461,9 +461,9 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
                     if (focused.r === r && focused.c === c) el?.focus();
                   }}
                   className={`w-full h-full text-center font-black text-lg transition-all outline-none border-none ${focused.r === r && focused.c === c
-                      ? 'bg-accent/50 text-white shadow-[inset_0_0_0_2px_var(--accent)]'
+                      ? 'bg-correct/50 text-white shadow-[inset_0_0_0_2px_var(--correct)]'
                       : correctCells.has(`${r}-${c}`)
-                        ? 'bg-accent/40 text-white'
+                        ? 'bg-correct/40 text-white'
                         : 'bg-card text-foreground'
                     }`}
                 />
@@ -484,7 +484,7 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
           <div className="flex items-center justify-between px-2 py-4">
             <button 
               onClick={prevClue}
-              className="p-2 rounded-full hover:bg-foreground/5 text-accent transition-all active:scale-90 flex-shrink-0"
+              className="p-2 rounded-full hover:bg-foreground/5 text-correct transition-all active:scale-90 flex-shrink-0"
             >
               <ChevronLeft className="w-8 h-8" />
             </button>
@@ -493,7 +493,7 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
               onClick={() => setShowAllClues(!showAllClues)}
               className="flex-1 text-center cursor-pointer px-1 group"
             >
-              <span className="text-[10px] font-black text-accent/40 uppercase tracking-[0.3em] block mb-3 group-hover:text-accent transition-colors">
+              <span className="text-[10px] font-black text-correct/40 uppercase tracking-[0.3em] block mb-3 group-hover:text-correct transition-colors">
                 {getActiveClue()?.label} {getActiveClue()?.direction}
               </span>
               <p className="text-sm font-bold leading-relaxed italic line-clamp-6 px-1 opacity-80">
@@ -503,7 +503,7 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
 
             <button 
               onClick={nextClue}
-              className="p-2 rounded-full hover:bg-foreground/5 text-accent transition-all active:scale-90 flex-shrink-0"
+              className="p-2 rounded-full hover:bg-foreground/5 text-correct transition-all active:scale-90 flex-shrink-0"
             >
               <ChevronRight className="w-8 h-8" />
             </button>
@@ -512,30 +512,30 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
           {showAllClues && (
             <div className="px-8 pb-10 max-h-[500px] overflow-y-auto space-y-10 animate-in slide-in-from-top-2 duration-300 scrollbar-hide border-t border-foreground/5 pt-8">
               <div className="space-y-6">
-                <p className="text-xs font-black text-accent/40 uppercase tracking-[0.3em] border-b border-foreground/10 pb-2">Across</p>
+                <p className="text-xs font-black text-correct/40 uppercase tracking-[0.3em] border-b border-foreground/10 pb-2">Across</p>
                 <div className="space-y-4">
                   {clues.filter(c => c.direction === 'across').map(c => (
                     <button 
                       key={`across-${c.label}`} 
                       onClick={() => { setFocused({ r: c.row, c: c.col }); setLastDir('across'); }}
-                      className={`w-full text-left p-5 rounded-[1.5rem] transition-all flex items-start gap-5 ${getActiveClue()?.label === c.label && getActiveClue()?.direction === 'across' ? 'bg-accent/15 shadow-neo-in ring-1 ring-accent/30' : 'bg-foreground/5 hover:bg-foreground/10'}`}
+                      className={`w-full text-left p-5 rounded-[1.5rem] transition-all flex items-start gap-5 ${getActiveClue()?.label === c.label && getActiveClue()?.direction === 'across' ? 'bg-correct/15 shadow-neo-in ring-1 ring-correct/30' : 'bg-foreground/5 hover:bg-foreground/10'}`}
                     >
-                      <span className="font-black text-accent text-xl mt-0.5 min-w-[1.5rem] text-center">{c.label}</span>
+                      <span className="font-black text-correct text-xl mt-0.5 min-w-[1.5rem] text-center">{c.label}</span>
                       <span className="text-sm font-bold text-foreground/80 leading-relaxed italic">"{c.clue}"</span>
                     </button>
                   ))}
                 </div>
               </div>
               <div className="space-y-6">
-                <p className="text-xs font-black text-accent/40 uppercase tracking-[0.3em] border-b border-foreground/10 pb-2">Down</p>
+                <p className="text-xs font-black text-correct/40 uppercase tracking-[0.3em] border-b border-foreground/10 pb-2">Down</p>
                 <div className="space-y-4">
                   {clues.filter(c => c.direction === 'down').map(c => (
                     <button 
                       key={`down-${c.label}`} 
                       onClick={() => { setFocused({ r: c.row, c: c.col }); setLastDir('down'); }}
-                      className={`w-full text-left p-5 rounded-[1.5rem] transition-all flex items-start gap-5 ${getActiveClue()?.label === c.label && getActiveClue()?.direction === 'down' ? 'bg-accent/15 shadow-neo-in ring-1 ring-accent/30' : 'bg-foreground/5 hover:bg-foreground/10'}`}
+                      className={`w-full text-left p-5 rounded-[1.5rem] transition-all flex items-start gap-5 ${getActiveClue()?.label === c.label && getActiveClue()?.direction === 'down' ? 'bg-correct/15 shadow-neo-in ring-1 ring-correct/30' : 'bg-foreground/5 hover:bg-foreground/10'}`}
                     >
-                      <span className="font-black text-accent text-xl mt-0.5 min-w-[1.5rem] text-center">{c.label}</span>
+                      <span className="font-black text-correct text-xl mt-0.5 min-w-[1.5rem] text-center">{c.label}</span>
                       <span className="text-sm font-bold text-foreground/80 leading-relaxed italic">"{c.clue}"</span>
                     </button>
                   ))}
@@ -547,7 +547,7 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
 
         <div className="flex flex-col gap-3">
           {hint && (
-            <div className="bg-accent/10 p-3 rounded-xl border border-accent/20 text-[10px] font-medium text-accent animate-in fade-in slide-in-from-top-1 relative group">
+            <div className="bg-correct/10 p-3 rounded-xl border border-correct/20 text-[10px] font-medium text-correct animate-in fade-in slide-in-from-top-1 relative group">
               {hint}
               <button 
                 onClick={() => setHint(null)}
@@ -572,7 +572,7 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
           
           <Button
             onClick={handleSubmit}
-            className="w-full py-6 text-lg font-black italic tracking-widest shadow-neo-out hover:shadow-neo-in transition-all active:scale-95"
+            className="w-full py-6 text-lg font-black italic tracking-widest shadow-neo-out hover:shadow-neo-in transition-all active:scale-95 bg-correct"
           >
             CHECK
           </Button>
@@ -591,7 +591,7 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
               variant="outline"
               onClick={handleReveal}
               disabled={!canReveal || won || isRevealed}
-              className="py-3 text-[10px] font-black tracking-[0.2em] uppercase shadow-neo-out hover:shadow-neo-in transition-all border-accent/20 text-accent disabled:opacity-50 disabled:grayscale"
+              className="py-3 text-[10px] font-black tracking-[0.2em] uppercase shadow-neo-out hover:shadow-neo-in transition-all border-correct/20 text-correct disabled:opacity-50 disabled:grayscale"
             >
               {canReveal ? "Reveal Solution" : `Reveal in ${timeLeft}s`}
             </Button>
@@ -601,11 +601,11 @@ export const Crosswords = ({ onComplete }: { onComplete: (xp: number) => void })
 
       {won && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-background/20 backdrop-blur-sm animate-in fade-in duration-500">
-          <Card className="w-full max-w-xs p-8 text-center space-y-6 shadow-2xl border-2 border-accent/20 relative">
+          <Card className="w-full max-w-xs p-8 text-center space-y-6 shadow-2xl border-correct/20 relative">
             <div className="absolute top-4 left-4">
-              <BackButton href="/" className="text-accent" />
+              <BackButton href="/" className="text-correct" />
             </div>
-            <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto text-white">
+            <div className="w-16 h-16 bg-correct rounded-full flex items-center justify-center mx-auto text-white">
               <Trophy size={32} />
             </div>
             <h2 className="text-3xl font-black italic">SOLVED!</h2>

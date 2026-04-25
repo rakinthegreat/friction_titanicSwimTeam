@@ -149,7 +149,7 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
     const letter = guess[index];
     const target = targetWord.toUpperCase();
 
-    if (target[index] === letter) return 'bg-accent text-white border-accent';
+    if (target[index] === letter) return 'bg-correct-position text-white border-correct-position';
     if (!target.includes(letter)) return 'bg-foreground/10 text-foreground border-foreground/5';
 
     let targetCount = 0;
@@ -171,7 +171,7 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
 
     const remainingToColor = targetCount - correctMatches;
     if (previousPresentMatches < remainingToColor) {
-      return 'bg-accent-secondary text-white border-accent-secondary';
+      return 'bg-wrong-position text-white border-wrong-position';
     }
 
     return 'bg-foreground/10 text-foreground border-foreground/5';
@@ -186,8 +186,8 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
     }
 
     switch (status) {
-      case 'correct': return base + "bg-accent text-white";
-      case 'present': return base + "bg-accent-secondary text-white";
+      case 'correct': return base + "bg-correct-position text-white";
+      case 'present': return base + "bg-wrong-position text-white";
       case 'absent': return base + "bg-foreground/10 text-foreground/20";
       default: return base + "bg-foreground/10 text-foreground hover:bg-foreground/20";
     }
@@ -197,7 +197,7 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
     <div className="flex flex-col items-center justify-center space-y-6 animate-in fade-in duration-500 w-full max-w-full mx-auto relative px-[2px]">
       {status !== 'playing' && (
         <div className="absolute -top-16 -left-8">
-          <BackButton href="/" className="text-accent" />
+          <BackButton href="/" className="text-correct-position" />
         </div>
       )}
       <div className="text-center">
@@ -213,7 +213,7 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
                 <div
                   key={j}
                   className={`w-12 h-12 flex items-center justify-center border-2 rounded-xl text-xl font-black transition-all duration-500 ${guesses[i] ? getLetterClass(guesses[i], j) : 'border-foreground/10'
-                    } ${i === guesses.length && guess[j] ? 'scale-110 border-accent/50 shadow-neo-out' : ''}`}
+                    } ${i === guesses.length && guess[j] ? 'scale-110 border-correct-position/50 shadow-neo-out' : ''}`}
                 >
                   {guess[j] || ""}
                 </div>
@@ -245,14 +245,14 @@ export const WordLess = ({ onComplete, targetWord = "GUESS" }: WordLessProps) =>
       {status !== 'playing' && (
         <div className="text-center animate-bounce">
           <p className="text-2xl font-black italic flex items-center justify-center gap-2">
-            {status === 'won' ? <><PartyPopper className="w-6 h-6 text-accent drop-shadow-sm" /> Brilliant!</> : `Target: ${targetWord}`}
+            {status === 'won' ? <><PartyPopper className="w-6 h-6 text-correct-position drop-shadow-sm" /> Brilliant!</> : `Target: ${targetWord}`}
           </p>
         </div>
       )}
 
       {ee && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-card p-8 rounded-[2.5rem] shadow-neo-out border border-accent/20 max-w-sm w-full text-center space-y-6 animate-in zoom-in duration-300">
+          <div className="bg-card p-8 rounded-[2.5rem] shadow-neo-out border border-correct-position/20 max-w-sm w-full text-center space-y-6 animate-in zoom-in duration-300">
             <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto">
               <Heart className="w-8 h-8 text-red-500 fill-red-500/20" />
             </div>
