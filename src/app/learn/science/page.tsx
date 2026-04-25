@@ -88,7 +88,8 @@ export default function ScienceModule() {
   const handleGenerate = async () => {
     setIsGenerating(true);
     setError(null);
-    const result = await generateScienceConcepts(interests);
+    const state = useUserStore.getState();
+    const result = await generateScienceConcepts(interests, state.completedScienceConcepts);
 
     if (result.success && result.concepts) {
       addCustomScienceConcepts(result.concepts);

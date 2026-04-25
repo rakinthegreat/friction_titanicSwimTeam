@@ -89,7 +89,8 @@ export default function PhilosophyModule() {
   const handleGenerate = async () => {
     setIsGenerating(true);
     setError(null);
-    const result = await generateConcepts(interests);
+    const state = useUserStore.getState();
+    const result = await generateConcepts(interests, state.completedPhilosophyConcepts);
 
     if (result.success && result.concepts) {
       addCustomPhilosophyConcepts(result.concepts);

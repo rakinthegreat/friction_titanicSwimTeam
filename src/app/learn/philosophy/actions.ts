@@ -47,7 +47,7 @@ const client = new OpenAI({
   baseURL: 'https://integrate.api.nvidia.com/v1',
 });
 
-export async function generateConcepts(interests: string[] = []) {
+export async function generateConcepts(interests: string[] = [], exclude: string[] = []) {
   try {
     console.log("Generating philosophy concepts...");
     let userPrompt = "Generate 5 advanced philosophical concepts.";
@@ -55,12 +55,21 @@ export async function generateConcepts(interests: string[] = []) {
       userPrompt += ` Try to relate some of the concepts to these user interests if possible: ${interests.join(', ')}. However, prioritize deep, classic philosophical concepts over forced relations.`;
     }
 
+    const messages: any[] = [
+      { role: "system", content: SYSTEM_PROMPT },
+      { role: "user", content: userPrompt }
+    ];
+
+    if (exclude.length > 0) {
+      messages.push({
+        role: "system",
+        content: `MANDATORY: Do NOT generate any of the following concepts as the user has already learned them: ${exclude.join(', ')}.`
+      });
+    }
+
     const completion = await client.chat.completions.create({
       model: "moonshotai/kimi-k2-instruct-0905",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: userPrompt }
-      ],
+      messages: messages,
       temperature: 0.6,
       top_p: 0.9,
       max_tokens: 4096,
