@@ -42,7 +42,7 @@ export async function generateChallenge(
     }
 
     const completion = await client.chat.completions.create({
-      model: 'moonshotai/kimi-k2-instruct-0905',
+      model: 'mistralai/mistral-large-3-675b-instruct-2512',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userPrompt },

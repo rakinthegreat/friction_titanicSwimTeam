@@ -44,7 +44,7 @@ export async function getDynamicSearchQueries(
     `;
 
     const completion = await client.chat.completions.create({
-      model: "moonshotai/kimi-k2-instruct-0905",
+      model: "mistralai/mistral-large-3-675b-instruct-2512",
       messages: [
         { 
           role: "system", 
@@ -254,7 +254,7 @@ export async function getRecommendedVideos(
     const userVibe = `${context.timeOfDay} in ${context.location}, Weather: ${context.weather}. Interests: ${interests.join(', ')}`;
     
     const selection = await client.chat.completions.create({
-      model: "moonshotai/kimi-k2-instruct-0905",
+      model: "mistralai/mistral-large-3-675b-instruct-2512",
       messages: [
         { role: "system", content: SELECTION_PROMPT },
         { role: "user", content: `Context: ${userVibe}\n\nCandidate Videos:\n${poolMetadata}` }

@@ -68,7 +68,7 @@ export async function generateConcepts(interests: string[] = [], exclude: string
     }
 
     const completion = await client.chat.completions.create({
-      model: "moonshotai/kimi-k2-instruct-0905",
+      model: "mistralai/mistral-large-3-675b-instruct-2512",
       messages: messages,
       temperature: 0.6,
       top_p: 0.9,
@@ -127,7 +127,7 @@ export async function getPhilosophyFeedback(conceptName: string, conceptText: st
     `;
 
     const completion = await client.chat.completions.create({
-      model: "moonshotai/kimi-k2-instruct-0905",
+      model: "mistralai/mistral-large-3-675b-instruct-2512",
       messages: [
         { role: "user", content: prompt }
       ],
