@@ -42,7 +42,7 @@ export async function generateChallenge(
     }
 
     const completion = await client.chat.completions.create({
-      model: 'mistralai/mistral-large-3-675b-instruct-2512',
+      model: 'google/gemma-3n-e2b-it',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userPrompt },
